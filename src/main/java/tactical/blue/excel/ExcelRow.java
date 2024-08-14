@@ -3,9 +3,9 @@ package tactical.blue.excel;
 public class ExcelRow {
     private String item;
     private String productNumber;
-    private int quantity;
-    private double msrp;
-    private double wholeSalePrice;
+    private Integer quantity;
+    private Double msrp;
+    private Double wholeSalePrice;
     private String productURL;
 
 
