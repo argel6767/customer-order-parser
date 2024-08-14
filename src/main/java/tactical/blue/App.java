@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import tactical.blue.excel.CleanExcelFile;
 
 /**
  * JavaFX App
@@ -18,6 +19,11 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         WebView webView = new WebView();
         webView.getEngine().load(getClass().getResource("static/index.html").toExternalForm());
+        webView.getEngine().getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == javafx.concurrent.Worker.State.SUCCEEDED) {
+                webView.getEngine().executeScript("window.javaBridge = ");
+            }
+        });
         scene = new Scene(webView, 800, 600);
         stage.setScene(scene);
         stage.show();

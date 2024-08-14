@@ -29,5 +29,9 @@ public class ExcelRow {
     public String toString() {
         return this.item + ", " + this.productNumber + ", " + this.quantity + ", " + this.msrp + ", " + this.wholeSalePrice; 
     }
+
+    public Object[] toArray() {
+        return new Object[]{item, productNumber, quantity, msrp, wholeSalePrice};
+    }
 }
 

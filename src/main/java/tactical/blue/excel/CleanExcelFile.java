@@ -18,16 +18,17 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class CleanExcelFile {
     private File fileOut;
-    private File fileIn;
+    private File fileInOctoparse;
+    private File fileInItemDescription;
     private final File DIRECTORY = new File("weekly-scrape");
     private BufferedReader bufferedReader;
     private List<String> csvRows = new ArrayList<>();
    
     //constructor that sets up bufferedreader object
     public CleanExcelFile(String fileInPath) {
-        this.fileIn = new File(fileInPath);
+        this.fileInOctoparse = new File(fileInPath);
         try {
-        this.bufferedReader = new BufferedReader(new FileReader(fileIn));
+        this.bufferedReader = new BufferedReader(new FileReader(fileInOctoparse));
         } catch (FileNotFoundException ex) {
             System.out.println("Something went wrong!");
         }
@@ -64,7 +65,6 @@ public class CleanExcelFile {
             int currentCell = 0;
             for (String str : rowArray) {
                 Cell cell = row.createCell(currentCell);
-                
             }
         }
     }
