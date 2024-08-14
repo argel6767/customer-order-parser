@@ -7,6 +7,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class CleanExcelFile {
     private File fileOut;
@@ -15,7 +23,7 @@ public class CleanExcelFile {
     private BufferedReader bufferedReader;
     private List<String> csvRows = new ArrayList<>();
    
-
+    //constructor that sets up bufferedreader object
     public CleanExcelFile(String fileInPath) {
         this.fileIn = new File(fileInPath);
         try {
@@ -24,7 +32,7 @@ public class CleanExcelFile {
             System.out.println("Something went wrong!");
         }
     }
-
+    //reads csv file that is put in
     private void readCSVFile() throws IOException {
         String currLine;
         while ((currLine = bufferedReader.readLine()) != null) {
@@ -32,5 +40,32 @@ public class CleanExcelFile {
         }
     }
 
-    
+    //reads lines from csvRows and puts them into a new excel file
+    private void createExcelFile() {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("weekly price report");
+
+        Map<String, String[]> dataSheetInfo = new TreeMap<>();
+        dataSheetInfo.put("1", new String[] {"Item", "Product Number", "Quantity", "MSRP", "Wholesale Price"}); //headers
+
+        int num = 2;
+        for (String row:csvRows) {
+            dataSheetInfo.put(String.valueOf(num), row.split(",")); //splits line by comma
+            num++;
+        }
+
+        Set<String> keySet = dataSheetInfo.keySet();
+        int currRow = 1;
+
+        for (String key: keySet) {
+            Row row = sheet.createRow(currRow);
+            String[] rowArray = dataSheetInfo.get(key);
+
+            int currentCell = 0;
+            for (String str : rowArray) {
+                Cell cell = row.createCell(currentCell);
+                
+            }
+        }
+    }
 }
