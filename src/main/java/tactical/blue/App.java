@@ -22,7 +22,7 @@ public class App extends Application {
         this.primaryStage = stage; // Store the primary stage reference
 
         webView = new WebView();
-        webView.getEngine().load(getClass().getResource("static/index.html").toExternalForm());
+        webView.getEngine().load(getClass().getResource("/tactical/blue/static/index.html").toExternalForm());
         webView.getEngine().getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == javafx.concurrent.Worker.State.SUCCEEDED) {
                 JSObject window = (JSObject) webView.getEngine().executeScript("window");

@@ -39,6 +39,11 @@ public class CleanExcelFile {
             System.out.println("Something went wrong!");
         }
     }
+
+    public void setExcelRows(List<ExcelRow> excelRows) {
+        this.excelRows = excelRows;
+    }
+
     public void makeNewExcelFile() {
         try {
             readCSVFiles();
@@ -46,12 +51,7 @@ public class CleanExcelFile {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        try {
-            createExcelCells();
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        createExcelCells();
         generateExcelFile();
     }
     //reads csv file that is put in
@@ -68,21 +68,25 @@ public class CleanExcelFile {
             String[] currOctoArray = currLineOctoparse.split(",");
             String[] currItemArray = currLineItemDescription.split(",");
             //will only make the line if the two csv lines match using the url that is search as it wouldnt change, this guareentees different prouducts are not being combined
-            if (currItemArray[4].equals(currOctoArray[3])) {
+            if ((currItemArray.length >= 5) && (currOctoArray.length >= 4)) {
+                if (currItemArray[4].equals(currOctoArray[3])) {
                 String productNumber = StringUtils.deleteWhitespace(currOctoArray[1]); //deletes whitespace that isnt cleaned from scraper
                 int quantity = Integer.parseInt(currItemArray[2]); //casts quantity as int
                 double msrp = Double.parseDouble(currOctoArray[2]); //casts msrp as double
                 double wholeSalePrice = msrp * quantity * .7; //TODO update this when the actiual wholeSaleCalculation is determined!!!!
                 ExcelRow currRow = new ExcelRow(currItemArray[0], productNumber, quantity, msrp, wholeSalePrice, currOctoArray[3]);
+                System.out.println("1st" + currRow.toString());
                 this.excelRows.add(currRow);
             }
+        }
+            System.out.println("Uh OH");
             
 
         }
     }
 
     //reads lines from csvRows and puts them into a new excel file
-    private void createExcelCells() throws FileNotFoundException {
+    public void createExcelCells() {
         this.workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("weekly price report");
 
@@ -92,7 +96,8 @@ public class CleanExcelFile {
         int index = 2;
         //adds the excel rows into dataSheetInfo from List excelRows
         for (ExcelRow excelRow : excelRows) {
-            dataSheetInfo.put(String.valueOf(index++), excelRow.toArray());
+            dataSheetInfo.put(String.valueOf(index), excelRow.toArray());
+            index++;
         }
 
         int rowNum = 0;
@@ -103,20 +108,19 @@ public class CleanExcelFile {
                 Row row = sheet.createRow(rowNum++); 
     
                 Object[] objArr = dataSheetInfo.get(key); 
-    
+                
                 int cellnum = 0; 
     
                 for (Object obj : objArr) { 
-    
                     // This line creates a cell in the next 
                     //  column of that row 
                     Cell cell = row.createCell(cellnum++); 
-    
+                    System.out.print(obj + " ");
                     if (obj instanceof Double) 
                         cell.setCellValue((Double)obj); 
     
                     else if (obj instanceof Integer) 
-                        cell.setCellValue((Integer)obj); 
+                        cell.setCellValue((Integer) obj); 
                     else cell.setCellValue((String)obj);
                 } 
             } 
@@ -124,7 +128,7 @@ public class CleanExcelFile {
 
         private void generateExcelFile() {
         try {
-            FileOutputStream excelOutput = new FileOutputStream(new File(DIRECTORY + String.valueOf(LocalDate.now()) + ".xlsx"));
+            FileOutputStream excelOutput = new FileOutputStream(new File(DIRECTORY + "/" + String.valueOf(LocalDate.now()) + ".xlsx"));
             this.workbook.write(excelOutput);
             excelOutput.close();
         } catch (Exception e) {
