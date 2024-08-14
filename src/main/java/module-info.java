@@ -8,4 +8,5 @@ module tactical.blue {
     requires org.apache.poi.ooxml;
     requires java.base;
     requires org.apache.commons.lang3;
+    requires jdk.jsobject;
 }

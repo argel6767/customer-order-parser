@@ -1,14 +1,84 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Excel File Processor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        #message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+        .error {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+    </style>
 </head>
 <body>
-    <h1>CSV Cleaner</h1>
-    <h2>Enter raw file here:</h2>
-    <h2>Press here to download clean file</h2>
-    <input type="file" id="input" multiple />
+    <div class="container">
+        <h1>Excel File Processor</h1>
+        <button onclick="javabridge.uploadOctoparseFile()">Upload Octoparse File</button>
+        <span id="octoparseFileName"></span>
+        <br><br>
+        <button onclick="javabridge.uploadItemDescriptionFile()">Upload Item Description File</button>
+        <span id="itemDescriptionFileName"></span>
+        <br><br>
+        <button onclick="javabridge.processFiles()">Process Files</button>
+        <div id="message"></div>
+    </div>
+
+    <script>
+        function updateOctoparseFileName(name) {
+            document.getElementById('octoparseFileName').textContent = name;
+        }
+
+        function updateItemDescriptionFileName(name) {
+            document.getElementById('itemDescriptionFileName').textContent = name;
+        }
+
+        function showMessage(msg) {
+            var messageDiv = document.getElementById('message');
+            messageDiv.textContent = msg;
+            if (msg.includes('successfully')) {
+                messageDiv.className = 'success';
+            } else {
+                messageDiv.className = 'error';
+            }
+        }
+    </script>
 </body>
 </html>

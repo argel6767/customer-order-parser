@@ -1,36 +1,77 @@
 package tactical.blue;
 
-import java.io.IOException;
+import java.io.File;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.web.WebView;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import netscape.javascript.JSObject;
+import tactical.blue.excel.CleanExcelFile;
 
-
-/**
- * JavaFX App
- */
 public class App extends Application {
 
-    private static Scene scene;
+    private File fileInOctoparse;
+    private File fileInItemDescription;
+    private WebView webView;
+    private Stage primaryStage; // Hold a reference to the primary stage
 
     @Override
-    public void start(Stage stage) throws IOException {
-        WebView webView = new WebView();
+    public void start(Stage stage) {
+        this.primaryStage = stage; // Store the primary stage reference
+
+        webView = new WebView();
         webView.getEngine().load(getClass().getResource("static/index.html").toExternalForm());
         webView.getEngine().getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == javafx.concurrent.Worker.State.SUCCEEDED) {
-                webView.getEngine().executeScript("window.javaBridge = ");
+                JSObject window = (JSObject) webView.getEngine().executeScript("window");
+                window.setMember("javabridge", this);
             }
         });
-        scene = new Scene(webView, 800, 600);
+
+        Scene scene = new Scene(webView, 800, 600);
         stage.setScene(scene);
+        stage.setTitle("Excel File Processor");
         stage.show();
+    }
+
+    public void uploadOctoparseFile() {
+        fileInOctoparse = uploadFile("Select Octoparse File");
+        if (fileInOctoparse != null) {
+            webView.getEngine().executeScript("updateOctoparseFileName('" + fileInOctoparse.getName() + "')");
+        }
+    }
+
+    public void uploadItemDescriptionFile() {
+        fileInItemDescription = uploadFile("Select Item Description File");
+        if (fileInItemDescription != null) {
+            webView.getEngine().executeScript("updateItemDescriptionFileName('" + fileInItemDescription.getName() + "')");
+        }
+    }
+
+    private File uploadFile(String title) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(title);
+        return fileChooser.showOpenDialog(primaryStage); // Use the primary stage for the dialog
+    }
+
+    public void processFiles() {
+        if (fileInOctoparse != null && fileInItemDescription != null) {
+            try {
+                CleanExcelFile cleaner = new CleanExcelFile(fileInOctoparse.getPath(), fileInItemDescription.getPath());
+                cleaner.makeNewExcelFile();
+                webView.getEngine().executeScript("showMessage('Excel file created successfully!')");
+            } catch (Exception e) {
+                e.printStackTrace();
+                webView.getEngine().executeScript("showMessage('Error processing files: " + e.getMessage() + "')");
+            }
+        } else {
+            webView.getEngine().executeScript("showMessage('Please upload both files before processing.')");
+        }
     }
 
     public static void main(String[] args) {
         launch(args);
     }
-
 }

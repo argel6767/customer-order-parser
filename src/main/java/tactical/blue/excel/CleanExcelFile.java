@@ -124,7 +124,7 @@ public class CleanExcelFile {
 
         private void generateExcelFile() {
         try {
-            FileOutputStream excelOutput = new FileOutputStream(new File(DIRECTORY + String.valueOf(LocalDate.now())));
+            FileOutputStream excelOutput = new FileOutputStream(new File(DIRECTORY + String.valueOf(LocalDate.now()) + ".xlsx"));
             this.workbook.write(excelOutput);
             excelOutput.close();
         } catch (Exception e) {
