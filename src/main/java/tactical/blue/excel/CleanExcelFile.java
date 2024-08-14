@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -55,34 +56,49 @@ public class CleanExcelFile {
         generateExcelFile();
     }
     //reads csv file that is put in
-    private void readCSVFiles() throws IOException {
-        String currLineOctoparse;
-        String currLineItemDescription;
-        int iteration = 0;
-        while ((currLineOctoparse = bufferedReaderOcto.readLine()) != null && (currLineItemDescription = bufferedReaderItemDescription.readLine()) != null) {
-            if (iteration == 0) { //makes sure title line isnt read
-                iteration++;
-                continue;
+   private void readCSVFiles() throws IOException {
+        // Step 1: Read Octoparse CSV into a map (URL -> row data)
+        Map<String, String[]> octoparseMap = new HashMap<>();
+            String currLineOctoparse;
+            int iteration = 0;
+            while ((currLineOctoparse = bufferedReaderOcto.readLine()) != null) {
+                if (iteration == 0) { // Skip headers
+                    iteration++;
+                    continue;
+                }
+                String[] currOctoArray = currLineOctoparse.split(",");
+                if (currOctoArray.length >= 4) { // Ensure the array has enough columns
+                    String octoUrl = currOctoArray[3];
+                    octoparseMap.put(octoUrl, currOctoArray);
+                    System.out.println(octoUrl);
+                }
             }
+        
 
-            String[] currOctoArray = currLineOctoparse.split(",");
-            String[] currItemArray = currLineItemDescription.split(",");
-            //will only make the line if the two csv lines match using the url that is search as it wouldnt change, this guareentees different prouducts are not being combined
-            if ((currItemArray.length >= 5) && (currOctoArray.length >= 4)) {
-                if (currItemArray[4].equals(currOctoArray[3])) {
-                String productNumber = StringUtils.deleteWhitespace(currOctoArray[1]); //deletes whitespace that isnt cleaned from scraper
-                int quantity = Integer.parseInt(currItemArray[2]); //casts quantity as int
-                double msrp = Double.parseDouble(currOctoArray[2]); //casts msrp as double
-                double wholeSalePrice = msrp * quantity * .7; //TODO update this when the actiual wholeSaleCalculation is determined!!!!
-                ExcelRow currRow = new ExcelRow(currItemArray[0], productNumber, quantity, msrp, wholeSalePrice, currOctoArray[3]);
-                System.out.println("1st" + currRow.toString());
-                this.excelRows.add(currRow);
+        // Step 2: Iterate over Item Description CSV and match URLs
+            String currLineItemDescription;
+            iteration = 0;
+            while ((currLineItemDescription = bufferedReaderItemDescription.readLine()) != null) {
+                if (iteration == 0) { // Skip headers
+                    iteration++;
+                    continue;
+                }
+                String[] currItemArray = currLineItemDescription.split(",");
+                if (currItemArray.length >= 5) { // Ensure the array has enough columns
+                    String itemUrl = currItemArray[4];
+                    if (octoparseMap.containsKey(itemUrl)) { // URL match found
+                        String[] currOctoArray = octoparseMap.get(itemUrl);
+                        String productNumber = StringUtils.deleteWhitespace(currOctoArray[1]);
+                        int quantity = Integer.parseInt(currItemArray[2].trim());
+                        double msrp = Double.parseDouble(currOctoArray[2].trim());
+                        double wholesalePrice = msrp * quantity * 0.7;
+
+                        ExcelRow currRow = new ExcelRow(currItemArray[0], productNumber, quantity, msrp, wholesalePrice, itemUrl);
+                        this.excelRows.add(currRow);
+                    }
+                }
             }
-        }
-            System.out.println("Uh OH");
-            
-
-        }
+        
     }
 
     //reads lines from csvRows and puts them into a new excel file
@@ -105,8 +121,8 @@ public class CleanExcelFile {
             for (String key : keySet) { 
   
             // Creating a new row in the sheet 
-                Row row = sheet.createRow(rowNum++); 
-    
+                Row row = sheet.createRow(rowNum); 
+                rowNum++;
                 Object[] objArr = dataSheetInfo.get(key); 
                 
                 int cellnum = 0; 
