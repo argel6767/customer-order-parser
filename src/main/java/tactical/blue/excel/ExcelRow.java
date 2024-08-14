@@ -25,6 +25,28 @@ public class ExcelRow {
         this.wholeSalePrice = Double.parseDouble(wholeSalePrice);
     }
 
+    public ExcelRow(){}
+
+    public void setItem(String item) {
+        this.item = item;
+    }
+    
+    public void setProductNumber(String productNumber) {
+        this.productNumber = productNumber;
+    }
+    
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+    
+    public void setMsrp(double msrp) {
+        this.msrp = msrp;
+    }
+    
+    public void setWholeSalePrice(double wholeSalePrice) {
+        this.wholeSalePrice = wholeSalePrice;
+    }
+
     @Override
     public String toString() {
         return this.item + ", " + this.productNumber + ", " + this.quantity + ", " + this.msrp + ", " + this.wholeSalePrice; 
