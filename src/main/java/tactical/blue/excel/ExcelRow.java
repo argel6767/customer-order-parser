@@ -6,23 +6,26 @@ public class ExcelRow {
     private int quantity;
     private double msrp;
     private double wholeSalePrice;
+    private String productURL;
 
 
-    public ExcelRow(String item, String productNumber, int quantity, double msrp, double wholeSalePrice) {
+    public ExcelRow(String item, String productNumber, int quantity, double msrp, double wholeSalePrice, String productURL) {
         this.item = item;
         this.productNumber = productNumber;
         this.quantity = quantity;
         this.msrp = msrp;
         this.wholeSalePrice = wholeSalePrice;
+        this.productURL = productURL;
     }
 
     //If Data is not preformatted before object is constructed
-    public ExcelRow(String item, String productNumber, String quantity, String msrp, String wholeSalePrice) {
+    public ExcelRow(String item, String productNumber, String quantity, String msrp, String wholeSalePrice, String productURL) {
         this.item = item;
         this.productNumber = productNumber;
         this.quantity = Integer.parseInt(quantity);
         this.msrp = Double.parseDouble(msrp);
         this.wholeSalePrice = Double.parseDouble(wholeSalePrice);
+        this.productURL = productURL;
     }
 
     public ExcelRow(){}
@@ -49,11 +52,11 @@ public class ExcelRow {
 
     @Override
     public String toString() {
-        return this.item + ", " + this.productNumber + ", " + this.quantity + ", " + this.msrp + ", " + this.wholeSalePrice; 
+        return this.item + ", " + this.productNumber + ", " + this.quantity + ", " + this.msrp + ", " + this.wholeSalePrice + ", " + this.productURL;
     }
 
     public Object[] toArray() {
-        return new Object[]{item, productNumber, quantity, msrp, wholeSalePrice};
+        return new Object[]{item, productNumber, quantity, msrp, wholeSalePrice, productURL};
     }
 }
 
