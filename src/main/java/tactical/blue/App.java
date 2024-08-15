@@ -3,6 +3,7 @@ package tactical.blue;
 import java.io.File;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
@@ -70,6 +71,11 @@ public class App extends Application {
             webView.getEngine().executeScript("showMessage('Please upload both files before processing.')");
         }
     }
+
+    public void endProgram() {
+        Platform.exit(); // This will close the JavaFX application
+    }
+
 
     public static void main(String[] args) {
         launch(args);
