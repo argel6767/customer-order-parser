@@ -28,6 +28,7 @@ public class CleanExcelFile {
     private BufferedReader bufferedReaderItemDescription;
     private List<ExcelRow> excelRows = new ArrayList<>();
     private XSSFWorkbook workbook;
+    private HashMap<String,Integer> columnHeaderIndex = new HashMap<>();
    
     //constructor that sets up bufferedreader object
     public CleanExcelFile(String fileInOctoparsePath, String fileInItemDescription) {
@@ -78,8 +79,10 @@ public class CleanExcelFile {
         // Step 2: Iterate over Item Description CSV and match URLs
             String currLineItemDescription;
             iteration = 0;
-            while ((currLineItemDescription = bufferedReaderItemDescription.readLine()) != null) {
+            while ((currLineItemDescription = bufferedReaderItemDescription.readLine()) != null) { //getting current row of file
                 if (iteration == 0) { // Skip headers
+                    String[] columnHeaders = currLineItemDescription.split(",");
+                    getExcelColumnNames(columnHeaders);
                     iteration++;
                     continue;
                 }
@@ -88,9 +91,9 @@ public class CleanExcelFile {
                     String itemUrl = currItemArray[4];
                     if (octoparseMap.containsKey(itemUrl)) { // URL match found
                         String[] currOctoArray = octoparseMap.get(itemUrl);
-                        String productNumber = StringUtils.deleteWhitespace(currOctoArray[1]);
-                        int quantity = Integer.parseInt(currItemArray[2].trim());
-                        double msrp = Double.parseDouble(currOctoArray[2].trim());
+                        String productNumber = StringUtils.deleteWhitespace(currOctoArray[columnHeaderIndex.get("SKU")]);
+                        int quantity = Integer.parseInt(currItemArray[columnHeaderIndex.get("Quantity")].trim());
+                        double msrp = Double.parseDouble(currOctoArray[columnHeaderIndex.get("MSRP")].trim());
                         double wholesalePrice = msrp * quantity * 0.7;
 
                         ExcelRow currRow = new ExcelRow(currItemArray[0], productNumber, quantity, msrp, wholesalePrice, itemUrl);
@@ -99,6 +102,12 @@ public class CleanExcelFile {
                 }
             }
         
+    }
+
+    private void getExcelColumnNames(String[] columnHeaders) { //allows for dynamic indexes of headers, should they be in an unexpected order
+        for (int i = 0; i < columnHeaders.length; i++) {
+            columnHeaderIndex.put(columnHeaders[i], i);
+        }
     }
 
     //reads lines from csvRows and puts them into a new excel file
