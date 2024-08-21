@@ -2,7 +2,7 @@ package tactical.blue.excel;
 
 public class ExcelRow {
     private String item;
-    private String productNumber;
+    private String sku;
     private Integer quantity;
     private Double msrp;
     private Double wholeSalePrice;
