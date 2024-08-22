@@ -1,9 +1,12 @@
 package tactical.blue.excel;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class ExcelRow {
-    private String itemName;
-    private String manufacturer;
-    private String sku;
+    private String itemName; //name of item
+    private String manufacturer; //maker of item
+    private String sku; //item sku
     private Integer quantityRequested; //how much of item customer wants
     private Integer quantityNeeded; //how much is actually needed to be bought, depened on packaging
     private String packaging; //how item is sold -- each, box, etc
@@ -13,35 +16,54 @@ public class ExcelRow {
     private final Double MARKUP = 1.30; //markup of customers 
     private Double unitPrice; //price per item customer will pay
     private Double extendedPrice; //entiry quantity of item customer will pay
-    private String source; //website item information was aqcuired from
-    private String productURL;
+    private String source; //website item information was acquired from
+    private String productURL; //url of product page
 
 
     public ExcelRow(String itemName, String sku, int quantity, double msrp, double wholeSalePrice, String productURL) {
         this.itemName = itemName;
         this.sku = sku;
-        this.quantityNeeded = quantity;
+        this.quantityRequested = quantity;
         this.msrp = msrp;
         this.wholeSalePrice = wholeSalePrice;
         this.productURL = productURL;
-        calculateCostAndPrices();
+        calculatePricingAndQuantities();
     }
 
     //If Data is not preformatted before object is constructed
     public ExcelRow(String itemName, String sku, String quantity, String msrp, String wholeSalePrice, String productURL) {
         this.itemName = itemName;
         this.sku = sku;
-        this.quantityNeeded = Integer.valueOf(quantity);
+        this.quantityRequested = Integer.valueOf(quantity);
         this.msrp = Double.valueOf(msrp);
         this.wholeSalePrice = Double.valueOf(wholeSalePrice);
         this.productURL = productURL;
-        calculateCostAndPrices();
+        calculatePricingAndQuantities(); 
     }
 
-    private void calculateCostAndPrices() {
+    //
+    private void calculatePricingAndQuantities() {
+        calculateQuantityNeeded();
         calculateCostOfGoods();
         calculateUnitPrice();
         calculateExtendedPrice();
+    }
+
+    /*
+     * grab the number value of the packaging variable to be able to determine how much
+     * of much of an item needs to be bought then save it to
+     * quantity needed
+     */
+    private void calculateQuantityNeeded() {
+        //create Pattern and matcher objects to find the digits in the in String packaging 
+        Pattern pattern = Pattern.compile("\\d+");
+        Matcher matcher = pattern.matcher(this.packaging);
+
+        String extractedValueString = matcher.group();
+        double extractedPackagingVal = Double.parseDouble(extractedValueString);
+
+        double quantityNeededToBuy = Math.ceil(this.quantityRequested/extractedPackagingVal); //round up as cannot will need to buy additional box/case if it theres remaineder
+        setQuantityNeeded((int)quantityNeededToBuy);
     }
 
     /*
@@ -63,7 +85,7 @@ public class ExcelRow {
     }
 
 
-
+    //getters and setters
     public String getItemName() {
         return this.itemName;
     }
