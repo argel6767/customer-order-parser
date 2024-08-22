@@ -37,7 +37,51 @@ public class ExcelRowTest {
         // Assert that the quantity requested is correctly set
         assertEquals(15, row.getQuantityRequested());
     }
+    
+    @Test
+    void testCalculateQuantityNeeded_ValidPackagingWithNumber() {
+        // Test valid packaging with a number (e.g., 5/Box)
+        ExcelRow row = new ExcelRow("Laptop", "SKU123", 5, "5/Box", 999.99, 500.00, "https://example.com/laptop");
         
+        // Expected quantity needed: ceil(5 / 5) = 1
+        assertEquals(1, row.getQuantityNeeded());
+    }
+
+    @Test
+    void testCalculateQuantityNeeded_ValidPackagingWithEach() {
+        // Test valid packaging with "each" (singular item packaging)
+        ExcelRow row = new ExcelRow("Mouse", "SKU456", 7, "Each", 49.99, 20.00, "https://example.com/mouse");
+        
+        // Expected quantity needed: ceil(7 / 1) = 7
+        assertEquals(7, row.getQuantityNeeded());
+    }
+
+    @Test
+    void testCalculateQuantityNeeded_EmptyPackaging() {
+        // Test case with empty packaging (treating as each item)
+        ExcelRow row = new ExcelRow("Keyboard", "SKU789", 3, "", 79.99, 30.00, "https://example.com/keyboard");
+        
+        // Expected quantity needed: ceil(3 / 1) = 3
+        assertEquals(3, row.getQuantityNeeded());
+    }
+
+    @Test
+    void testCalculateQuantityNeeded_InvalidPackagingNoNumber() {
+        // Test case where packaging has no number and is not "each"
+        ExcelRow row = new ExcelRow("Monitor", "SKU101", 10, "Box", 199.99, 100.00, "https://example.com/monitor");
+        
+        // Expected quantity needed: fallback to treating it as "each"
+        assertEquals(10, row.getQuantityNeeded());
+    }
+
+    @Test
+    void testCalculateQuantityNeeded_InvalidPackagingFormat() {
+        // Test case with an invalid packaging format
+        ExcelRow row = new ExcelRow("Phone", "SKU555", 8, "InvalidFormat", 699.99, 400.00, "https://example.com/phone");
+        
+        // Expected quantity needed: fallback to treating it as "each"
+        assertEquals(8, row.getQuantityNeeded());
+    }
      
    
 }

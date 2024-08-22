@@ -71,7 +71,7 @@ public class ExcelRow {
         if (numberPartOfPackaging != null && !numberPartOfPackaging.isEmpty()) { 
             extractedPackagingVal = Double.parseDouble(numberPartOfPackaging);
         } 
-        else if (textPartOfPackaging.contains("each") || textPartOfPackaging.isEmpty()) { //checking if its just each, ie packaged singular
+        else if (textPartOfPackaging.contains("each") || textPartOfPackaging.isEmpty() || numberPartOfPackaging == null) { //checking if its just each, ie packaged singular
             extractedPackagingVal = 1;
         }
 
