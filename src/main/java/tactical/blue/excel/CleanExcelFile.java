@@ -70,8 +70,8 @@ public class CleanExcelFile {
                     continue;
                 }
                 String[] currOctoArray = currLineOctoparse.split(",");
-                if (currOctoArray.length >= 4) { // Ensure the array has enough columns
-                    String octoUrl = currOctoArray[3];
+                if (currOctoArray.length >= 7) { // Ensure the array has enough columns
+                    String octoUrl = currOctoArray[1]; //url of item in octoparse file
                     octoparseMap.put(octoUrl, currOctoArray);
                     System.out.println(octoUrl);
                 }
@@ -93,12 +93,11 @@ public class CleanExcelFile {
                     String itemUrl = currItemArray[4];
                     if (octoparseMap.containsKey(itemUrl)) { // URL match found
                         String[] currOctoArray = octoparseMap.get(itemUrl);
-                        String productNumber = StringUtils.deleteWhitespace(currOctoArray[columnHeaderIndex.get("SKU")]);
+                        String sku = StringUtils.deleteWhitespace(currOctoArray[columnHeaderIndex.get("SKU")]);
                         int quantity = Integer.parseInt(currItemArray[columnHeaderIndex.get("Quantity")].trim());
                         double msrp = Double.parseDouble(currOctoArray[columnHeaderIndex.get("MSRP")].trim());
-                        double wholesalePrice = msrp * quantity * 0.7;
 
-                        ExcelRow currRow = new ExcelRow(currItemArray[0], productNumber, quantity, msrp, wholesalePrice, itemUrl);
+                        ExcelRow currRow = new ExcelRow(currItemArray[0], sku, quantity, msrp, wholesalePrice, itemUrl);
                         this.excelRows.add(currRow);
                     }
                 }
@@ -110,6 +109,44 @@ public class CleanExcelFile {
         for (int i = 0; i < columnHeaders.length; i++) {
             columnHeaderIndex.put(columnHeaders[i], i);
         }
+    }
+
+    /*
+     * Determines what website the items are being sourced from to determine correct way to format rows
+     * and get data
+     */
+    private ExcelRow method(String[] currOctoArray, Map<String, String[]> octoparseMap) {
+        switch (this.citeName) {
+            case "HenrySchein":
+                return henryScheinExcelRow(currItemArray, octoparseMap);
+            case "Boundtree":
+                return boundTreeExcelRow(currOctoArray);
+            default:
+                throw new AssertionError();
+        }
+    }
+
+    private ExcelRow henryScheinExcelRow(String[] currItemArray, Map<String, String[]> octoparseMap) {
+        if (currItemArray.length >= 5) { // Ensure the array has enough columns
+            String itemUrl = currItemArray[4];
+            if (octoparseMap.containsKey(itemUrl)) { // URL match found
+                String[] currOctoArray = octoparseMap.get(itemUrl);
+                String manufacturerInfo = StringUtils.deleteWhitespace(currOctoArray[columnHeaderIndex.get("Manufacturer")]);
+                int quantity = Integer.parseInt(currItemArray[columnHeaderIndex.get("Quantity")].trim());
+                String packaging = currOctoArray[columnHeaderIndex.get("Packaging")];
+                double msrp = Double.parseDouble(currOctoArray[columnHeaderIndex.get("MSRP")].trim());
+                double wholesalePrice = Double.parseDouble(currOctoArray[columnHeaderIndex.get("Price")]);
+
+                ExcelRow currRow = new ExcelRow(currItemArray[2], manufacturerInfo, quantity, packaging, msrp, wholesalePrice, itemUrl);
+                return currRow;
+            }
+            
+        }
+        return null;
+    }
+
+    private ExcelRow boundTreeExcelRow(String[] currOctoArray) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     //reads lines from csvRows and puts them into a new excel file
@@ -167,4 +204,5 @@ public class CleanExcelFile {
         }
 
         }
+
 }

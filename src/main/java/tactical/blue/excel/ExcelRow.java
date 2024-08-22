@@ -19,7 +19,9 @@ public class ExcelRow {
     private String source; //website item information was acquired from
     private String productURL; //url of product page
 
-
+    /*
+     * Can be used by Boundtree
+     */
     public ExcelRow(String itemName, String manufacturer, String sku, int quantityRequested, String packaging, double msrp, double wholeSalePrice, String productURL) {
         this.itemName = itemName;
         this.sku = sku;
