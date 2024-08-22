@@ -23,6 +23,7 @@ public class ExcelRow {
     public ExcelRow(String itemName, String sku, int quantityRequested, String packaging, double msrp, double wholeSalePrice, String productURL) {
         this.itemName = itemName;
         this.sku = sku;
+        this.packaging = packaging;
         this.quantityRequested = quantityRequested;
         this.msrp = msrp;
         this.wholeSalePrice = wholeSalePrice;
@@ -34,6 +35,7 @@ public class ExcelRow {
     public ExcelRow(String itemName, String sku, String quantityRequested, String packaging, String msrp, String wholeSalePrice, String productURL) {
         this.itemName = itemName;
         this.sku = sku;
+        this.packaging = packaging;
         this.quantityRequested = Integer.valueOf(quantityRequested);
         this.msrp = Double.valueOf(msrp);
         this.wholeSalePrice = Double.valueOf(wholeSalePrice);
@@ -56,14 +58,27 @@ public class ExcelRow {
      */
     private void calculateQuantityNeeded() {
         //create Pattern and matcher objects to find the digits in the in String packaging 
-        Pattern pattern = Pattern.compile("\\d+");
-        Matcher matcher = pattern.matcher(this.packaging);
+        Pattern pattern = Pattern.compile("(\\d+)?\\s*(.*)"); //look for the number and its packing method
+        Matcher matcher = pattern.matcher(this.packaging.toLowerCase());
 
-        String extractedValueString = matcher.group();
-        double extractedPackagingVal = Double.parseDouble(extractedValueString);
+        
+        if (matcher.matches()) { //check if there is any matches to regex in packaging string
+        String numberPartOfPackaging = matcher.group(1);
+        String textPartOfPackaging = matcher.group(2);
+        double extractedPackagingVal = 0;
+
+        
+        if (numberPartOfPackaging != null && !numberPartOfPackaging.isEmpty()) { 
+            extractedPackagingVal = Double.parseDouble(numberPartOfPackaging);
+        } 
+        else if (textPartOfPackaging.contains("each") || textPartOfPackaging.isEmpty()) { //checking if its just each, ie packaged singular
+            extractedPackagingVal = 1;
+        }
 
         double quantityNeededToBuy = Math.ceil(this.quantityRequested/extractedPackagingVal); //round up as cannot will need to buy additional box/case if it theres remaineder
         setQuantityNeeded((int)quantityNeededToBuy);
+        }
+        else System.out.print("No Matches Found");
     }
 
     /*

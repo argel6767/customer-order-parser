@@ -28,7 +28,7 @@ public class ExcelRowTest {
         // Assert that the quantity needed is calculated correctly
         assertEquals(expectedQuantityNeeded, row.getQuantityNeeded());
     }
-
+    
     @Test
     void testGetQuantityRequested() {
         // Creating an ExcelRow object
@@ -37,4 +37,7 @@ public class ExcelRowTest {
         // Assert that the quantity requested is correctly set
         assertEquals(15, row.getQuantityRequested());
     }
+        
+     
+   
 }
