@@ -29,6 +29,7 @@ public class ExcelRow {
         this.wholeSalePrice = wholeSalePrice;
         this.productURL = productURL;
         calculatePricingAndQuantities();
+        determineSourceUsingProductURL();
     }
 
     //If Data is not preformatted before object is constructed
@@ -41,6 +42,7 @@ public class ExcelRow {
         this.wholeSalePrice = Double.valueOf(wholeSalePrice);
         this.productURL = productURL;
         calculatePricingAndQuantities(); 
+        determineSourceUsingProductURL();
     }
 
     //
@@ -79,6 +81,27 @@ public class ExcelRow {
         setQuantityNeeded((int)quantityNeededToBuy);
         }
         else System.out.print("No Matches Found");
+    }
+
+    //find the source of the item bought using the url of the product page
+    private void determineSourceUsingProductURL() {
+        String urlLowerCase = this.productURL.toLowerCase(); // Convert to lowercase for easier matching
+        
+        if (urlLowerCase.contains("boundtree") || urlLowerCase.contains("boundtree.com")) {
+            this.source = "Boundtree";
+        } else if (urlLowerCase.contains("henryschein") || urlLowerCase.contains("henryschein.com")) {
+            this.source = "Henry Schein";
+        } else if (urlLowerCase.contains("narescue") || urlLowerCase.contains("north american rescue")) {
+            this.source = "North American Rescue";
+        } else if (urlLowerCase.contains("dynarex") || urlLowerCase.contains("dynarex.com")) {
+            this.source = "Dynarex";
+        } else if (urlLowerCase.contains("medco-athletics") || urlLowerCase.contains("medco sports medicine")) {
+            this.source = "Medco Sports Medicine";
+        } else if (urlLowerCase.contains("login required")) {
+            this.source = "Login Required";
+        } else {
+            this.source = "Unknown";
+        }
     }
 
     /*

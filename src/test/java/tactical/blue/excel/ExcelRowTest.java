@@ -83,5 +83,68 @@ public class ExcelRowTest {
         assertEquals(8, row.getQuantityNeeded());
     }
      
+    @Test
+    void testSourceBoundtree() {
+        // Create ExcelRow object with Boundtree URL
+        ExcelRow row = new ExcelRow("Laptop", "SKU123", 5, "5/Box", 999.99, 500.00, "https://www.boundtree.com/product/123");
+
+        // Assert the source is correctly identified as Boundtree
+        assertEquals("Boundtree", row.getSource());
+    }
+
+    @Test
+    void testSourceHenrySchein() {
+        // Create ExcelRow object with Henry Schein URL
+        ExcelRow row = new ExcelRow("Mouse", "SKU456", 10, "10/Pack", 49.99, 20.00, "https://www.henryschein.com/product/456");
+
+        // Assert the source is correctly identified as Henry Schein
+        assertEquals("Henry Schein", row.getSource());
+    }
+
+    @Test
+    void testSourceNorthAmericanRescue() {
+        // Create ExcelRow object with North American Rescue URL
+        ExcelRow row = new ExcelRow("Bandage", "SKU789", 7, "Each", 19.99, 10.00, "https://www.narescue.com/product/789");
+
+        // Assert the source is correctly identified as North American Rescue
+        assertEquals("North American Rescue", row.getSource());
+    }
+
+    @Test
+    void testSourceDynarex() {
+        // Create ExcelRow object with Dynarex URL
+        ExcelRow row = new ExcelRow("Gauze", "SKU101", 12, "12/Pack", 29.99, 15.00, "https://www.dynarex.com/product/101");
+
+        // Assert the source is correctly identified as Dynarex
+        assertEquals("Dynarex", row.getSource());
+    }
+
+    @Test
+    void testSourceMedcoSportsMedicine() {
+        // Create ExcelRow object with Medco Sports Medicine URL
+        ExcelRow row = new ExcelRow("Tape", "SKU555", 8, "8/Pack", 5.99, 3.00, "https://www.medco-athletics.com/product/555");
+
+        // Assert the source is correctly identified as Medco Sports Medicine
+        assertEquals("Medco Sports Medicine", row.getSource());
+    }
+
+    @Test
+    void testSourceLoginRequired() {
+        // Create ExcelRow object with 'Login Required' in the product URL
+        ExcelRow row = new ExcelRow("Gloves", "SKU666", 20, "20/Box", 15.99, 8.00, "Login required to access");
+
+        // Assert the source is identified as Login Required
+        assertEquals("Login Required", row.getSource());
+    }
+
+    @Test
+    void testSourceUnknown() {
+        // Create ExcelRow object with an unknown product URL
+        ExcelRow row = new ExcelRow("Unknown Item", "SKU999", 1, "Each", 1.99, 0.99, "https://www.unknown.com/product/999");
+
+        // Assert the source is identified as Unknown
+        assertEquals("Unknown", row.getSource());
+    }
+
    
 }
