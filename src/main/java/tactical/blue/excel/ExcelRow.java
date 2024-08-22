@@ -20,10 +20,10 @@ public class ExcelRow {
     private String productURL; //url of product page
 
 
-    public ExcelRow(String itemName, String sku, int quantity, double msrp, double wholeSalePrice, String productURL) {
+    public ExcelRow(String itemName, String sku, int quantityRequested, String packaging, double msrp, double wholeSalePrice, String productURL) {
         this.itemName = itemName;
         this.sku = sku;
-        this.quantityRequested = quantity;
+        this.quantityRequested = quantityRequested;
         this.msrp = msrp;
         this.wholeSalePrice = wholeSalePrice;
         this.productURL = productURL;
@@ -31,10 +31,10 @@ public class ExcelRow {
     }
 
     //If Data is not preformatted before object is constructed
-    public ExcelRow(String itemName, String sku, String quantity, String msrp, String wholeSalePrice, String productURL) {
+    public ExcelRow(String itemName, String sku, String quantityRequested, String packaging, String msrp, String wholeSalePrice, String productURL) {
         this.itemName = itemName;
         this.sku = sku;
-        this.quantityRequested = Integer.valueOf(quantity);
+        this.quantityRequested = Integer.valueOf(quantityRequested);
         this.msrp = Double.valueOf(msrp);
         this.wholeSalePrice = Double.valueOf(wholeSalePrice);
         this.productURL = productURL;
