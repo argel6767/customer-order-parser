@@ -66,7 +66,9 @@ public class CleanExcelFile {
             int iteration = 0;
             while ((currLineOctoparse = bufferedReaderOcto.readLine()) != null) {
                 if (iteration == 0) { // Skip headers
-                    iteration++;
+                    iteration++; 
+                    String[] columnHeaders = currLineOctoparse.split(",");
+                    getExcelColumnNames(columnHeaders);
                     continue;
                 }
                 String[] currOctoArray = currLineOctoparse.split(",");
@@ -83,23 +85,13 @@ public class CleanExcelFile {
             iteration = 0;
             while ((currLineItemDescription = bufferedReaderItemDescription.readLine()) != null) { //getting current row of file
                 if (iteration == 0) { // Skip headers
-                    String[] columnHeaders = currLineItemDescription.split(",");
-                    getExcelColumnNames(columnHeaders);
                     iteration++;
                     continue;
                 }
                 String[] currItemArray = currLineItemDescription.split(",");
-                if (currItemArray.length >= 5) { // Ensure the array has enough columns
-                    String itemUrl = currItemArray[4];
-                    if (octoparseMap.containsKey(itemUrl)) { // URL match found
-                        String[] currOctoArray = octoparseMap.get(itemUrl);
-                        String sku = StringUtils.deleteWhitespace(currOctoArray[columnHeaderIndex.get("SKU")]);
-                        int quantity = Integer.parseInt(currItemArray[columnHeaderIndex.get("Quantity")].trim());
-                        double msrp = Double.parseDouble(currOctoArray[columnHeaderIndex.get("MSRP")].trim());
-
-                        ExcelRow currRow = new ExcelRow(currItemArray[0], sku, quantity, msrp, wholesalePrice, itemUrl);
-                        this.excelRows.add(currRow);
-                    }
+                ExcelRow currentRow = parseRowBasedOnSite(currItemArray, octoparseMap);
+                if (currentRow != null) { //checks if valid row, will be not if not
+                    this.excelRows.add(currentRow);
                 }
             }
         
@@ -115,12 +107,12 @@ public class CleanExcelFile {
      * Determines what website the items are being sourced from to determine correct way to format rows
      * and get data
      */
-    private ExcelRow method(String[] currOctoArray, Map<String, String[]> octoparseMap) {
+    private ExcelRow parseRowBasedOnSite(String[] currItemArray, Map<String, String[]> octoparseMap) {
         switch (this.citeName) {
             case "HenrySchein":
                 return henryScheinExcelRow(currItemArray, octoparseMap);
             case "Boundtree":
-                return boundTreeExcelRow(currOctoArray);
+                return boundTreeExcelRow(currItemArray, octoparseMap);
             default:
                 throw new AssertionError();
         }
@@ -142,10 +134,10 @@ public class CleanExcelFile {
             }
             
         }
-        return null;
+        return null; //will return null if line is not valid
     }
 
-    private ExcelRow boundTreeExcelRow(String[] currOctoArray) {
+    private ExcelRow boundTreeExcelRow(String[] currOctoArray, Map<String, String[]> octoparseMap) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

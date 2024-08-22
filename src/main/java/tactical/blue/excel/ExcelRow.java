@@ -24,6 +24,7 @@ public class ExcelRow {
      */
     public ExcelRow(String itemName, String manufacturer, String sku, int quantityRequested, String packaging, double msrp, double wholeSalePrice, String productURL) {
         this.itemName = itemName;
+        this.manufacturer = manufacturer;
         this.sku = sku;
         this.packaging = packaging;
         this.quantityRequested = quantityRequested;
@@ -37,6 +38,7 @@ public class ExcelRow {
     //If Data is not preformatted before object is constructed
     public ExcelRow(String itemName, String manufacturer, String sku, String quantityRequested, String packaging, String msrp, String wholeSalePrice, String productURL) {
         this.itemName = itemName;
+        this.manufacturer = manufacturer;
         this.sku = sku;
         this.packaging = packaging;
         this.quantityRequested = Integer.valueOf(quantityRequested);
@@ -47,20 +49,21 @@ public class ExcelRow {
         determineSourceUsingProductURL();
     }
 
-    /*
-     * Must be used for HenrySchein data as manufacturer and SKU are tied to the same element on the web page
-     */
-    public ExcelRow(String itemName, String manufacturerInfo, int quantityRequested, String packaging, double msrp, double wholeSalePrice, String productURL) {
+
+    public ExcelRow(String itemName, int quantityRequested, String packaging, double msrp, double wholeSalePrice, String productURL) {
         this.itemName = itemName;
-        setManufactuerAndSKUHenrySchein(manufacturerInfo);
-        this.packaging = packaging;
         this.quantityRequested = quantityRequested;
+        this.packaging = packaging;
         this.msrp = msrp;
         this.wholeSalePrice = wholeSalePrice;
         this.productURL = productURL;
         calculatePricingAndQuantities();
-        determineSourceUsingProductURL();
     }
+    
+
+    /*
+     * Must be used for HenrySchein data as manufacturer and SKU are tied to the same element on the web page
+     */
 
     //
     private void calculatePricingAndQuantities() {
@@ -119,14 +122,6 @@ public class ExcelRow {
         } else {
             this.source = "Unknown";
         }
-    }
-
-    private void setManufactuerAndSKUHenrySchein(String manufacturerInfo) {
-        String [] manufacturerAndSKU = manufacturerInfo.split("\\R+");
-        String manufacturer = manufacturerAndSKU[1].trim();
-        String sku = manufacturerAndSKU[2].trim();
-        setManufacturer(manufacturer);
-        setSKU(sku);
     }
 
     /*
