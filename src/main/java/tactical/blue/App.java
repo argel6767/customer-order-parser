@@ -17,6 +17,7 @@ public class App extends Application {
     private File fileInItemDescription;
     private WebView webView;
     private Stage primaryStage; // Hold a reference to the primary stage
+    private String selectedEcommerceSite;
 
     @Override
     public void start(Stage stage) {
@@ -57,14 +58,14 @@ public class App extends Application {
         return fileChooser.showOpenDialog(primaryStage); // Use the primary stage for the dialog
     }
 
-    public void processFiles() {
+    public void processFiles(String selectedEccomerceSite) {
+        this.selectedEcommerceSite = selectedEccomerceSite;
         if (fileInOctoparse != null && fileInItemDescription != null) {
             try {
-                CleanExcelFile cleaner = new CleanExcelFile(fileInOctoparse.getPath(), fileInItemDescription.getPath());
+                CleanExcelFile cleaner = new CleanExcelFile(fileInOctoparse.getPath(), fileInItemDescription.getPath(), selectedEccomerceSite);
                 cleaner.makeNewExcelFile();
                 webView.getEngine().executeScript("showMessage('Excel file created successfully!')");
             } catch (Exception e) {
-                e.printStackTrace();
                 webView.getEngine().executeScript("showMessage('Error processing files: " + e.getMessage() + "')");
             }
         } else {

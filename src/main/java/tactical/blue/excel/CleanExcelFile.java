@@ -23,6 +23,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class CleanExcelFile {
     private File fileInOctoparse;
     private File fileInItemDescription;
+    private String citeName;
     private final File DIRECTORY = new File("weekly-scrape");
     private BufferedReader bufferedReaderOcto;
     private BufferedReader bufferedReaderItemDescription;
@@ -31,9 +32,10 @@ public class CleanExcelFile {
     private HashMap<String,Integer> columnHeaderIndex = new HashMap<>();
    
     //constructor that sets up bufferedreader object
-    public CleanExcelFile(String fileInOctoparsePath, String fileInItemDescription) {
+    public CleanExcelFile(String fileInOctoparsePath, String fileInItemDescription, String citeName) {
         this.fileInOctoparse = new File(fileInOctoparsePath);
         this.fileInItemDescription = new File(fileInItemDescription);
+        this.citeName = citeName;
         try {
         this.bufferedReaderOcto = new BufferedReader(new FileReader(fileInOctoparse));
         this.bufferedReaderItemDescription = new BufferedReader(new FileReader(fileInItemDescription));

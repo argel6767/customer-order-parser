@@ -1,52 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="stylesheet" href="style.css">
     <title>Excel File Processor</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f0f0f0;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #333;
-        }
-        button {
-            background-color: #4CAF50;
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-        #message {
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 4px;
-        }
-        .success {
-            background-color: #dff0d8;
-            color: #3c763d;
-        }
-        .error {
-            background-color: #f2dede;
-            color: #a94442;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
@@ -59,27 +15,19 @@
         <br><br>
         <button onclick="javabridge.processFiles()">Process Files</button>
         <div id="message"></div>
+         <!-- E-commerce site selection -->
+         <label for="ecommerceSite">Select E-commerce Site:</label><br>
+         <input type="radio" id="boundtree" name="ecommerceSite" value="Boundtree">
+         <label for="boundtree">Boundtree</label><br>
+         <input type="radio" id="northAmericanRescue" name="ecommerceSite" value="North American Rescue">
+         <label for="northAmericanRescue">North American Rescue</label><br>
+         <input type="radio" id="medco" name="ecommerceSite" value="Medco Sports Medicine">
+         <label for="medco">Medco Sports Medicine</label><br>
+         <input type="radio" id="henrySchein" name="ecommerceSite" value="Henry Schein">
+         <label for="henrySchein">Henry Schein</label><br><br>
         <button class="end-button" onclick="javabridge.endProgram()">End Program</button>
     </div>
 
-    <script>
-        function updateOctoparseFileName(name) {
-            document.getElementById('octoparseFileName').textContent = name;
-        }
-
-        function updateItemDescriptionFileName(name) {
-            document.getElementById('itemDescriptionFileName').textContent = name;
-        }
-
-        function showMessage(msg) {
-            var messageDiv = document.getElementById('message');
-            messageDiv.textContent = msg;
-            if (msg.includes('successfully')) {
-                messageDiv.className = 'success';
-            } else {
-                messageDiv.className = 'error';
-            }
-        }
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
