@@ -118,7 +118,7 @@ public class CleanExcelFile {
         }
     }
 
-    private ExcelRow henryScheinExcelRow(String[] currItemArray, Map<String, String[]> octoparseMap) {
+    private HenryScheinExcelRow henryScheinExcelRow(String[] currItemArray, Map<String, String[]> octoparseMap) {
         if (currItemArray.length >= 5) { // Ensure the array has enough columns
             String itemUrl = currItemArray[4];
             if (octoparseMap.containsKey(itemUrl)) { // URL match found
@@ -129,8 +129,7 @@ public class CleanExcelFile {
                 double msrp = Double.parseDouble(currOctoArray[columnHeaderIndex.get("MSRP")].trim());
                 double wholesalePrice = Double.parseDouble(currOctoArray[columnHeaderIndex.get("Price")]);
 
-                ExcelRow currRow = new ExcelRow(currItemArray[2], manufacturerInfo, quantity, packaging, msrp, wholesalePrice, itemUrl);
-                return currRow;
+                return new HenryScheinExcelRow(currItemArray[2], manufacturerInfo, quantity, packaging, msrp, wholesalePrice, itemUrl);
             }
             
         }
