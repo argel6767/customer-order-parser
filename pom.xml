@@ -48,6 +48,11 @@
         <version>5.10.2</version>
         <scope>test</scope>
     </dependency>
+    <dependency>
+    <groupId>com.konghq</groupId>
+    <artifactId>unirest-java</artifactId>
+    <version>3.14.1</version>
+</dependency>
     
     <!-- JUnit Platform Launcher -->
     <dependency>
