@@ -9,4 +9,5 @@ module tactical.blue {
     requires java.base;
     requires org.apache.commons.lang3;
     requires jdk.jsobject;
+    requires unirest.java;
 }
