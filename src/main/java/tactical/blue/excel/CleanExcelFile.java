@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -114,8 +113,12 @@ public class CleanExcelFile {
         switch (this.citeName) {
             case "HenrySchein":
                 return henryScheinExcelRow(currItemArray, octoparseMap);
-            case "Boundtree":
+            case "BoundTree":
                 return boundTreeExcelRow(currItemArray, octoparseMap);
+            case "Medco":
+                return medcoExcelRow(currItemArray, octoparseMap);
+            case "NARescue":
+                return naRescueExcelRow(currItemArray, octoparseMap);
             default:
                 throw new AssertionError();
         }
@@ -139,8 +142,19 @@ public class CleanExcelFile {
         return null; //will return null if line is not valid
     }
 
+
     private ExcelRow boundTreeExcelRow(String[] currOctoArray, Map<String, String[]> octoparseMap) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private ExcelRow medcoExcelRow(String[] currItemArray, Map<String, String[]> octoparseMap) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'medcoExcelRow'");
+    }
+
+    private ExcelRow naRescueExcelRow(String[] currItemArray, Map<String, String[]> octoparseMap) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'medcoExcelRow'");
     }
 
     //reads lines from csvRows and puts them into a new excel file
@@ -148,7 +162,7 @@ public class CleanExcelFile {
         this.workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("weekly price report");
 
-        Map<String, Object[]> dataSheetInfo = new TreeMap<>();
+        Map<String, Object[]> dataSheetInfo = new HashMap<>();
         dataSheetInfo.put("1", new Object[] {"Item", "Product Number", "Quantity", "MSRP", "Wholesale Price", "ProductURL"}); //headers
         
         int index = 2;
