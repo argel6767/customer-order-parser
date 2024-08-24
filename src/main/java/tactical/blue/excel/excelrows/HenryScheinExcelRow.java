@@ -1,5 +1,8 @@
 package tactical.blue.excel.excelrows;
 
+/*
+ * Product, Source, Price, Packaging, Manufactuer
+ */
 public class HenryScheinExcelRow extends ExcelRow{
 
     private final String SOURCE = "HenrySchein";

@@ -108,7 +108,7 @@ public class ExcelRow {
             this.source = "Boundtree";
         } else if (urlLowerCase.contains("henryschein") || urlLowerCase.contains("henryschein.com")) {
             this.source = "Henry Schein";
-        } else if (urlLowerCase.contains("narescue") || urlLowerCase.contains("north american rescue")) {
+        } else if (urlLowerCase.contains("narescue") || urlLowerCase.contains("narescue")) {
             this.source = "North American Rescue";
         } else if (urlLowerCase.contains("dynarex") || urlLowerCase.contains("dynarex.com")) {
             this.source = "Dynarex";
