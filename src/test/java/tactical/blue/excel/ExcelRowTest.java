@@ -1,7 +1,9 @@
-package tactical.blue.excel;
+package tactical.blue.excel.excelrows;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
+
+import tactical.blue.excel.excelrows.ExcelRow;
 
 public class ExcelRowTest {
     @Test

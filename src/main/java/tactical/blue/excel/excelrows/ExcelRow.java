@@ -1,4 +1,4 @@
-package tactical.blue.excel;
+package tactical.blue.excel.excelrows;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -61,10 +61,7 @@ public class ExcelRow {
     }
     
 
-    /*
-     * Must be used for HenrySchein data as manufacturer and SKU are tied to the same element on the web page
-     */
-
+    
     //
     private void calculatePricingAndQuantities() {
         calculateQuantityNeeded();
@@ -97,7 +94,7 @@ public class ExcelRow {
             extractedPackagingVal = 1;
         }
 
-        double quantityNeededToBuy = Math.ceil(this.quantityRequested/extractedPackagingVal); //round up as cannot will need to buy additional box/case if it theres remaineder
+        double quantityNeededToBuy = Math.ceil(this.quantityRequested/extractedPackagingVal); //round up as will need to buy additional box/case if it theres remaineder
         setQuantityNeeded((int)quantityNeededToBuy);
         }
         else System.out.print("No Matches Found");

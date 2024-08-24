@@ -20,6 +20,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import tactical.blue.excel.excelrows.ExcelRow;
+import tactical.blue.excel.excelrows.HenryScheinExcelRow;
+
 public class CleanExcelFile {
     private File fileInOctoparse;
     private File fileInItemDescription;

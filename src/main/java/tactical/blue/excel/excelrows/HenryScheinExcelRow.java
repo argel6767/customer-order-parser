@@ -1,4 +1,4 @@
-package tactical.blue.excel;
+package tactical.blue.excel.excelrows;
 
 public class HenryScheinExcelRow extends ExcelRow{
 
@@ -10,6 +10,9 @@ public class HenryScheinExcelRow extends ExcelRow{
         setSource(this.SOURCE);
     }
 
+    /*
+     * Must be used for HenrySchein data as manufacturer and SKU are tied to the same element on the web page
+     */
 
     private void setManufactuerAndSKU(String manufacturerInfo) {
         String [] manufacturerAndSKU = manufacturerInfo.split("\\R+");
