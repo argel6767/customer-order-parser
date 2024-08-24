@@ -30,7 +30,7 @@ public class OpenAIClient {
             .body(jsonBody)
             .asJson();
 
-        // Print the response
+        // return the response if successful
         if (response.getStatus() == 200) {
             String packaging = response.getBody().getObject().getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content"); //grabbing the response from the entire json object that is returned
             return packaging;

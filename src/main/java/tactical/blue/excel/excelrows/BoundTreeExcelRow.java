@@ -5,7 +5,7 @@ package tactical.blue.excel.excelrows;
  * Results, Item, Manufacturer, SKU, Original_Url, Our_Price, List_Price, Packaging, (Amount_Per_Package)sometimes, unless its each
  */
 public class BoundTreeExcelRow extends ExcelRow{
-//TODO add a combiner of the value number in a package and the actual package, CS/BX/etc
+    
     public BoundTreeExcelRow(String itemName, String manufacturer, String sku, int quantityRequested, String packagingType, String amountPerPackage, double msrp, double wholeSalePrice, String productURL) {
         super(itemName, manufacturer, sku, quantityRequested, formatPackaging(amountPerPackage, packagingType), msrp, wholeSalePrice, productURL);
     }
