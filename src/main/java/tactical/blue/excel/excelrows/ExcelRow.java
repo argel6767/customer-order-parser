@@ -1,8 +1,5 @@
 package tactical.blue.excel.excelrows;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import tactical.blue.excel.api.OpenAIClient;
 
 public class ExcelRow {
@@ -31,7 +28,7 @@ public class ExcelRow {
         this.msrp = msrp;
         this.wholeSalePrice = wholeSalePrice;
         this.productURL = productURL;
-        calculatePricingAndQuantities();
+        calculatePricingAndQuantities(packaging);
         determineSourceUsingProductURL();
     }
 
@@ -45,7 +42,7 @@ public class ExcelRow {
         this.msrp = Double.valueOf(msrp);
         this.wholeSalePrice = Double.valueOf(wholeSalePrice);
         this.productURL = productURL;
-        calculatePricingAndQuantities(); 
+        calculatePricingAndQuantities(packaging); 
         determineSourceUsingProductURL();
     }
 
@@ -57,7 +54,7 @@ public class ExcelRow {
         this.msrp = msrp;
         this.wholeSalePrice = wholeSalePrice;
         this.productURL = productURL;
-        calculatePricingAndQuantities();
+        calculatePricingAndQuantities(packaging);
     }
     
     /*
@@ -88,21 +85,29 @@ public class ExcelRow {
     /*
      * Grabs the number portion of a packaging item and returns it as an int
      */
+
     private int getNumberPartOfPackagingOnly(String packaging) {
-        int indexOfSlash = packaging.indexOf("/");
-        if (indexOfSlash != -1) {
-            String number = packaging.substring(0,indexOfSlash).replaceAll("\\D", "");
-            return Integer.parseInt(number);
+        if (packaging.length() < 1) {
+            return 1;
         }
-        return 1; //no numbers found
+        int index = 0;
+        String digit = "";
+        while (Character.isDigit(packaging.charAt(index))) {
+            digit += packaging.charAt(index);
+            index++;
+        }
+        if (digit.equals("")) {
+            return 1;
+        }
+        return Integer.parseInt(digit);
     }
 
 
     /*
      * Caluclates various important values for excel row, that are not potentially given directly by websites or customers
      */
-    private void calculatePricingAndQuantities() {
-        calculateQuantityNeeded();
+    private void calculatePricingAndQuantities(String packaging) {
+        calculateQuantityNeeded(packaging);
         calculateCostOfGoods();
         calculateUnitPrice();
         calculateExtendedPrice();
@@ -113,29 +118,10 @@ public class ExcelRow {
      * of much of an item needs to be bought then save it to
      * quantity needed
      */
-    private void calculateQuantityNeeded() {
-        //create Pattern and matcher objects to find the digits in the in String packaging 
-        Pattern pattern = Pattern.compile("(\\d+)?\\s*(.*)"); //look for the number and its packing method
-        Matcher matcher = pattern.matcher(this.packaging.toLowerCase());
-
-        
-        if (matcher.matches()) { //check if there is any matches to regex in packaging string
-        String numberPartOfPackaging = matcher.group(1);
-        String textPartOfPackaging = matcher.group(2);
-        double extractedPackagingVal = 0;
-
-        
-        if (numberPartOfPackaging != null && !numberPartOfPackaging.isEmpty()) { 
-            extractedPackagingVal = Double.parseDouble(numberPartOfPackaging);
-        } 
-        else if (textPartOfPackaging.contains("each") || textPartOfPackaging.contains("EA") ||textPartOfPackaging.isEmpty() || numberPartOfPackaging == null) { //checking if its just each, ie packaged singular
-            extractedPackagingVal = 1;
-        }
-
-        double quantityNeededToBuy = Math.ceil(this.quantityRequested/extractedPackagingVal); //round up as will need to buy additional box/case if it theres remaineder
-        setQuantityNeeded((int)quantityNeededToBuy);
-        }
-        else System.out.print("No Matches Found");
+    private void calculateQuantityNeeded(String packaging) {
+       double extractedPackagingVal = getNumberPartOfPackagingOnly(packaging);
+       double quantityNeededToBuy = Math.ceil(this.quantityRequested/extractedPackagingVal);
+       setQuantityNeeded((int)quantityNeededToBuy);
     }
 
     //find the source of the item bought using the url of the product page

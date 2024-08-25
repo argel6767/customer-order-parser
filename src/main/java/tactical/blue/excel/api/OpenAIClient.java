@@ -9,7 +9,7 @@ import kong.unirest.json.JSONObject;
 
 public class OpenAIClient {
     private String itemDescription;
-    private final String BEGINNING_OF_PROMPT = "Using the following item description, indentify what its packaging is. It will typicaly be in the form of XX/package, XX/box, X per case, etc. If no packaging is found it is safe to assume it is just each and so return so. Only return the value and packaging type. Here is the item description: ";
+    private final String BEGINNING_OF_PROMPT = "Using the following item description, indentify what its packaging is. It will typicaly be in the form of XX/package, XX/box, X per case, etc. If no packaging is found it is safe to assume it is just each, and so return each. Only return the value and packaging type. Here is the item description: ";
     private String entirePrompt;
     private final String API_KEY = getAPIKey();
     private final String API_URL = "https://api.openai.com/v1/chat/completions";
@@ -54,7 +54,7 @@ public class OpenAIClient {
     //creates the JSON request body for api call
     private JSONObject createJSONBody() {
         JSONObject requestBody = new JSONObject();
-        requestBody.put("model", "gpt-3.5-turbo");
+        requestBody.put("model", "gpt-4o-mini");
         JSONArray messagesArray = new JSONArray();
         JSONObject messageObject = new JSONObject();
         messageObject.put("role", "user");
