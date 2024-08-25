@@ -1,8 +1,11 @@
 package tactical.blue.excel.excelrows;
 
+import java.text.NumberFormat;
+
 import tactical.blue.excel.api.OpenAIClient;
 
 public class ExcelRow {
+    private static Integer row = 1;
     private String itemName; //name of item
     private String manufacturer; //maker of item
     private String sku; //item sku
@@ -12,9 +15,10 @@ public class ExcelRow {
     private Double msrp; //Manufacturers Suggested Retail Price 
     private Double wholeSalePrice; //cost for a single item
     private Double costOfGoods; //  Cost of Goods Sold – qty x wholesale (usually just qty * wholesale)
-    private final Double MARKUP = 1.30; //markup of customers 
+    private final Double MARKUP = .30; //markup of customers 
     private Double unitPrice; //price per item customer will pay
-    private Double extendedPrice; //entiry quantity of item customer will pay
+    private Double extendedPrice; //entire quantity of item customer will pay
+    private Double contribution;//the money earned above
     private String source; //website item information was acquired from
     private String productURL; //url of product page
 
@@ -111,6 +115,7 @@ public class ExcelRow {
         calculateCostOfGoods();
         calculateUnitPrice();
         calculateExtendedPrice();
+        calculateContribution();
     }
 
     /*
@@ -154,13 +159,18 @@ public class ExcelRow {
     }
 
     private void calculateUnitPrice() {
-        Double price = this.wholeSalePrice * this.MARKUP;
+        Double price = this.wholeSalePrice * (1.0+ this.MARKUP);
         setUnitPrice(price);
     }
 
     private void calculateExtendedPrice() {
         Double price = this.unitPrice * quantityNeeded;
         setExtendedPrice(price);
+    }
+
+    private void calculateContribution() {
+        Double contribution = this.unitPrice - this.wholeSalePrice;
+        setContribution(contribution);
     }
 
 
@@ -252,6 +262,10 @@ public class ExcelRow {
         this.extendedPrice = extendedPrice;
     }
 
+    public void setContribution(Double contribution) {
+        this.contribution = contribution;
+    }
+
     public String getSource() {
         return this.source;
     }
@@ -297,8 +311,21 @@ public class ExcelRow {
         return this.itemName + ", " + this.sku + ", " + this.quantityNeeded + ", " + this.msrp + ", " + this.wholeSalePrice + ", " + this.productURL;
     }
 
+    /*
+     * Excel Row Format:
+     * Line Item, Product Name, Manufacturer, Source, SKU, Packaging, Quantity, MSRP, Wholesale, Cost of Goods, Markup, Unit Price, Extended Price, Contribution
+     */
     public Object[] toArray() {
-        return new Object[]{itemName, sku, quantityNeeded, msrp, wholeSalePrice, productURL};
+        return new Object[]{ExcelRow.row++, this.itemName, this.manufacturer, this.source, this.sku, this.packaging, this.quantityNeeded, this.msrp, this.wholeSalePrice, this.wholeSalePrice, this.costOfGoods, convertToPercent(this.MARKUP), this.unitPrice, this.extendedPrice, this.contribution};
+    }
+
+    /*
+     * Converts contribution to the desired percent format in the Excel Sheet
+     */
+    private String convertToPercent(Double decimal) {
+        NumberFormat percentConverter = NumberFormat.getPercentInstance();
+        percentConverter.setMaximumFractionDigits(0);
+        return percentConverter.format(decimal);
     }
 }
 
