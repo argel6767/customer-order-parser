@@ -3,6 +3,8 @@ package tactical.blue.excel.excelrows;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import tactical.blue.excel.api.OpenAIClient;
+
 public class ExcelRow {
     private String itemName; //name of item
     private String manufacturer; //maker of item
@@ -19,15 +21,13 @@ public class ExcelRow {
     private String source; //website item information was acquired from
     private String productURL; //url of product page
 
-    /*
-     * Can be used by Boundtree
-     */
-    public ExcelRow(String itemName, String manufacturer, String sku, int quantityRequested, String packaging, double msrp, double wholeSalePrice, String productURL) {
+   
+    public ExcelRow(String itemDescription ,String itemName, String manufacturer, String sku, int quantityRequested, String packaging, double msrp, double wholeSalePrice, String productURL) {
         this.itemName = itemName;
         this.manufacturer = manufacturer;
         this.sku = sku;
         this.packaging = packaging;
-        this.quantityRequested = quantityRequested;
+        this.quantityRequested = calculateRawQuantity(quantityRequested, itemDescription);
         this.msrp = msrp;
         this.wholeSalePrice = wholeSalePrice;
         this.productURL = productURL;
@@ -60,9 +60,47 @@ public class ExcelRow {
         calculatePricingAndQuantities();
     }
     
+    /*
+     * Finds the packaging via customer description of item, then multplies by quantity requested in order to get raw value, as opposed to packaged value
+     * (100 as opposed to 4 of 25pk)
+     * If packaging is each then just return requested quantity
+     */
+    private int calculateRawQuantity(int quantityRequested, String customerDescription) {
+        String packaging = getPackagingFromItemDescription(customerDescription);
+        if (packaging.equals("Each")) {
+           return quantityRequested;
+        }
+        else {
+            int packagingVal = getNumberPartOfPackagingOnly(packaging);
+            return quantityRequested * packagingVal;
+        }
+    }
 
-    
-    //
+    /*
+    * Takes in a itemDescription then makes an OpenAIObject in the method to return the packaging for any use
+    * works with both customer and store item descriptions
+    */
+    protected  static String getPackagingFromItemDescription(String itemDescription) {
+        OpenAIClient openAIClient = new OpenAIClient(itemDescription);
+        return openAIClient.makeAPICall();
+    }
+
+    /*
+     * Grabs the number portion of a packaging item and returns it as an int
+     */
+    private int getNumberPartOfPackagingOnly(String packaging) {
+        int indexOfSlash = packaging.indexOf("/");
+        if (indexOfSlash != -1) {
+            String number = packaging.substring(0,indexOfSlash).replaceAll("\\D", "");
+            return Integer.parseInt(number);
+        }
+        return 1; //no numbers found
+    }
+
+
+    /*
+     * Caluclates various important values for excel row, that are not potentially given directly by websites or customers
+     */
     private void calculatePricingAndQuantities() {
         calculateQuantityNeeded();
         calculateCostOfGoods();
