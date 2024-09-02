@@ -19,8 +19,10 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import tactical.blue.excel.excelrows.BoundTreeExcelRow;
 import tactical.blue.excel.excelrows.ExcelRow;
 import tactical.blue.excel.excelrows.HenryScheinExcelRow;
+import tactical.blue.excel.excelrows.MedcoSportsMedicineExcelRow;
 
 public class CleanExcelFile {
     private File fileInOctoparse;
@@ -44,6 +46,12 @@ public class CleanExcelFile {
         } catch (FileNotFoundException ex) {
             System.out.println("Something went wrong!");
         }
+    }
+
+    /*
+     * Testing purposes
+     */
+    public CleanExcelFile() {
     }
 
     public void setExcelRows(List<ExcelRow> excelRows) {
@@ -92,7 +100,7 @@ public class CleanExcelFile {
                 }
                 String[] currItemArray = currLineItemDescription.split(",");
                 ExcelRow currentRow = parseRowBasedOnSite(currItemArray, octoparseMap);
-                if (currentRow != null) { //checks if valid row, will be not if not
+                if (currentRow != null) { //checks if valid row, will be null if not
                     this.excelRows.add(currentRow);
                 }
             }
@@ -124,32 +132,59 @@ public class CleanExcelFile {
         }
     }
 
+    /*
+     * Customer Details Will Be This Format: Item Description, Quantity, URL
+     */
+
+    /*
+     * Creates a HenryScheinExcelRow object that will become a row
+     */
     private HenryScheinExcelRow henryScheinExcelRow(String[] currItemArray, Map<String, String[]> octoparseMap) {
         if (currItemArray.length >= 5) { // Ensure the array has enough columns
-            String itemUrl = currItemArray[4];
+            String itemUrl = currItemArray[3];
             if (octoparseMap.containsKey(itemUrl)) { // URL match found
                 String[] currOctoArray = octoparseMap.get(itemUrl);
+                String productName = currOctoArray[columnHeaderIndex.get("Product")];
                 String manufacturerInfo = StringUtils.deleteWhitespace(currOctoArray[columnHeaderIndex.get("Manufacturer")]);
-                int quantity = Integer.parseInt(currItemArray[columnHeaderIndex.get("Quantity")].trim());
+                int quantity = Integer.parseInt(currItemArray[1].trim());
                 String packaging = currOctoArray[columnHeaderIndex.get("Packaging")];
                 double msrp = Double.parseDouble(currOctoArray[columnHeaderIndex.get("MSRP")].trim());
                 double wholesalePrice = Double.parseDouble(currOctoArray[columnHeaderIndex.get("Price")]);
 
-                return new HenryScheinExcelRow(currItemArray[2], manufacturerInfo, quantity, packaging, msrp, wholesalePrice, itemUrl);
+                return new HenryScheinExcelRow(productName, manufacturerInfo, quantity, packaging, msrp, wholesalePrice, itemUrl);
             }
             
         }
         return null; //will return null if line is not valid
     }
 
+   
 
-    private ExcelRow boundTreeExcelRow(String[] currOctoArray, Map<String, String[]> octoparseMap) {
-        throw new UnsupportedOperationException("Not supported yet.");
+
+    private BoundTreeExcelRow boundTreeExcelRow(String[] currOctoArray, Map<String, String[]> octoparseMap) {
+        return null;
     }
 
-    private ExcelRow medcoExcelRow(String[] currItemArray, Map<String, String[]> octoparseMap) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'medcoExcelRow'");
+    private MedcoSportsMedicineExcelRow medcoExcelRow(String[] currItemArray, Map<String, String[]> octoparseMap) {
+        if (currItemArray.length >= 7) {
+        String itemUrl = currItemArray[3];
+        if (octoparseMap.containsKey(itemUrl)) {
+            String[] currOctoArray = octoparseMap.get(itemUrl);
+            String customerDescription = currItemArray[0];
+            String itemName = currOctoArray[columnHeaderIndex.get("Product")];
+            String manufacturer = currOctoArray[columnHeaderIndex.get("Manufacturer")];
+            String sku = currOctoArray[columnHeaderIndex.get("SKU")];
+            int quantityRequested = Integer.parseInt(currItemArray[1]);
+            //Medco Does not include MSRP
+            Double msrp = null;
+            double wholesalePrice = Double.parseDouble(currOctoArray[columnHeaderIndex.get("Our Price")]);
+            
+            return new MedcoSportsMedicineExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, msrp, wholesalePrice, itemUrl);
+        }
+
+        }
+        return null; //will return null if line is not valid
+
     }
 
     private ExcelRow naRescueExcelRow(String[] currItemArray, Map<String, String[]> octoparseMap) {
@@ -188,6 +223,9 @@ public class CleanExcelFile {
                     //  column of that row 
                     Cell cell = row.createCell(cellnum++); 
                     System.out.print(obj + " ");
+                    if (obj == null) {
+                        cell.setCellValue("N/A");
+                    }
                     if (obj instanceof Double) 
                         cell.setCellValue((Double)obj); 
     

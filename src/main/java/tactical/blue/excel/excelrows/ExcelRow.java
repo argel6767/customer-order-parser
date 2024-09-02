@@ -22,12 +22,30 @@ public class ExcelRow {
     private String source; //website item information was acquired from
     private String productURL; //url of product page
 
-   
+   /*
+   Need to find raw quantity of item using item description
+   */
     public ExcelRow(String itemDescription ,String itemName, String manufacturer, String sku, int quantityRequested, String packaging, double msrp, double wholeSalePrice, String productURL) {
         this.itemName = itemName;
         this.manufacturer = manufacturer;
         this.sku = sku;
         this.packaging = packaging;
+        this.quantityRequested = calculateRawQuantity(quantityRequested, itemDescription);
+        this.msrp = msrp;
+        this.wholeSalePrice = wholeSalePrice;
+        this.productURL = productURL;
+        calculatePricingAndQuantities(packaging);
+        determineSourceUsingProductURL();
+    }
+
+
+    /*
+     * If no packaging info is found, an item descrition can be used to get packaging type
+     */
+    public ExcelRow(String itemDescription, String itemName, String manufacturer, String sku, int quantityRequested, double msrp, double wholeSalePrice, String productURL) {
+        this.itemName = itemName;
+        this.manufacturer = manufacturer;
+        this.sku = sku;
         this.quantityRequested = calculateRawQuantity(quantityRequested, itemDescription);
         this.msrp = msrp;
         this.wholeSalePrice = wholeSalePrice;
@@ -81,7 +99,7 @@ public class ExcelRow {
     * Takes in a itemDescription then makes an OpenAIObject in the method to return the packaging for any use
     * works with both customer and store item descriptions
     */
-    protected  static String getPackagingFromItemDescription(String itemDescription) {
+    protected static String getPackagingFromItemDescription(String itemDescription) {
         OpenAIClient openAIClient = new OpenAIClient(itemDescription);
         return openAIClient.makeAPICall();
     }
@@ -228,7 +246,7 @@ public class ExcelRow {
     }
 
 
-    public Double getWholeSalePrice() {
+    public Double getWholesalePrice() {
         return this.wholeSalePrice;
     }
 

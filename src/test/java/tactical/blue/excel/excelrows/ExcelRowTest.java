@@ -10,7 +10,7 @@ public class ExcelRowTest {
         ExcelRow row = new ExcelRow("Big ole laptop for games","Laptop", "Dell", "SKU123", 5, "5/Box", 999.99, 500.00, "https://example.com/laptop");
         
         // Calculate the expected cost of goods
-        double expectedCostOfGoods = row.getQuantityNeeded() * row.getWholeSalePrice();
+        double expectedCostOfGoods = row.getQuantityNeeded() * row.getWholesalePrice();
         
         // Assert that the calculated cost of goods is correct
         assertEquals(expectedCostOfGoods, row.getCostOfGoods(), 0.01);  // delta of 0.01 for floating-point comparison
