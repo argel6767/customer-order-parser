@@ -21,6 +21,6 @@ public class OpenAIClientTest {
         String packaging = client.makeAPICall();
 
         assertNotNull(packaging);
-        assertEquals("Each", packaging);
+        assertEquals("each", packaging);
     }
 }

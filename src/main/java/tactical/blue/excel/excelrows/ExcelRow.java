@@ -25,7 +25,7 @@ public class ExcelRow {
    /*
    Need to find raw quantity of item using item description
    */
-    public ExcelRow(String itemDescription ,String itemName, String manufacturer, String sku, Integer quantityRequested, String packaging, Object msrp, Double wholeSalePrice, String productURL) {
+    public ExcelRow(String itemDescription ,String itemName, String manufacturer, String sku, Integer quantityRequested, String packaging, Double msrp, Double wholeSalePrice, String productURL) {
         this.itemName = itemName;
         this.manufacturer = manufacturer;
         this.sku = sku;
@@ -42,10 +42,11 @@ public class ExcelRow {
     /*
      * If no packaging info is found, an item descrition can be used to get packaging type
      */
-    public ExcelRow(String itemDescription, String itemName, String manufacturer, String sku, Integer quantityRequested, Object msrp, Double wholeSalePrice, String productURL) {
+    public ExcelRow(String itemDescription, String itemName, String manufacturer, String sku, Integer quantityRequested, Double msrp, Double wholeSalePrice, String productURL) {
         this.itemName = itemName;
         this.manufacturer = manufacturer;
         this.sku = sku;
+        this.packaging = getPackagingFromItemDescription(itemDescription);
         this.quantityRequested = calculateRawQuantity(quantityRequested, itemDescription);
         this.msrp = determineIfMSRPIsPresent(msrp);
         this.wholeSalePrice = wholeSalePrice;
@@ -69,7 +70,7 @@ public class ExcelRow {
     }
 
 
-    public ExcelRow(String itemName, Integer quantityRequested, String packaging, Object msrp, Double wholeSalePrice, String productURL) {
+    public ExcelRow(String itemName, Integer quantityRequested, String packaging, Double msrp, Double wholeSalePrice, String productURL) {
         this.itemName = itemName;
         this.quantityRequested = quantityRequested;
         this.packaging = packaging;
@@ -84,8 +85,8 @@ public class ExcelRow {
      * Will Check if MSRP is null, ie the Store Front Does not have an MSRP and return "N/A"
      * return the value back otherwise
      */
-    private Object determineIfMSRPIsPresent(Object msrp) {
-        if (msrp == null) {
+    private Object determineIfMSRPIsPresent(Double msrp) {
+        if (msrp == 0.0) {
             return "N/A";
         }
         return msrp;
@@ -337,16 +338,32 @@ public class ExcelRow {
     }
 
     @Override
-    public String toString() {
-        return this.itemName + ", " + this.sku + ", " + this.quantityNeeded + ", " + this.msrp + ", " + this.wholeSalePrice + ", " + this.productURL;
-    }
+public String toString() {
+    return "ExcelRow{" +
+            "itemName='" + itemName + '\'' +
+            ", manufacturer='" + manufacturer + '\'' +
+            ", sku='" + sku + '\'' +
+            ", quantityRequested=" + quantityRequested +
+            ", quantityNeeded=" + quantityNeeded +
+            ", packaging='" + packaging + '\'' +
+            ", msrp=" + msrp +
+            ", wholeSalePrice=" + wholeSalePrice +
+            ", costOfGoods=" + costOfGoods +
+            ", MARKUP=" + MARKUP +
+            ", unitPrice=" + unitPrice +
+            ", extendedPrice=" + extendedPrice +
+            ", contribution=" + contribution +
+            ", source='" + source + '\'' +
+            ", productURL='" + productURL + '\'' +
+            '}';
+}
 
     /*
      * Excel Row Format:
-     * Line Item, Product Name, Manufacturer, Source, SKU, Packaging, Quantity, MSRP, Wholesale, Cost of Goods, Markup, Unit Price, Extended Price, Contribution
+     * Line Item, Product Name, Manufacturer, Source, SKU, Packaging, Quantity, MSRP, Wholesale, Cost of Goods, Markup, Unit Price, Extended Price, Contribution, Product URL
      */
     public Object[] toArray() {
-        return new Object[]{ExcelRow.row++, this.itemName, this.manufacturer, this.source, this.sku, this.packaging, this.quantityNeeded, this.msrp, this.wholeSalePrice, this.wholeSalePrice, this.costOfGoods, convertToPercent(this.MARKUP), this.unitPrice, this.extendedPrice, this.contribution};
+        return new Object[]{ExcelRow.row++, this.itemName, this.manufacturer, this.source, this.sku, this.packaging, this.quantityNeeded, this.msrp, this.wholeSalePrice, this.costOfGoods, convertToPercent(this.MARKUP), this.unitPrice, this.extendedPrice, this.contribution, this.productURL};
     }
 
     /*

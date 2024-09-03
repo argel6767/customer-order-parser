@@ -59,6 +59,7 @@ public class CleanExcelFile {
     }
 
     public void makeNewExcelFile() {
+        System.out.println("makeNewExcelFile() called");
         try {
             readCSVFiles();
         } catch (IOException e) {
@@ -70,6 +71,8 @@ public class CleanExcelFile {
     }
     //reads csv file that is put in
    private void readCSVFiles() throws IOException {
+        System.out.println("readCSVFiles() was called");
+
         // Step 1: Read Octoparse CSV into a map (URL -> row data)
         Map<String, String[]> octoparseMap = new HashMap<>();
             String currLineOctoparse;
@@ -82,8 +85,8 @@ public class CleanExcelFile {
                     continue;
                 }
                 String[] currOctoArray = currLineOctoparse.split(",");
-                if (currOctoArray.length >= 7) { // Ensure the array has enough columns
-                    String octoUrl = currOctoArray[1]; //url of item in octoparse file
+                if (currOctoArray.length >= 5) { // Ensure the array has enough columns
+                    String octoUrl = currOctoArray[currOctoArray.length-1]; //url of item in octoparse file
                     octoparseMap.put(octoUrl, currOctoArray);
                     System.out.println(octoUrl);
                 }
@@ -119,9 +122,9 @@ public class CleanExcelFile {
      */
     private ExcelRow parseRowBasedOnSite(String[] currItemArray, Map<String, String[]> octoparseMap) {
         switch (this.citeName) {
-            case "HenrySchein":
+            case "Henry Schein":
                 return henryScheinExcelRow(currItemArray, octoparseMap);
-            case "BoundTree":
+            case "Bound Tree":
                 return boundTreeExcelRow(currItemArray, octoparseMap);
             case "Medco":
                 return medcoExcelRow(currItemArray, octoparseMap);
@@ -166,8 +169,8 @@ public class CleanExcelFile {
     }
 
     private MedcoSportsMedicineExcelRow medcoExcelRow(String[] currItemArray, Map<String, String[]> octoparseMap) {
-        if (currItemArray.length >= 7) {
-        String itemUrl = currItemArray[3];
+        if (currItemArray.length >= 3) {
+        String itemUrl = currItemArray[2];
         if (octoparseMap.containsKey(itemUrl)) {
             String[] currOctoArray = octoparseMap.get(itemUrl);
             String customerDescription = currItemArray[0];
@@ -176,8 +179,8 @@ public class CleanExcelFile {
             String sku = currOctoArray[columnHeaderIndex.get("SKU")];
             int quantityRequested = Integer.parseInt(currItemArray[1]);
             //Medco Does not include MSRP
-            Double msrp = null;
-            double wholesalePrice = Double.parseDouble(currOctoArray[columnHeaderIndex.get("Our Price")]);
+            Double msrp = 0.0;
+            double wholesalePrice = Double.parseDouble(currOctoArray[columnHeaderIndex.get("Wholesale")]);
             
             return new MedcoSportsMedicineExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, msrp, wholesalePrice, itemUrl);
         }
@@ -194,18 +197,23 @@ public class CleanExcelFile {
 
     //reads lines from csvRows and puts them into a new excel file
     public void createExcelCells() {
+        System.out.println("createExcelCells() called");
+        
         this.workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet("weekly price report");
+        XSSFSheet sheet = workbook.createSheet("weekly price report for " + this.citeName + " " + LocalDate.now());
 
         Map<String, Object[]> dataSheetInfo = new HashMap<>();
-        dataSheetInfo.put("1", new Object[] {"Item", "Product Number", "Quantity", "MSRP", "Wholesale Price", "ProductURL"}); //headers
+        dataSheetInfo.put("1", new Object[] {"Row","Item", "Manfucturer", "Source", "SKU", "Packaging", "Quantity", "MSRP", "Wholesale Price", "Cost of Goods", "Markup", "Unit Price", "Extended Price", "Contribution", "Product URL"}); //headers
         
         int index = 2;
         //adds the excel rows into dataSheetInfo from List excelRows
         for (ExcelRow excelRow : excelRows) {
+            System.out.println(excelRow.toString());
             dataSheetInfo.put(String.valueOf(index), excelRow.toArray());
             index++;
         }
+
+        
 
         int rowNum = 0;
         Set<String> keySet = dataSheetInfo.keySet();
@@ -237,6 +245,7 @@ public class CleanExcelFile {
         }
 
         private void generateExcelFile() {
+            System.out.println("generateExcelFile() Called");
             File directory = new File("../" + DIRECTORY);
             if (!directory.exists()) {
                 directory.mkdir();
@@ -247,8 +256,14 @@ public class CleanExcelFile {
             excelOutput.close();
         } catch (Exception e) {
             System.out.println("FILE NOT FOUND!");
+            e.printStackTrace();
         }
 
+        }
+
+        public static void main(String[] args) {
+            CleanExcelFile cleanExcelFile = new CleanExcelFile("/Users/argelhernandezamaya/Desktop/Blue-Tactical/product-orders/Medco-Sports-Medicine-Scrape.csv", "/Users/argelhernandezamaya/Desktop/Blue-Tactical/product-orders/Medco-order-example.csv", "Medco");
+            cleanExcelFile.makeNewExcelFile();
         }
 
 }

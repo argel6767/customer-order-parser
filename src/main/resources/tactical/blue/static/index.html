@@ -13,21 +13,70 @@
         <button onclick="javabridge.uploadItemDescriptionFile()">Upload Item Description File</button>
         <span id="itemDescriptionFileName"></span>
         <br><br>
+        <form id="websiteForm">
+            <label for="ecommerceSite">Select E-commerce Site:</label><br>
+            <input type="radio" id="boundtree" name="ecommerceSite" value="Boundtree">
+            <label for="boundtree">Boundtree</label><br>
+            <input type="radio" id="northAmericanRescue" name="ecommerceSite" value="North American Rescue">
+            <label for="northAmericanRescue">North American Rescue</label><br>
+            <input type="radio" id="medco" name="ecommerceSite" value="Medco Sports Medicine">
+            <label for="medco">Medco Sports Medicine</label><br>
+            <input type="radio" id="henrySchein" name="ecommerceSite" value="Henry Schein">
+            <label for="henrySchein">Henry Schein</label><br>
+        </form>
         <button onclick="javabridge.processFiles()">Process Files</button>
-        <div id="message"></div>
          <!-- E-commerce site selection -->
-         <label for="ecommerceSite">Select E-commerce Site:</label><br>
-         <input type="radio" id="boundtree" name="ecommerceSite" value="Boundtree">
-         <label for="boundtree">Boundtree</label><br>
-         <input type="radio" id="northAmericanRescue" name="ecommerceSite" value="North American Rescue">
-         <label for="northAmericanRescue">North American Rescue</label><br>
-         <input type="radio" id="medco" name="ecommerceSite" value="Medco Sports Medicine">
-         <label for="medco">Medco Sports Medicine</label><br>
-         <input type="radio" id="henrySchein" name="ecommerceSite" value="Henry Schein">
-         <label for="henrySchein">Henry Schein</label><br><br>
         <button class="end-button" onclick="javabridge.endProgram()">End Program</button>
     </div>
 
-    <script src="app.js"></script>
+    <script>
+        function updateOctoparseFileName(name) {
+    console.log("filename " + name + " grabbed")
+    document.getElementById('octoparseFileName').textContent = name;
+}
+
+function updateItemDescriptionFileName(name) {
+    console.log("filename " + name + " grabbed")
+    document.getElementById('itemDescriptionFileName').textContent = name;
+}
+
+function showMessage(msg) {
+    const messageDiv = document.getElementById('message');
+    messageDiv.textContent = msg;
+    if (msg.includes('successfully')) {
+        messageDiv.className = 'success';
+    } else {
+        messageDiv.className = 'error';
+    }
+}
+
+function processFiles() {
+    console.log("processFiles() called")
+    const form = document.getElementById('websiteForm');
+    // Get the selected radio button
+    const selectedRadio = form.querySelector('input[name="website"]:checked');
+    if (!selectedRadio) {
+        showMessage("Please select an e-commerce site.");
+        return;
+    }
+
+    const siteName = selectedRadio.value;
+    console.log("Selected E-commerce Site: " + siteName);
+    // Pass the siteName to Java
+    try {
+        console.log("Attempting to call Java processFiles method");
+        // Make sure javabridge is available
+        if (typeof javabridge !== 'undefined' && javabridge.processFiles) {
+            javabridge.processFiles(siteName);
+            console.log("Java processFiles method called successfully");
+        } else {
+            throw new Error("Java bridge or processFiles method not available");
+        }
+    } catch (error) {
+        console.error("Error calling Java processFiles method:", error);
+        showMessage("Error: " + error.message);
+    }
+}
+    </script>
 </body>
 </html>

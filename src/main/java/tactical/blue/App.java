@@ -5,6 +5,8 @@ import java.io.File;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.control.TextArea;
+import javafx.scene.web.WebEvent;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -17,13 +19,21 @@ public class App extends Application {
     private File fileInItemDescription;
     private WebView webView;
     private Stage primaryStage; // Hold a reference to the primary stage
-    private String selectedEcommerceSite;
+    private TextArea logArea;
 
     @Override
     public void start(Stage stage) {
         this.primaryStage = stage; // Store the primary stage reference
 
+        logArea = new TextArea();
+        logArea.setEditable(false);
+        logArea.setWrapText(true);
+        logArea.setPrefHeight(150);
+
         webView = new WebView();
+          webView.getEngine().setOnAlert((WebEvent<String> wEvent) -> {
+            log("JS alert: " + wEvent.getData());
+        });
         webView.getEngine().load(getClass().getResource("/tactical/blue/static/index.html").toExternalForm());
         webView.getEngine().getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == javafx.concurrent.Worker.State.SUCCEEDED) {
@@ -36,6 +46,11 @@ public class App extends Application {
         stage.setScene(scene);
         stage.setTitle("Excel File Processor");
         stage.show();
+    }
+
+
+    public void log(String message) {
+        Platform.runLater(() -> logArea.appendText(message + "\n"));
     }
 
     public void uploadOctoparseFile() {
@@ -59,18 +74,20 @@ public class App extends Application {
     }
 
     public void processFiles(String selectedEccomerceSite) {
-        this.selectedEcommerceSite = selectedEccomerceSite;
-        if (fileInOctoparse != null && fileInItemDescription != null) {
-            try {
-                CleanExcelFile cleaner = new CleanExcelFile(fileInOctoparse.getPath(), fileInItemDescription.getPath(), selectedEccomerceSite);
-                cleaner.makeNewExcelFile();
-                webView.getEngine().executeScript("showMessage('Excel file created successfully!')");
-            } catch (Exception e) {
-                webView.getEngine().executeScript("showMessage('Error processing files: " + e.getMessage() + "')");
+        Platform.runLater(() -> {
+            System.out.println("processFiles() called with site: " + selectedEccomerceSite);
+            if (fileInOctoparse != null && fileInItemDescription != null) {
+                try {
+                    CleanExcelFile cleaner = new CleanExcelFile(fileInOctoparse.getPath(), fileInItemDescription.getPath(), selectedEccomerceSite);
+                    cleaner.makeNewExcelFile();
+                    webView.getEngine().executeScript("showMessage('Excel file created successfully!')");
+                } catch (Exception e) {
+                    webView.getEngine().executeScript("showMessage('Error processing files: " + e.getMessage() + "')");
+                }
+            } else {
+                webView.getEngine().executeScript("showMessage('Please upload both files before processing.')");
             }
-        } else {
-            webView.getEngine().executeScript("showMessage('Please upload both files before processing.')");
-        }
+        });
     }
 
     public void endProgram() {

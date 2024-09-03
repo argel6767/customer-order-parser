@@ -16,7 +16,7 @@ h1 {
     color: #333;
 }
 button {
-    background-color: #4CAF50;
+    background-color: #2E5698;
     border: none;
     color: white;
     padding: 10px 20px;
@@ -40,4 +40,8 @@ button {
 .error {
     background-color: #f2dede;
     color: #a94442;
+}
+
+.radio-group {
+    margin-bottom: 10px;
 }
