@@ -25,13 +25,13 @@ public class ExcelRow {
    /*
    Need to find raw quantity of item using item description
    */
-    public ExcelRow(String itemDescription ,String itemName, String manufacturer, String sku, Integer quantityRequested, String packaging, Double msrp, Double wholeSalePrice, String productURL) {
+    public ExcelRow(String itemDescription ,String itemName, String manufacturer, String sku, Integer quantityRequested, String packaging, Object msrp, Double wholeSalePrice, String productURL) {
         this.itemName = itemName;
         this.manufacturer = manufacturer;
         this.sku = sku;
         this.packaging = packaging;
         this.quantityRequested = calculateRawQuantity(quantityRequested, itemDescription);
-        this.msrp = msrp;
+        this.msrp = determineIfMSRPIsPresent(msrp);
         this.wholeSalePrice = wholeSalePrice;
         this.productURL = productURL;
         calculatePricingAndQuantities(packaging);
@@ -42,12 +42,12 @@ public class ExcelRow {
     /*
      * If no packaging info is found, an item descrition can be used to get packaging type
      */
-    public ExcelRow(String itemDescription, String itemName, String manufacturer, String sku, Integer quantityRequested, Double msrp, Double wholeSalePrice, String productURL) {
+    public ExcelRow(String itemDescription, String itemName, String manufacturer, String sku, Integer quantityRequested, Object msrp, Double wholeSalePrice, String productURL) {
         this.itemName = itemName;
         this.manufacturer = manufacturer;
         this.sku = sku;
         this.quantityRequested = calculateRawQuantity(quantityRequested, itemDescription);
-        this.msrp = msrp;
+        this.msrp = determineIfMSRPIsPresent(msrp);
         this.wholeSalePrice = wholeSalePrice;
         this.productURL = productURL;
         calculatePricingAndQuantities(packaging);
@@ -69,17 +69,27 @@ public class ExcelRow {
     }
 
 
-    public ExcelRow(String itemName, Integer quantityRequested, String packaging, Double msrp, Double wholeSalePrice, String productURL) {
+    public ExcelRow(String itemName, Integer quantityRequested, String packaging, Object msrp, Double wholeSalePrice, String productURL) {
         this.itemName = itemName;
         this.quantityRequested = quantityRequested;
         this.packaging = packaging;
-        this.msrp = msrp;
+        this.msrp = determineIfMSRPIsPresent(msrp);
         this.wholeSalePrice = wholeSalePrice;
         this.productURL = productURL;
         calculatePricingAndQuantities(packaging);
     }
 
-    
+
+    /*
+     * Will Check if MSRP is null, ie the Store Front Does not have an MSRP and return "N/A"
+     * return the value back otherwise
+     */
+    private Object determineIfMSRPIsPresent(Object msrp) {
+        if (msrp == null) {
+            return "N/A";
+        }
+        return msrp;
+    }
     
     /*
      * Finds the packaging via customer description of item, then multplies by quantity requested in order to get raw value, as opposed to packaged value
@@ -319,7 +329,7 @@ public class ExcelRow {
     }
     
     public void setMsrp(double msrp) {
-        this.msrp = msrp;
+        this.msrp = determineIfMSRPIsPresent(msrp);
     }
     
     public void setWholeSalePrice(double wholeSalePrice) {
