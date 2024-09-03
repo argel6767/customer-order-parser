@@ -74,7 +74,7 @@ public class CleanExcelFile {
         System.out.println("readCSVFiles() was called");
 
         // Step 1: Read Octoparse CSV into a map (URL -> row data)
-        Map<String, String[]> octoparseMap = new HashMap<>();
+        Map<String, String[]> octoparseMap = new HashMap<>(); //TODO Change This to a Map<String, List<String[]>> more than one item will have the same url
             String currLineOctoparse;
             int iteration = 0;
             while ((currLineOctoparse = bufferedReaderOcto.readLine()) != null) {
@@ -189,6 +189,12 @@ public class CleanExcelFile {
         return null; //will return null if line is not valid
 
     }
+
+    /*
+     * TODO
+     * Create a method to loop through each list element to make a new Excel row per item, mutiple items can have the same, url
+     * they will all share the same currItemArray
+     */
 
     private ExcelRow naRescueExcelRow(String[] currItemArray, Map<String, String[]> octoparseMap) {
         // TODO Auto-generated method stub
