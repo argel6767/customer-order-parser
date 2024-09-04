@@ -24,7 +24,7 @@ import tactical.blue.excel.excelrows.ExcelRow;
 import tactical.blue.excel.excelrows.HenryScheinExcelRow;
 import tactical.blue.excel.excelrows.MedcoSportsMedicineExcelRow;
 
-public class CleanExcelFile {
+public class PriceReportCreator {
     private File fileInOctoparse;
     private File fileInItemDescription;
     private String citeName;
@@ -39,7 +39,7 @@ public class CleanExcelFile {
     /*
      * constructor that sets up bufferedreader object, used when path is put in constrcutor as String
      */
-    public CleanExcelFile(String fileInOctoparsePath, String fileInItemDescription, String citeName) {
+    public PriceReportCreator(String fileInOctoparsePath, String fileInItemDescription, String citeName) {
         this.fileInOctoparse = new File(fileInOctoparsePath);
         this.fileInItemDescription = new File(fileInItemDescription);
         this.citeName = citeName;
@@ -54,7 +54,7 @@ public class CleanExcelFile {
     /*
      * Constructor used when File objects are given
      */
-    public CleanExcelFile(File fileInOctoparsePath, File fileInItemDescription, String citeName) {
+    public PriceReportCreator(File fileInOctoparsePath, File fileInItemDescription, String citeName) {
         this.citeName = citeName;
         try {
         this.bufferedReaderOcto = new BufferedReader(new FileReader(fileInOctoparsePath));
@@ -66,7 +66,7 @@ public class CleanExcelFile {
     /*
      * Testing purposes
      */
-    public CleanExcelFile() {
+    public PriceReportCreator() {
     }
 
     public void setExcelRows(List<ExcelRow> excelRows) {
@@ -283,7 +283,7 @@ public class CleanExcelFile {
         }
 
         public static void main(String[] args) {
-            CleanExcelFile cleanExcelFile = new CleanExcelFile("/Users/argelhernandezamaya/Desktop/Blue-Tactical/product-orders/Medco-Sports-Medicine-Scrape.csv", "/Users/argelhernandezamaya/Desktop/Blue-Tactical/product-orders/Medco-order-example.csv", "Medco");
+            PriceReportCreator cleanExcelFile = new PriceReportCreator("/Users/argelhernandezamaya/Desktop/Blue-Tactical/product-orders/Medco-Sports-Medicine-Scrape.csv", "/Users/argelhernandezamaya/Desktop/Blue-Tactical/product-orders/Medco-order-example.csv", "Medco");
             cleanExcelFile.makeNewExcelFile();
         }
 

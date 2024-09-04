@@ -13,7 +13,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import tactical.blue.excel.CleanExcelFile;
+import tactical.blue.excel.PriceReportCreator;
+import tactical.blue.excel.ui.ExcelFileCreatorUIBuilder;
 
 public class App extends Application {
 
@@ -82,14 +83,15 @@ public class App extends Application {
 
        Button buttonCreateExcelFile = new Button("Create Price Report");
        buttonCreateExcelFile.setOnAction(e -> {
-        CleanExcelFile cleanExcelFile = new CleanExcelFile(fileInWebScraped, fileInItemDescriptions, siteName);
+        PriceReportCreator cleanExcelFile = new PriceReportCreator(fileInWebScraped, fileInItemDescriptions, siteName);
         cleanExcelFile.makeNewExcelFile();
        }); 
 
         HBox radioButtons = new HBox(boundTree, henrySchein, medco, naRescue);
         VBox vbox = new VBox(buttonWebScrape, buttonCustomerOrder, radioButtons, buttonCreateExcelFile, buttonEndProgram);
         
-        Scene scene = new Scene(vbox, 950, 534);
+        ExcelFileCreatorUIBuilder excelFileCreatorUIBuilder = new ExcelFileCreatorUIBuilder();
+        Scene scene = excelFileCreatorUIBuilder.buildExcelFileCreatorUI(primaryStage, fileInWebScraped, fileInItemDescriptions, siteName);
 
         // Set the scene and show the stage
         primaryStage.setScene(scene);
