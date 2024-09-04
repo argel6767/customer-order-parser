@@ -16,19 +16,23 @@ import tactical.blue.excel.PriceReportCreator;
 
 public class ExcelFileCreatorUIBuilder {
 
+    private String siteName;
+    private File fileInWebScrapedData;
+    private File fileInCustomerOrderData;
+
     /*
      * Builds the entire Scene object
      */
-    public Scene buildExcelFileCreatorUI(Stage primaryStage, File fileInWebScrapedData, File fileInItemDescriptions, String siteName) {
+    public Scene buildExcelFileCreatorUI(Stage primaryStage) {
         FileChooser fileChooserWebScraped = createFileChooser("Web Scraped Data File");
-        Button buttonWebScrape = createFileButton(primaryStage, fileInWebScrapedData, fileChooserWebScraped, "Upload Web Scraped Data");
+        Button buttonWebScrape = createWebScrapeFileButton(primaryStage, fileChooserWebScraped);
 
         FileChooser fileChooserCustomerOrder = createFileChooser("Customer Order Data");
-        Button buttonCustomerOrder = createFileButton(primaryStage, fileInItemDescriptions, fileChooserCustomerOrder, "Upload Customer Order Data");
+        Button buttonCustomerOrder = createCustomerOrderFileButton(primaryStage, fileChooserCustomerOrder);
 
-        ToggleGroup eccomerceSites = createRadioButtons(siteName);
+        ToggleGroup eccomerceSites = createRadioButtons();
 
-        Button buttonMakeFile = createMakeExcelFileButton(fileInWebScrapedData, fileInItemDescriptions, siteName);
+        Button buttonMakeFile = createMakeExcelFileButton();
         Button buttonEndProgram = createEndProgramButton();
 
         HBox hBox = createRadioButtonHBox(eccomerceSites);
@@ -48,23 +52,36 @@ public class ExcelFileCreatorUIBuilder {
     }
 
     /*
-     * Creates Button that allows uploading a file
+     * Creates Button that allows uploading web scraped data file
      */
-    private Button createFileButton(Stage primaryStage, File file, FileChooser fileChooser, String buttonName) {
-        Button button = new Button(buttonName);
-        File[] fileContainer = {file};
+    private Button createWebScrapeFileButton(Stage primaryStage, FileChooser fileChooser) {
+        Button button = new Button("Upload Web Scraped Data Here");
+        
         button.setOnAction(e -> {
-            fileContainer[0] = fileChooser.showOpenDialog(primaryStage); //TODO FIND HOW TO SAVE FILE PATH
-            System.out.println("Selected file: " + fileContainer[0].getAbsolutePath());
+            this.fileInWebScrapedData = fileChooser.showOpenDialog(primaryStage); 
+            System.out.println("Selected file: " +this.fileInWebScrapedData.getAbsolutePath());
         });
-        file = fileContainer[0];
+        return button;
+    }
+
+
+    /*
+     * Creates Button that allows uploding a customer order data file
+     */
+    private Button createCustomerOrderFileButton(Stage primaryStage, FileChooser fileChooser) {
+        Button button = new Button("Upload Customer Order Data Here");
+        
+        button.setOnAction(e -> {
+            this.fileInCustomerOrderData = fileChooser.showOpenDialog(primaryStage); 
+            System.out.println("Selected file: " +this.fileInCustomerOrderData.getAbsolutePath());
+        });
         return button;
     }
 
     /*
      * Creates the Radio Buttons for Each Eccomerce Website and puts them into one ToggleGroup object
      */
-    private ToggleGroup createRadioButtons(String siteName) {
+    private ToggleGroup createRadioButtons() {
         ToggleGroup eccomerceSites = new ToggleGroup();
         RadioButton boundTree = new RadioButton("Bound Tree");
         boundTree.setToggleGroup(eccomerceSites);
@@ -75,35 +92,33 @@ public class ExcelFileCreatorUIBuilder {
         RadioButton naRescue = new RadioButton("North American Rescue");
         naRescue.setToggleGroup(eccomerceSites);
 
-        String[] siteNameHolder = new String[1]; //wrapper to allow for lamda
-
         eccomerceSites.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == boundTree) {
-                    siteNameHolder[0] = "Bound Tree";
+                    this.siteName = "Bound Tree";
             }
             else if (newValue == henrySchein) {
-                    siteNameHolder[0] = "Henry Schein";
+                    this.siteName = "Henry Schein";
             }
             else if (newValue == medco) {
-                    siteNameHolder[0] = "Medco";
+                   this.siteName = "Medco";
             }
             else {
-                    siteNameHolder[0] = "NARescue";
+                   this.siteName = "NARescue";
                 }
 
-            System.out.println(siteNameHolder[0]);
+            System.out.println(this.siteName);
         });
-        siteName = siteNameHolder[0];
+       
         return eccomerceSites;
     }
 
     /*
      * The "Create Price Report Button"
      */
-    private Button createMakeExcelFileButton(File fileInWebScraped, File fileInItemDescriptions, String siteName) {
+    private Button createMakeExcelFileButton() {
         Button button = new Button("Create Price Report");
         button.setOnAction(e -> {
-            PriceReportCreator priceReportCreator = new PriceReportCreator(fileInWebScraped, fileInItemDescriptions, siteName);
+            PriceReportCreator priceReportCreator = new PriceReportCreator(this.fileInWebScrapedData, this.fileInCustomerOrderData, this.siteName);
             priceReportCreator.makeNewExcelFile();  
         });
 
