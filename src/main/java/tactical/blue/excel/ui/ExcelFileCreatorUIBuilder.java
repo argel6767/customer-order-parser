@@ -3,12 +3,17 @@ package tactical.blue.excel.ui;
 import java.io.File;
 
 import javafx.application.Platform;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -36,9 +41,15 @@ public class ExcelFileCreatorUIBuilder {
         Button buttonEndProgram = createEndProgramButton();
 
         HBox hBox = createRadioButtonHBox(eccomerceSites);
-        VBox vBox = new VBox(buttonWebScrape, buttonCustomerOrder, hBox, buttonMakeFile, buttonEndProgram);
+        HBox logoBox = createLogoBox();
 
-        Scene scene = new Scene(vBox, 950, 534);
+
+        VBox vBox = createVbox(logoBox,buttonWebScrape, buttonCustomerOrder, hBox, buttonMakeFile, buttonEndProgram);
+        StackPane root = new StackPane(vBox);
+        
+
+        Scene scene = new Scene(root, 950, 534);
+        scene.getStylesheets().add(getClass().getResource("/tactical/blue/static/stylesheet.css").toExternalForm());
         return scene;
     }
 
@@ -61,6 +72,7 @@ public class ExcelFileCreatorUIBuilder {
             this.fileInWebScrapedData = fileChooser.showOpenDialog(primaryStage); 
             System.out.println("Selected file: " +this.fileInWebScrapedData.getAbsolutePath());
         });
+        button.getStyleClass().add("ui-button");
         return button;
     }
 
@@ -75,6 +87,7 @@ public class ExcelFileCreatorUIBuilder {
             this.fileInCustomerOrderData = fileChooser.showOpenDialog(primaryStage); 
             System.out.println("Selected file: " +this.fileInCustomerOrderData.getAbsolutePath());
         });
+        button.getStyleClass().add("ui-button");
         return button;
     }
 
@@ -121,7 +134,7 @@ public class ExcelFileCreatorUIBuilder {
             PriceReportCreator priceReportCreator = new PriceReportCreator(this.fileInWebScrapedData, this.fileInCustomerOrderData, this.siteName);
             priceReportCreator.makeNewExcelFile();  
         });
-
+        button.getStyleClass().add("ui-button");
         return button;
     }
     
@@ -133,6 +146,7 @@ public class ExcelFileCreatorUIBuilder {
         button.setOnAction(e -> {
             Platform.exit();
         });
+        button.getStyleClass().add("ui-button");
         return button;
     }
 
@@ -145,7 +159,36 @@ public class ExcelFileCreatorUIBuilder {
         for (Toggle toggle: toggleGroup.getToggles()) {
             hBox.getChildren().add((RadioButton)toggle);
         }
+        hBox.setSpacing(5);
+        hBox.setPadding(new Insets(5));
+        hBox.setAlignment(Pos.CENTER);
         return hBox;
     }
+
+    private HBox createLogoBox() {
+        HBox logoBox = new HBox(createLogoImageView());
+        logoBox.setAlignment(Pos.TOP_LEFT);
+        return logoBox;
+    }
+
+    private ImageView createLogoImageView() {
+        ImageView blueTacticalLogo = new ImageView(new Image(getClass().getResource("/tactical/blue/static/Blue-Tactical-Logo.png").toExternalForm()));
+        blueTacticalLogo.setFitWidth(250);
+        blueTacticalLogo.setPreserveRatio(true);
+        return blueTacticalLogo;
+    }
+
+    
+    private VBox createVbox(HBox logoBox, Button buttonWebScrape, Button buttonCustomerOrder, HBox hBox, Button buttonMakeFile, Button buttonEndProgram) {
+        VBox vBox = new VBox(logoBox, buttonWebScrape, buttonCustomerOrder, hBox, buttonMakeFile, buttonEndProgram);
+        vBox.getStyleClass().add(".container");
+        vBox.setSpacing(15);
+        vBox.setPadding(new Insets(10));
+        vBox.setAlignment(Pos.TOP_CENTER);
+        return vBox;
+    }
+
+
+    
     
 }

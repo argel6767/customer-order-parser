@@ -9,9 +9,12 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Collections;
+import java.util.Comparator;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -89,7 +92,7 @@ public class PriceReportCreator{
         System.out.println("readCSVFiles() was called");
 
         // Step 1: Read Octoparse CSV into a map (URL -> row data)
-        Map<String, List<String[]>> webScrapedMap = new HashMap<>(); //TODO Change This to a Map<String, List<String[]>> more than one item will have the same url
+        Map<String, List<String[]>> webScrapedMap = new HashMap<>();
             String currLineOctoparse;
             int iteration = 0;
             while ((currLineOctoparse = bufferedReaderOcto.readLine()) != null) {
@@ -130,7 +133,12 @@ public class PriceReportCreator{
                 if (currentRows != null) { //checks if valid rows, will be null if not
                     this.excelRows.addAll(currentRows);
                 }
-                Collections.sort(excelRows);
+                Collections.sort(excelRows, new Comparator<ExcelRow>() {
+                    @Override
+                    public int compare(ExcelRow row1, ExcelRow row2) {
+                        return row1.getProductURL().compareTo(row2.getProductURL());
+                    }
+                });
             }
         
     }
@@ -244,7 +252,7 @@ public class PriceReportCreator{
         this.workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("weekly price report for " + this.citeName + " " + LocalDate.now());
 
-        Map<String, Object[]> dataSheetInfo = new HashMap<>();
+        Map<String, Object[]> dataSheetInfo = new LinkedHashMap<>(); //use LinkedHashMap to keep order
         dataSheetInfo.put("1", new Object[] {"Row","Item", "Manfucturer", "Source", "SKU", "Packaging", "Quantity", "MSRP", "Wholesale Price", "Cost of Goods", "Markup", "Unit Price", "Extended Price", "Contribution", "Product URL"}); //headers
         
         int index = 2;
@@ -272,7 +280,7 @@ public class PriceReportCreator{
                     // This line creates a cell in the next 
                     //  column of that row 
                     Cell cell = row.createCell(cellnum++); 
-                    System.out.print(obj + " ");
+                    
                     if (obj == null) {
                         cell.setCellValue("N/A");
                     }

@@ -1,0 +1,20 @@
+
+
+.container {
+    -fx-font-family: "Arial", sans-serif;
+    -fx-padding: 20px;
+    -fx-background-color: #f0f0f0;
+    -fx-pref-width: 600px; /* Fixed width since max-width is not supported */
+    -fx-background-color: white;
+    -fx-padding: 20px;
+    -fx-border-radius: 5px;
+}
+
+.ui-button {
+    -fx-background-color: #2E5698;
+    -fx-border: none;
+    -fx-text-fill: white; /* For text color */
+    -fx-padding: 10px 20px;
+    -fx-font-size: 16px;
+    -fx-background-radius: 16px;
+}

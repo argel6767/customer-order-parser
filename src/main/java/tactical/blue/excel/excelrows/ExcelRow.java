@@ -5,7 +5,7 @@ import java.text.NumberFormat;
 import tactical.blue.excel.api.OpenAIClient;
 import java.util.Comparator;
 
-public class ExcelRow implements Comparator<Integer>{
+public class ExcelRow{
     private static Integer row = 1;
     private String itemName; //name of item
     private String manufacturer; //maker of item
@@ -380,9 +380,6 @@ public String toString() {
     
 
 
-    @Override
-    public int compare(Integer o1, Integer o2) {
-        return 
-    }
+    
 }
 
