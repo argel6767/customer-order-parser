@@ -89,7 +89,7 @@ public class PriceReportCreator {
         System.out.println("readCSVFiles() was called");
 
         // Step 1: Read Octoparse CSV into a map (URL -> row data)
-        Map<String, String[]> octoparseMap = new HashMap<>(); //TODO Change This to a Map<String, List<String[]>> more than one item will have the same url
+        Map<String, List<String[]>> webScrapedMap = new HashMap<>(); //TODO Change This to a Map<String, List<String[]>> more than one item will have the same url
             String currLineOctoparse;
             int iteration = 0;
             while ((currLineOctoparse = bufferedReaderOcto.readLine()) != null) {
@@ -99,11 +99,20 @@ public class PriceReportCreator {
                     getExcelColumnNames(columnHeaders);
                     continue;
                 }
-                String[] currOctoArray = currLineOctoparse.split(",");
-                if (currOctoArray.length >= 5) { // Ensure the array has enough columns
-                    String octoUrl = currOctoArray[currOctoArray.length-1]; //url of item in octoparse file
-                    octoparseMap.put(octoUrl, currOctoArray);
-                    System.out.println(octoUrl);
+                String[] currWebScrapedDataArray = currLineOctoparse.split(",");
+                if (currWebScrapedDataArray.length >= 5) { // Ensure the array has enough columns
+                    String productURL = currWebScrapedDataArray[currWebScrapedDataArray.length-1]; //url of item in octoparse file
+                    if (webScrapedMap.containsKey(productURL)) {
+                        List<String[]> urValList = webScrapedMap.get(productURL);
+                        urValList.add(currWebScrapedDataArray);
+                    }
+                    else {
+                       List<String[]> urlValList = new ArrayList<>();
+                       urlValList.add(currWebScrapedDataArray);
+                       webScrapedMap.put(productURL, urlValList);
+                    }
+                    
+                    System.out.println(productURL);
                 }
             }
         
@@ -117,7 +126,7 @@ public class PriceReportCreator {
                     continue;
                 }
                 String[] currItemArray = currLineItemDescription.split(",");
-                ExcelRow currentRow = parseRowBasedOnSite(currItemArray, octoparseMap);
+                ExcelRow currentRow = parseRowBasedOnSite(currItemArray, webScrapedMap);
                 if (currentRow != null) { //checks if valid row, will be null if not
                     this.excelRows.add(currentRow);
                 }
@@ -135,16 +144,16 @@ public class PriceReportCreator {
      * Determines what website the items are being sourced from to determine correct way to format rows
      * and get data
      */
-    private ExcelRow parseRowBasedOnSite(String[] currItemArray, Map<String, String[]> octoparseMap) {
+    private ExcelRow parseRowBasedOnSite(String[] currItemArray, Map<String, String[]> webScrapedMap) {
         switch (this.citeName) {
             case "Henry Schein":
-                return henryScheinExcelRow(currItemArray, octoparseMap);
+                return henryScheinExcelRow(currItemArray, webScrapedMap);
             case "Bound Tree":
-                return boundTreeExcelRow(currItemArray, octoparseMap);
+                return boundTreeExcelRow(currItemArray, webScrapedMap);
             case "Medco":
-                return medcoExcelRow(currItemArray, octoparseMap);
+                return medcoExcelRow(currItemArray, webScrapedMap);
             case "NARescue":
-                return naRescueExcelRow(currItemArray, octoparseMap);
+                return naRescueExcelRow(currItemArray, webScrapedMap);
             default:
                 throw new AssertionError();
         }
@@ -157,17 +166,17 @@ public class PriceReportCreator {
     /*
      * Creates a HenryScheinExcelRow object that will become a row
      */
-    private HenryScheinExcelRow henryScheinExcelRow(String[] currItemArray, Map<String, String[]> octoparseMap) {
+    private HenryScheinExcelRow henryScheinExcelRow(String[] currItemArray, Map<String, String[]> webScrapedMap) {
         if (currItemArray.length >= 5) { // Ensure the array has enough columns
             String itemUrl = currItemArray[3];
-            if (octoparseMap.containsKey(itemUrl)) { // URL match found
-                String[] currOctoArray = octoparseMap.get(itemUrl);
-                String productName = currOctoArray[columnHeaderIndex.get("Product")];
-                String manufacturerInfo = StringUtils.deleteWhitespace(currOctoArray[columnHeaderIndex.get("Manufacturer")]);
+            if (webScrapedMap.containsKey(itemUrl)) { // URL match found
+                String[] currWebScrapedDataArray = webScrapedMap.get(itemUrl);
+                String productName = currWebScrapedDataArray[columnHeaderIndex.get("Product")];
+                String manufacturerInfo = StringUtils.deleteWhitespace(currWebScrapedDataArray[columnHeaderIndex.get("Manufacturer")]);
                 int quantity = Integer.parseInt(currItemArray[1].trim());
-                String packaging = currOctoArray[columnHeaderIndex.get("Packaging")];
-                double msrp = Double.parseDouble(currOctoArray[columnHeaderIndex.get("MSRP")].trim());
-                double wholesalePrice = Double.parseDouble(currOctoArray[columnHeaderIndex.get("Price")]);
+                String packaging = currWebScrapedDataArray[columnHeaderIndex.get("Packaging")];
+                double msrp = Double.parseDouble(currWebScrapedDataArray[columnHeaderIndex.get("MSRP")].trim());
+                double wholesalePrice = Double.parseDouble(currWebScrapedDataArray[columnHeaderIndex.get("Price")]);
 
                 return new HenryScheinExcelRow(productName, manufacturerInfo, quantity, packaging, msrp, wholesalePrice, itemUrl);
             }
@@ -179,23 +188,23 @@ public class PriceReportCreator {
    
 
 
-    private BoundTreeExcelRow boundTreeExcelRow(String[] currOctoArray, Map<String, String[]> octoparseMap) {
+    private BoundTreeExcelRow boundTreeExcelRow(String[] currWebScrapedDataArray, Map<String, String[]> webScrapedMap) {
         return null;
     }
 
-    private MedcoSportsMedicineExcelRow medcoExcelRow(String[] currItemArray, Map<String, String[]> octoparseMap) {
+    private MedcoSportsMedicineExcelRow medcoExcelRow(String[] currItemArray, Map<String, String[]> webScrapedMap) {
         if (currItemArray.length >= 3) {
         String itemUrl = currItemArray[2];
-        if (octoparseMap.containsKey(itemUrl)) {
-            String[] currOctoArray = octoparseMap.get(itemUrl);
+        if (webScrapedMap.containsKey(itemUrl)) {
+            String[] currWebScrapedDataArray = webScrapedMap.get(itemUrl);
             String customerDescription = currItemArray[0];
-            String itemName = currOctoArray[columnHeaderIndex.get("Product")];
-            String manufacturer = currOctoArray[columnHeaderIndex.get("Manufacturer")];
-            String sku = currOctoArray[columnHeaderIndex.get("SKU")];
+            String itemName = currWebScrapedDataArray[columnHeaderIndex.get("Product")];
+            String manufacturer = currWebScrapedDataArray[columnHeaderIndex.get("Manufacturer")];
+            String sku = currWebScrapedDataArray[columnHeaderIndex.get("SKU")];
             int quantityRequested = Integer.parseInt(currItemArray[1]);
             //Medco Does not include MSRP
             Double msrp = 0.0;
-            double wholesalePrice = Double.parseDouble(currOctoArray[columnHeaderIndex.get("Wholesale")]);
+            double wholesalePrice = Double.parseDouble(currWebScrapedDataArray[columnHeaderIndex.get("Wholesale")]);
             
             return new MedcoSportsMedicineExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, msrp, wholesalePrice, itemUrl);
         }
@@ -211,7 +220,7 @@ public class PriceReportCreator {
      * they will all share the same currItemArray
      */
 
-    private ExcelRow naRescueExcelRow(String[] currItemArray, Map<String, String[]> octoparseMap) {
+    private ExcelRow naRescueExcelRow(String[] currItemArray, Map<String, String[]> webScrapedMap) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'medcoExcelRow'");
     }
