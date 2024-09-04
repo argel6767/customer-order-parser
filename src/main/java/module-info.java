@@ -10,4 +10,5 @@ module tactical.blue {
     requires org.apache.commons.lang3;
     requires jdk.jsobject;
     requires unirest.java;
+    requires javafx.graphics;
 }

@@ -5,7 +5,12 @@ import java.io.File;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEvent;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
@@ -15,84 +20,86 @@ import tactical.blue.excel.CleanExcelFile;
 
 public class App extends Application {
 
-    private File fileInOctoparse;
-    private File fileInItemDescription;
-    private WebView webView;
-    private Stage primaryStage; // Hold a reference to the primary stage
-    private TextArea logArea;
+    private File fileInWebScraped;
+    private File fileInItemDescriptions;
+    private String siteName;
 
     @Override
-    public void start(Stage stage) {
-        this.primaryStage = stage; // Store the primary stage reference
+    public void start(Stage primaryStage) {
+        FileChooser fileChooserWebScraped = new FileChooser();
 
-        logArea = new TextArea();
-        logArea.setEditable(false);
-        logArea.setWrapText(true);
-        logArea.setPrefHeight(150);
+        // Set the title for the FileChooser dialog
+        fileChooserWebScraped.setTitle("Web Scraped Data File");
 
-        webView = new WebView();
-          webView.getEngine().setOnAlert((WebEvent<String> wEvent) -> {
-            log("JS alert: " + wEvent.getData());
-        });
-        webView.getEngine().load(getClass().getResource("/tactical/blue/static/index.html").toExternalForm());
-        webView.getEngine().getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == javafx.concurrent.Worker.State.SUCCEEDED) {
-                JSObject window = (JSObject) webView.getEngine().executeScript("window");
-                window.setMember("javabridge", this);
+        Button buttonWebScrape = new Button("Upload Web Scraped Data");
+        buttonWebScrape.setOnAction(e -> {
+            // Show the open file dialog
+            this.fileInWebScraped = fileChooserWebScraped.showOpenDialog(primaryStage);
+            if (fileInWebScraped != null) {
+                // Handle the selected file (e.g., display the file name)
+                System.out.println("Selected file: " + fileInWebScraped.getAbsolutePath());
             }
         });
 
-        Scene scene = new Scene(webView, 800, 600);
-        stage.setScene(scene);
-        stage.setTitle("Excel File Processor");
-        stage.show();
-    }
+        FileChooser fileChooserCustomerOrder = new FileChooser();
+        fileChooserCustomerOrder.setTitle("Customer Order Data");
+        Button buttonCustomerOrder = new Button("Upload Customer Order Data");
+        buttonCustomerOrder.setOnAction(e -> {
+            fileInItemDescriptions = fileChooserCustomerOrder.showOpenDialog(primaryStage);
+            System.out.println("Selected file: " + fileInItemDescriptions.getAbsolutePath());
+        });
 
+        Button buttonEndProgram = new Button("End Program");
+        buttonEndProgram.setOnAction(e -> {
+            Platform.exit();
+        });
 
-    public void log(String message) {
-        Platform.runLater(() -> logArea.appendText(message + "\n"));
-    }
+        ToggleGroup eccomerceSites = new ToggleGroup();
+        RadioButton boundTree = new RadioButton("Bound Tree");
+        boundTree.setToggleGroup(eccomerceSites);
+        RadioButton henrySchein = new RadioButton("Henry Schein");
+        henrySchein.setToggleGroup(eccomerceSites);
+        RadioButton medco = new RadioButton("Medco Sports Medicine");
+        medco.setToggleGroup(eccomerceSites);
+        RadioButton naRescue = new RadioButton("North American Rescue");
+        naRescue.setToggleGroup(eccomerceSites);
 
-    public void uploadOctoparseFile() {
-        fileInOctoparse = uploadFile("Select Octoparse File");
-        if (fileInOctoparse != null) {
-            webView.getEngine().executeScript("updateOctoparseFileName('" + fileInOctoparse.getName() + "')");
-        }
-    }
+        
 
-    public void uploadItemDescriptionFile() {
-        fileInItemDescription = uploadFile("Select Item Description File");
-        if (fileInItemDescription != null) {
-            webView.getEngine().executeScript("updateItemDescriptionFileName('" + fileInItemDescription.getName() + "')");
-        }
-    }
-
-    private File uploadFile(String title) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(title);
-        return fileChooser.showOpenDialog(primaryStage); // Use the primary stage for the dialog
-    }
-
-    public void processFiles(String selectedEccomerceSite) {
-        Platform.runLater(() -> {
-            System.out.println("processFiles() called with site: " + selectedEccomerceSite);
-            if (fileInOctoparse != null && fileInItemDescription != null) {
-                try {
-                    CleanExcelFile cleaner = new CleanExcelFile(fileInOctoparse.getPath(), fileInItemDescription.getPath(), selectedEccomerceSite);
-                    cleaner.makeNewExcelFile();
-                    webView.getEngine().executeScript("showMessage('Excel file created successfully!')");
-                } catch (Exception e) {
-                    webView.getEngine().executeScript("showMessage('Error processing files: " + e.getMessage() + "')");
+        eccomerceSites.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == boundTree) {
+                    this.siteName = "Bound Tree";
+            }
+            else if (newValue == henrySchein) {
+                    this.siteName = "Henry Schein";
+            }
+            else if (newValue == medco) {
+                    this.siteName = "Medco";
+            }
+            else {
+                    this.siteName = "NARescue";
                 }
-            } else {
-                webView.getEngine().executeScript("showMessage('Please upload both files before processing.')");
-            }
+
+            System.out.println(this.siteName);
         });
+
+       Button buttonCreateExcelFile = new Button("Create Price Report");
+       buttonCreateExcelFile.setOnAction(e -> {
+        CleanExcelFile cleanExcelFile = new CleanExcelFile(fileInWebScraped, fileInItemDescriptions, siteName);
+        cleanExcelFile.makeNewExcelFile();
+       }); 
+
+        HBox radioButtons = new HBox(boundTree, henrySchein, medco, naRescue);
+        VBox vbox = new VBox(buttonWebScrape, buttonCustomerOrder, radioButtons, buttonCreateExcelFile, buttonEndProgram);
+        
+        Scene scene = new Scene(vbox, 950, 534);
+
+        // Set the scene and show the stage
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Excel File Generator");
+        primaryStage.show();
     }
 
-    public void endProgram() {
-        Platform.exit(); // This will close the JavaFX application
-    }
 
 
     public static void main(String[] args) {

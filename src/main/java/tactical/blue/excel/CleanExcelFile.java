@@ -35,7 +35,10 @@ public class CleanExcelFile {
     private XSSFWorkbook workbook;
     private HashMap<String,Integer> columnHeaderIndex = new HashMap<>();
    
-    //constructor that sets up bufferedreader object
+    
+    /*
+     * constructor that sets up bufferedreader object, used when path is put in constrcutor as String
+     */
     public CleanExcelFile(String fileInOctoparsePath, String fileInItemDescription, String citeName) {
         this.fileInOctoparse = new File(fileInOctoparsePath);
         this.fileInItemDescription = new File(fileInItemDescription);
@@ -48,6 +51,18 @@ public class CleanExcelFile {
         }
     }
 
+    /*
+     * Constructor used when File objects are given
+     */
+    public CleanExcelFile(File fileInOctoparsePath, File fileInItemDescription, String citeName) {
+        this.citeName = citeName;
+        try {
+        this.bufferedReaderOcto = new BufferedReader(new FileReader(fileInOctoparsePath));
+        this.bufferedReaderItemDescription = new BufferedReader(new FileReader(fileInItemDescription));
+        } catch (FileNotFoundException ex) {
+            System.out.println("Something went wrong!");
+        }
+    }
     /*
      * Testing purposes
      */
