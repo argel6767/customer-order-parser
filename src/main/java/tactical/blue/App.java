@@ -7,15 +7,12 @@ import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextArea;
+
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.web.WebEvent;
-import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import netscape.javascript.JSObject;
 import tactical.blue.excel.CleanExcelFile;
 
 public class App extends Application {
