@@ -1,4 +1,4 @@
-module tactical.blue {
+module excel_cleaner {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
