@@ -3,8 +3,9 @@ package tactical.blue.excel.excelrows;
 import java.text.NumberFormat;
 
 import tactical.blue.excel.api.OpenAIClient;
+import java.util.Comparator;
 
-public class ExcelRow {
+public class ExcelRow implements Comparator<Integer>{
     private static Integer row = 1;
     private String itemName; //name of item
     private String manufacturer; //maker of item
@@ -373,6 +374,15 @@ public String toString() {
         NumberFormat percentConverter = NumberFormat.getPercentInstance();
         percentConverter.setMaximumFractionDigits(0);
         return percentConverter.format(decimal);
+    }
+
+
+    
+
+
+    @Override
+    public int compare(Integer o1, Integer o2) {
+        return 
     }
 }
 

@@ -24,7 +24,7 @@ import tactical.blue.excel.excelrows.ExcelRow;
 import tactical.blue.excel.excelrows.HenryScheinExcelRow;
 import tactical.blue.excel.excelrows.MedcoSportsMedicineExcelRow;
 
-public class PriceReportCreator {
+public class PriceReportCreator{
     private File fileInOctoparse;
     private File fileInItemDescription;
     private String citeName;
@@ -130,6 +130,7 @@ public class PriceReportCreator {
                 if (currentRows != null) { //checks if valid rows, will be null if not
                     this.excelRows.addAll(currentRows);
                 }
+                Collections.sort(excelRows);
             }
         
     }
