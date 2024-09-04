@@ -126,9 +126,9 @@ public class PriceReportCreator {
                     continue;
                 }
                 String[] currItemArray = currLineItemDescription.split(",");
-                ExcelRow currentRow = parseRowBasedOnSite(currItemArray, webScrapedMap);
-                if (currentRow != null) { //checks if valid row, will be null if not
-                    this.excelRows.add(currentRow);
+                List<ExcelRow> currentRows = parseRowBasedOnSite(currItemArray, webScrapedMap);
+                if (currentRows != null) { //checks if valid rows, will be null if not
+                    this.excelRows.addAll(currentRows);
                 }
             }
         
@@ -144,16 +144,21 @@ public class PriceReportCreator {
      * Determines what website the items are being sourced from to determine correct way to format rows
      * and get data
      */
-    private ExcelRow parseRowBasedOnSite(String[] currItemArray, Map<String, String[]> webScrapedMap) {
+    private List<ExcelRow> parseRowBasedOnSite(String[] currItemArray, Map<String, List<String[]>> webScrapedMap) {
+        List<ExcelRow> rows =  new ArrayList<>();
         switch (this.citeName) {
             case "Henry Schein":
-                return henryScheinExcelRow(currItemArray, webScrapedMap);
+                //return henryScheinExcelRow(currItemArray, webScrapedMap);
             case "Bound Tree":
-                return boundTreeExcelRow(currItemArray, webScrapedMap);
+                //return boundTreeExcelRow(currItemArray, webScrapedMap);
             case "Medco":
-                return medcoExcelRow(currItemArray, webScrapedMap);
+                List<MedcoSportsMedicineExcelRow> medcoRows = medcoExcelRow(currItemArray, webScrapedMap);
+                if (medcoRows!= null) {
+                    rows.addAll(medcoRows);
+                }
+                return rows;
             case "NARescue":
-                return naRescueExcelRow(currItemArray, webScrapedMap);
+                //return naRescueExcelRow(currItemArray, webScrapedMap);
             default:
                 throw new AssertionError();
         }
@@ -192,21 +197,27 @@ public class PriceReportCreator {
         return null;
     }
 
-    private MedcoSportsMedicineExcelRow medcoExcelRow(String[] currItemArray, Map<String, String[]> webScrapedMap) {
+    private List<MedcoSportsMedicineExcelRow> medcoExcelRow(String[] currItemArray, Map<String, List<String[]>> webScrapedMap) {
+        List<MedcoSportsMedicineExcelRow> productRows = new ArrayList<>();
         if (currItemArray.length >= 3) {
         String itemUrl = currItemArray[2];
         if (webScrapedMap.containsKey(itemUrl)) {
-            String[] currWebScrapedDataArray = webScrapedMap.get(itemUrl);
-            String customerDescription = currItemArray[0];
-            String itemName = currWebScrapedDataArray[columnHeaderIndex.get("Product")];
-            String manufacturer = currWebScrapedDataArray[columnHeaderIndex.get("Manufacturer")];
-            String sku = currWebScrapedDataArray[columnHeaderIndex.get("SKU")];
-            int quantityRequested = Integer.parseInt(currItemArray[1]);
-            //Medco Does not include MSRP
-            Double msrp = 0.0;
-            double wholesalePrice = Double.parseDouble(currWebScrapedDataArray[columnHeaderIndex.get("Wholesale")]);
+            List<String[]> urlValList = webScrapedMap.get(itemUrl); //grabs all products found under url
+
+            for (String[] currWebScrapedDataArray : urlValList) { //makes new objects for each one
+                String customerDescription = currItemArray[0]; //objects with same URL with have the same customer description
+                String itemName = currWebScrapedDataArray[columnHeaderIndex.get("Product")];
+                String manufacturer = currWebScrapedDataArray[columnHeaderIndex.get("Manufacturer")];
+                String sku = currWebScrapedDataArray[columnHeaderIndex.get("SKU")];
+                int quantityRequested = Integer.parseInt(currItemArray[1]);
+                //Medco Does not include MSRP
+                Double msrp = 0.0;
+                double wholesalePrice = Double.parseDouble(currWebScrapedDataArray[columnHeaderIndex.get("Wholesale")]);
+
+                productRows.add(new MedcoSportsMedicineExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, msrp, wholesalePrice, itemUrl)); //then add current row to all the will be returned
+            }
             
-            return new MedcoSportsMedicineExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, msrp, wholesalePrice, itemUrl);
+            return productRows;
         }
 
         }
