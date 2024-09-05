@@ -1,6 +1,8 @@
 package tactical.blue.excel.ui;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -28,7 +30,7 @@ public class ExcelFileCreatorUIBuilder {
     /*
      * Builds the entire Scene object
      */
-    public Scene buildExcelFileCreatorUI(Stage primaryStage) {
+    public Scene buildExcelFileCreatorUI(Stage primaryStage) throws FileNotFoundException {
         FileChooser fileChooserWebScraped = createFileChooser("Web Scraped Data File");
         Button buttonWebScrape = createWebScrapeFileButton(primaryStage, fileChooserWebScraped);
 
@@ -49,7 +51,7 @@ public class ExcelFileCreatorUIBuilder {
         
 
         Scene scene = new Scene(root, 950, 534);
-        scene.getStylesheets().add(getClass().getResource("/tactical/blue/static/stylesheet.css").toExternalForm());
+        scene.getStylesheets().add("src/main/java/tactical/blue/excel/ui/static/stylesheet.css");
         return scene;
     }
 
@@ -165,17 +167,20 @@ public class ExcelFileCreatorUIBuilder {
         return hBox;
     }
 
-    private HBox createLogoBox() {
+    private HBox createLogoBox() throws FileNotFoundException {
         HBox logoBox = new HBox(createLogoImageView());
         logoBox.setAlignment(Pos.TOP_LEFT);
         return logoBox;
     }
 
-    private ImageView createLogoImageView() {
-        ImageView blueTacticalLogo = new ImageView(new Image(getClass().getResource("/tactical/blue/static/Blue-Tactical-Logo.png").toExternalForm()));
+    private ImageView createLogoImageView() throws FileNotFoundException {
+        FileInputStream logo = new FileInputStream("src/main/java/tactical/blue/excel/ui/static/Blue-Tactical-Logo.png");
+        ImageView blueTacticalLogo = new ImageView(new Image(logo));
         blueTacticalLogo.setFitWidth(250);
         blueTacticalLogo.setPreserveRatio(true);
         return blueTacticalLogo;
+        
+        
     }
 
     
