@@ -1,12 +1,10 @@
 package tactical.blue;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import tactical.blue.excel.ui.ExcelFileCreatorUIBuilder;
 
 public class App extends Application {
