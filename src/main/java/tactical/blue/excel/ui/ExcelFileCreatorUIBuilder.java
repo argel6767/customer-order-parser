@@ -3,6 +3,7 @@ package tactical.blue.excel.ui;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -17,6 +18,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import tactical.blue.excel.PriceReportCreator;
@@ -26,6 +28,9 @@ public class ExcelFileCreatorUIBuilder {
     private String siteName;
     private File fileInWebScrapedData;
     private File fileInCustomerOrderData;
+    private final String buttonStyle = "-fx-background-color: #2E5698; -fx-border: none; -fx-text-fill: white; -fx-padding: 10px 20px; -fx-font-size: 16px; -fx-background-radius: 16px;";
+                
+    private final String container = "-fx-font-family: \"Arial\", sans-serif;  -fx-padding: 20px;  -fx-pref-width: 600px; -fx-background-color: #f0f0f0; -fx-padding: 20px; -fx-border-radius: 5px;";
 
     /*
      * Builds the entire Scene object
@@ -48,10 +53,8 @@ public class ExcelFileCreatorUIBuilder {
 
         VBox vBox = createVbox(logoBox,buttonWebScrape, buttonCustomerOrder, hBox, buttonMakeFile, buttonEndProgram);
         StackPane root = new StackPane(vBox);
-        
-
         Scene scene = new Scene(root, 950, 534);
-        scene.getStylesheets().add("src/main/java/tactical/blue/excel/ui/static/stylesheet.css");
+        
         return scene;
     }
 
@@ -74,7 +77,8 @@ public class ExcelFileCreatorUIBuilder {
             this.fileInWebScrapedData = fileChooser.showOpenDialog(primaryStage); 
             System.out.println("Selected file: " +this.fileInWebScrapedData.getAbsolutePath());
         });
-        button.getStyleClass().add("ui-button");
+        
+        button.setStyle(buttonStyle);
         return button;
     }
 
@@ -89,7 +93,7 @@ public class ExcelFileCreatorUIBuilder {
             this.fileInCustomerOrderData = fileChooser.showOpenDialog(primaryStage); 
             System.out.println("Selected file: " +this.fileInCustomerOrderData.getAbsolutePath());
         });
-        button.getStyleClass().add("ui-button");
+        button.setStyle(buttonStyle);
         return button;
     }
 
@@ -136,7 +140,7 @@ public class ExcelFileCreatorUIBuilder {
             PriceReportCreator priceReportCreator = new PriceReportCreator(this.fileInWebScrapedData, this.fileInCustomerOrderData, this.siteName);
             priceReportCreator.makeNewExcelFile();  
         });
-        button.getStyleClass().add("ui-button");
+        button.setStyle(buttonStyle);
         return button;
     }
     
@@ -148,7 +152,7 @@ public class ExcelFileCreatorUIBuilder {
         button.setOnAction(e -> {
             Platform.exit();
         });
-        button.getStyleClass().add("ui-button");
+        button.setStyle(buttonStyle);
         return button;
     }
 
@@ -174,7 +178,7 @@ public class ExcelFileCreatorUIBuilder {
     }
 
     private ImageView createLogoImageView() throws FileNotFoundException {
-        FileInputStream logo = new FileInputStream("src/main/java/tactical/blue/excel/ui/static/Blue-Tactical-Logo.png");
+        InputStream logo = getClass().getResourceAsStream("/static/Blue-Tactical-Logo.png");
         ImageView blueTacticalLogo = new ImageView(new Image(logo));
         blueTacticalLogo.setFitWidth(250);
         blueTacticalLogo.setPreserveRatio(true);
@@ -186,7 +190,7 @@ public class ExcelFileCreatorUIBuilder {
     
     private VBox createVbox(HBox logoBox, Button buttonWebScrape, Button buttonCustomerOrder, HBox hBox, Button buttonMakeFile, Button buttonEndProgram) {
         VBox vBox = new VBox(logoBox, buttonWebScrape, buttonCustomerOrder, hBox, buttonMakeFile, buttonEndProgram);
-        vBox.getStyleClass().add(".container");
+        vBox.setStyle(container);
         vBox.setSpacing(15);
         vBox.setPadding(new Insets(10));
         vBox.setAlignment(Pos.TOP_CENTER);

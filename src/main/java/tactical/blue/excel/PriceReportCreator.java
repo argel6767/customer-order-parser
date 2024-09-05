@@ -296,12 +296,13 @@ public class PriceReportCreator{
 
         private void generateExcelFile() {
             System.out.println("generateExcelFile() Called");
-            File directory = new File("../" + DIRECTORY);
+            String userDesktop = System.getProperty("user.home");
+            File directory = new File(userDesktop, "Desktop/Blue-Tactical/weekly-scrapes");
             if (!directory.exists()) {
-                directory.mkdir();
+                directory.mkdirs();
             }
         try {
-            FileOutputStream excelOutput = new FileOutputStream(new File(directory + "/" + String.valueOf(LocalDate.now()) + ".xlsx"));
+            FileOutputStream excelOutput = new FileOutputStream(new File(directory + "/"+ citeName + "-" + "Report"+ "-" + String.valueOf(LocalDate.now()) + ".xlsx"));
             this.workbook.write(excelOutput);
             excelOutput.close();
         } catch (Exception e) {
