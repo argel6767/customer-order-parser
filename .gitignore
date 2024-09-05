@@ -29,6 +29,7 @@ replay_pid*
 !.vscode/launch.json
 !.vscode/extensions.json
 !.vscode/*.code-snippets
+launch.json
 
 # Local History for Visual Studio Code
 .history/
@@ -53,3 +54,5 @@ buildNumber.properties
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+
+#ENV

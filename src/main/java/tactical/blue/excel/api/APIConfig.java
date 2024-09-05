@@ -14,13 +14,7 @@ public class APIConfig {
      * Grabs OpenAI Key from config file
      */
     public static String getApiKey() throws IOException {
-        Properties properties = new Properties();
-         // Use ClassLoader to load the resource
-        FileInputStream configFile = new FileInputStream("src/main/java/tactical/blue/excel/api/config/config.properties");
-            properties.load(configFile);
-        
-        
-        return properties.getProperty("OPENAI_API_KEY");
+            return System.getenv("OPENAI_API_KEY");
         }
     }
 
