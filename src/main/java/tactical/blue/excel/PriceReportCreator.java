@@ -15,6 +15,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Collections;
 import java.util.Comparator;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -257,8 +260,8 @@ public class PriceReportCreator{
         
         int index = 2;
         //adds the excel rows into dataSheetInfo from List excelRows
+        System.out.println("Grabbing rows...");
         for (ExcelRow excelRow : excelRows) {
-            System.out.println(excelRow.toString());
             dataSheetInfo.put(String.valueOf(index), excelRow.toArray());
             index++;
         }
@@ -296,17 +299,24 @@ public class PriceReportCreator{
 
         private void generateExcelFile() {
             System.out.println("generateExcelFile() Called");
-            String userDesktop = System.getProperty("user.home");
-            File directory = new File(userDesktop, "Desktop/Blue-Tactical/weekly-scrapes");
-            if (!directory.exists()) {
-                directory.mkdirs();
+            String userHome = System.getProperty("user.home");
+            Path folderPath = Paths.get(userHome, "Desktop", "Blue-Tactical", "weekly-scrapes");
+            if (!Files.exists(folderPath)) {
+                try {
+                    Files.createDirectories(folderPath);
+                } catch (Exception e) {
+                    System.out.println("Creation of folder path: " + folderPath + ", failed!");
+                }
             }
         try {
-            FileOutputStream excelOutput = new FileOutputStream(new File(directory + "/"+ citeName + "-" + "Report"+ "-" + String.valueOf(LocalDate.now()) + ".xlsx"));
-            this.workbook.write(excelOutput);
-            excelOutput.close();
+            Path filePath = folderPath.resolve(citeName + "-Report-" + LocalDate.now() + ".xlsx");
+             // Open a FileOutputStream using the Path to write the Excel file
+            try (FileOutputStream excelOutput = new FileOutputStream(filePath.toFile())) {
+                    this.workbook.write(excelOutput);
+                    excelOutput.close();
+                }
         } catch (Exception e) {
-            System.out.println("FILE NOT FOUND!");
+            System.out.println("File Not Found");
             e.printStackTrace();
         }
 
