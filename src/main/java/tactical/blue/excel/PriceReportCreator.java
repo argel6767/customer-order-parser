@@ -162,7 +162,10 @@ public class PriceReportCreator{
             case "Henry Schein":
                 //return henryScheinExcelRow(currItemArray, webScrapedMap);
             case "Bound Tree":
-                //return boundTreeExcelRow(currItemArray, webScrapedMap);
+                List<BoundTreeExcelRow> boundTreeRows = boundTreeExcelRow(currItemArray, webScrapedMap);
+                if (boundTreeRows != null) {
+                    rows.addAll(boundTreeRows);
+                }
             case "Medco":
                 List<MedcoSportsMedicineExcelRow> medcoRows = medcoExcelRow(currItemArray, webScrapedMap);
                 if (medcoRows!= null) {
@@ -204,10 +207,41 @@ public class PriceReportCreator{
 
    
 
+    /*
+    * Bound Tree Data Scrape Structure:
+    * Results, Product, Manufacturer, SKU, Wholesale, List_Price, Packaging, Whole_Sale_Bulk, List_Price_Bulk, Bulk_Packaging, Original_URL
+    */
+    private List<BoundTreeExcelRow> boundTreeExcelRow(String[] currItemArray, Map<String, List<String[]>> webScrapedMap) {
+        List<BoundTreeExcelRow> productRows = new ArrayList<>();
+        if (currItemArray.length >= 3) {
+        String itemUrl = currItemArray[2];
+        if (webScrapedMap.containsKey(itemUrl)) {
+            List<String[]> urlValList = webScrapedMap.get(itemUrl); //grabs all products found under url
 
-    private BoundTreeExcelRow boundTreeExcelRow(String[] currWebScrapedDataArray, Map<String, String[]> webScrapedMap) {
-        return null;
+            for (String[] currWebScrapedDataArray : urlValList) { //makes new objects for each one
+                String customerDescription = currItemArray[0]; //objects with same URL with have the same customer description
+                String itemName = currWebScrapedDataArray[columnHeaderIndex.get("Product")];
+                String manufacturer = currWebScrapedDataArray[columnHeaderIndex.get("Manufacturer")];
+                String sku = currWebScrapedDataArray[columnHeaderIndex.get("SKU")];
+                int quantityRequested = Integer.parseInt(currItemArray[1]);
+                String packaging = currWebScrapedDataArray[columnHeaderIndex.get("Packaging")];
+                double msrp = Double.parseDouble(currWebScrapedDataArray[columnHeaderIndex.get("List_Price")]);
+                double wholesalePrice = Double.parseDouble(currWebScrapedDataArray[columnHeaderIndex.get("Wholesale")]);
+
+                //Grab bulk items to make another BoundTreeExcelRow object
+                double wholesaleBulk = Double.parseDouble(currWebScrapedDataArray[columnHeaderIndex.get("Whole_Sale_Bulk")]);
+                double msrpBulk = Double.parseDouble(currWebScrapedDataArray[columnHeaderIndex.get("List_Price_Bulk")]);
+
+                productRows.add(new BoundTreeExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, packaging, msrp, wholesalePrice, itemUrl)); //then add current row to all the will be returned
+                productRows.add(new BoundTreeExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, packaging, msrpBulk, wholesaleBulk, packaging)); //also add bulk row
+            }
+            
+            return productRows;
+        }
     }
+    return null;
+
+}
 
     private List<MedcoSportsMedicineExcelRow> medcoExcelRow(String[] currItemArray, Map<String, List<String[]>> webScrapedMap) {
         List<MedcoSportsMedicineExcelRow> productRows = new ArrayList<>();
