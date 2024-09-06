@@ -2,7 +2,7 @@ package tactical.blue.excel.excelrows;
 
 /*
  * Bound Tree Data Scrape Structure:
- * Results, Item, Manufacturer, SKU, Original_Url, Source, Our_Price, List_Price, Packaging, (Amount_Per_Package)sometimes, unless its each
+ * Results, Product, Manufacturer, SKU, Wholesale, List_Price, Packaging, Whole_Sale_Bulk, List_Price_Bulk, Bulk_Packaging, Original_URL
  */
 public class BoundTreeExcelRow extends ExcelRow{
     
