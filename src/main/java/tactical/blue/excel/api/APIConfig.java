@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /*
- * Having to OpenAI Key given my sh file  allows for greater secrecy when using API Keys and version control
+ * Having to OpenAI Key given by sh file allows for greater secrecy when using API Keys and version control
  */
 public class APIConfig {
 
