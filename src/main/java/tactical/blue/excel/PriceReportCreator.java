@@ -19,7 +19,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -30,22 +29,18 @@ import tactical.blue.csv.parsing.CSVParser;
 import tactical.blue.csv.parsing.HenryScheinCSVParser;
 import tactical.blue.csv.parsing.MedcoCSVParser;
 import tactical.blue.csv.parsing.NARescueParser;
-import tactical.blue.excel.excelrows.BoundTreeExcelRow;
 import tactical.blue.excel.excelrows.ExcelRow;
-import tactical.blue.excel.excelrows.HenryScheinExcelRow;
-import tactical.blue.excel.excelrows.MedcoSportsMedicineExcelRow;
 
 public class PriceReportCreator{
     private File fileInOctoparse;
     private File fileInItemDescription;
     private String citeName;
-    private final File DIRECTORY = new File("weekly-scrape");
     private BufferedReader bufferedReaderOcto;
     private BufferedReader bufferedReaderItemDescription;
     private List<ExcelRow> excelRows = new ArrayList<>();
     private XSSFWorkbook workbook;
     private HashMap<String,Integer> columnHeaderIndex = new HashMap<>();
-    private CSVParser csvParser;
+    private CSVParser csvParser; //strategy pattern
    
     
     /*
@@ -55,6 +50,7 @@ public class PriceReportCreator{
         this.fileInOctoparse = new File(fileInOctoparsePath);
         this.fileInItemDescription = new File(fileInItemDescription);
         this.citeName = citeName;
+        setCSVParser(citeName);
         try {
         this.bufferedReaderOcto = new BufferedReader(new FileReader(fileInOctoparse));
         this.bufferedReaderItemDescription = new BufferedReader(new FileReader(fileInItemDescription));
@@ -82,6 +78,10 @@ public class PriceReportCreator{
     public PriceReportCreator() {
     }
 
+    /*
+     * Depending on what site the data is sourced the CSVParser object will be instantiated as the appropriate
+     * strategy
+     */
     private void setCSVParser(String siteName) {
         switch (siteName) {
             case "Bound Tree":
@@ -89,12 +89,15 @@ public class PriceReportCreator{
                 break;
             case "Henry Schein":
                 this.csvParser = new HenryScheinCSVParser();
+                break;
             case "Medco":
                 this.csvParser = new MedcoCSVParser();
+                break;
             case "NA Rescue":
                 this.csvParser = new NARescueParser();
-            default:
                 break;
+            default:
+                System.out.println("Not a valid option!");
         }
     }
 
@@ -102,6 +105,9 @@ public class PriceReportCreator{
         this.excelRows = excelRows;
     }
 
+    /*
+     * Abstracted overview of how a Excel file is created using the scraped data and order info given by customer
+     */
     public void makeNewExcelFile() {
         System.out.println("makeNewExcelFile() called");
         try {
@@ -154,7 +160,7 @@ public class PriceReportCreator{
                     continue;
                 }
                 String[] currItemArray = currLineItemDescription.split(",");
-                List<ExcelRow> currentRows = parseRows(currItemArray, webScrapedMap);
+                List<ExcelRow> currentRows = parseRowsForExcelFile(currItemArray, webScrapedMap);
                 if (currentRows != null) { //checks if valid rows, will be null if not
                     this.excelRows.addAll(currentRows);
                 }
@@ -168,166 +174,22 @@ public class PriceReportCreator{
         
     }
 
+    /*
+     * Grabs the column headers from scraped data to have dynamic indexes
+     */
     private void getExcelColumnNames(String[] columnHeaders) { //allows for dynamic indexes of headers, should they be in an unexpected order
         for (int i = 0; i < columnHeaders.length; i++) {
             columnHeaderIndex.put(columnHeaders[i], i);
         }
     }
 
-    private List<ExcelRow> parseRows(String[] currItemArray, Map<String, List<String[]>> webScrapedMap) {
+    /*
+     * calls the CSVParser parseRow() object to parse scraped data and have them formatted for the Excel table
+     */
+    private List<ExcelRow> parseRowsForExcelFile(String[] currItemArray, Map<String, List<String[]>> webScrapedMap) {
         return csvParser.parseRow(currItemArray, webScrapedMap, columnHeaderIndex);
     }
 
-    /*
-     * Determines what website the items are being sourced from to determine correct way to format rows
-     * and get data
-     */
-    private List<ExcelRow> parseRowBasedOnSite(String[] currItemArray, Map<String, List<String[]>> webScrapedMap) {
-        List<ExcelRow> rows =  new ArrayList<>();
-        switch (this.citeName) {
-            case "Henry Schein":
-                //return henryScheinExcelRow(currItemArray, webScrapedMap);
-            case "Bound Tree":
-                List<BoundTreeExcelRow> boundTreeRows = boundTreeExcelRow(currItemArray, webScrapedMap);
-                if (boundTreeRows != null) {
-                    for (BoundTreeExcelRow row : boundTreeRows) {
-                        System.out.println(row.toString());
-                    }
-                    rows.addAll(boundTreeRows);
-                }
-            case "Medco":
-                List<MedcoSportsMedicineExcelRow> medcoRows = medcoExcelRow(currItemArray, webScrapedMap);
-                if (medcoRows!= null) {
-                    rows.addAll(medcoRows);
-                }
-                return rows;
-            case "NARescue":
-                //return naRescueExcelRow(currItemArray, webScrapedMap);
-            default:
-                throw new AssertionError();
-        }
-    }
-
-    /*
-     * Customer Details Will Be This Format: Item Description, Quantity, URL
-     */
-
-    /*
-     * Creates a HenryScheinExcelRow object that will become a row
-     */
-    private HenryScheinExcelRow henryScheinExcelRow(String[] currItemArray, Map<String, String[]> webScrapedMap) {
-        if (currItemArray.length >= 5) { // Ensure the array has enough columns
-            String itemUrl = currItemArray[3];
-            if (webScrapedMap.containsKey(itemUrl)) { // URL match found
-                String[] currWebScrapedDataArray = webScrapedMap.get(itemUrl);
-                String productName = currWebScrapedDataArray[columnHeaderIndex.get("Product")];
-                String manufacturerInfo = StringUtils.deleteWhitespace(currWebScrapedDataArray[columnHeaderIndex.get("Manufacturer")]);
-                int quantity = Integer.parseInt(currItemArray[1].trim());
-                String packaging = currWebScrapedDataArray[columnHeaderIndex.get("Packaging")];
-                double msrp = Double.parseDouble(currWebScrapedDataArray[columnHeaderIndex.get("MSRP")].trim());
-                double wholesalePrice = Double.parseDouble(currWebScrapedDataArray[columnHeaderIndex.get("Price")]);
-
-                return new HenryScheinExcelRow(productName, manufacturerInfo, quantity, packaging, msrp, wholesalePrice, itemUrl);
-            }
-            
-        }
-        return null; //will return null if line is not valid
-    }
-
-   
-
-    /*
-    * Bound Tree Data Scrape Structure:
-    * Results, Product, Manufacturer, SKU, Wholesale, List_Price, Packaging, Whole_Sale_Bulk, List_Price_Bulk, Bulk_Packaging, Original_URL
-    */
-    private List<BoundTreeExcelRow> boundTreeExcelRow(String[] currItemArray, Map<String, List<String[]>> webScrapedMap) {
-        List<BoundTreeExcelRow> productRows = new ArrayList<>();
-        if (currItemArray.length >= 3) {
-        String itemUrl = currItemArray[2];
-        if (webScrapedMap.containsKey(itemUrl)) {
-            List<String[]> urlValList = webScrapedMap.get(itemUrl); //grabs all products found under url
-
-            for (String[] currWebScrapedDataArray : urlValList) { //makes new objects for each one
-                
-                    /*
-                     * Grab all scraped Info to make row objects
-                     * 
-                     */
-                    String customerDescription = currItemArray[0]; //objects with same URL with have the same customer description
-                    String itemName = currWebScrapedDataArray[columnHeaderIndex.get("Product")];
-                    String manufacturer = currWebScrapedDataArray[columnHeaderIndex.get("Manufacturer")].trim();
-                    String sku = currWebScrapedDataArray[columnHeaderIndex.get("SKU")];
-                    int quantityRequested = Integer.parseInt(currItemArray[1]);
-                    String packaging = currWebScrapedDataArray[columnHeaderIndex.get("Packaging")];
-                    double msrp = Double.parseDouble(currWebScrapedDataArray[columnHeaderIndex.get("List_Price")]);
-                    double wholesalePrice = Double.parseDouble(currWebScrapedDataArray[columnHeaderIndex.get("Wholesale")]);
-
-                    //Grab bulk items to make another BoundTreeExcelRow object
-                    /*
-                     * Add both a regular and bulk item row to thw entire list of rows
-                     */
-                    try {
-                        double wholesaleBulk = Double.parseDouble(currWebScrapedDataArray[columnHeaderIndex.get("Whole_Sale_Bulk")]);
-                        double msrpBulk = Double.parseDouble(currWebScrapedDataArray[columnHeaderIndex.get("List_Price_Bulk")]);
-                        String packagingBulk = currWebScrapedDataArray[columnHeaderIndex.get("Bulk_Packaging")];
-                        productRows.add(new BoundTreeExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, packaging, msrp, wholesalePrice, itemUrl)); 
-                        productRows.add(new BoundTreeExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, packagingBulk, msrpBulk, wholesaleBulk, itemUrl)); 
-
-                    }
-                    /*
-                     * Will catch NullPointerException that is thrown when an item has no bulk info
-                     */
-                    catch(NullPointerException npe) {
-                        productRows.add(new BoundTreeExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, packaging, msrp, wholesalePrice, itemUrl)); 
-                    }
-
-            }
-                
-            return productRows;
-        }
-    }
-    return null;
-
-}
-
-    private List<MedcoSportsMedicineExcelRow> medcoExcelRow(String[] currItemArray, Map<String, List<String[]>> webScrapedMap) {
-        List<MedcoSportsMedicineExcelRow> productRows = new ArrayList<>();
-        if (currItemArray.length >= 3) {
-        String itemUrl = currItemArray[2];
-        if (webScrapedMap.containsKey(itemUrl)) {
-            List<String[]> urlValList = webScrapedMap.get(itemUrl); //grabs all products found under url
-
-            for (String[] currWebScrapedDataArray : urlValList) { //makes new objects for each one
-                String customerDescription = currItemArray[0]; //objects with same URL with have the same customer description
-                String itemName = currWebScrapedDataArray[columnHeaderIndex.get("Product")];
-                String manufacturer = currWebScrapedDataArray[columnHeaderIndex.get("Manufacturer")];
-                String sku = currWebScrapedDataArray[columnHeaderIndex.get("SKU")];
-                int quantityRequested = Integer.parseInt(currItemArray[1]);
-                //Medco Does not include MSRP
-                Double msrp = 0.0;
-                double wholesalePrice = Double.parseDouble(currWebScrapedDataArray[columnHeaderIndex.get("Wholesale")]);
-
-                productRows.add(new MedcoSportsMedicineExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, msrp, wholesalePrice, itemUrl)); //then add current row to all the will be returned
-            }
-            
-            return productRows;
-        }
-
-        }
-        return null; //will return null if line is not valid
-
-    }
-
-    /*
-     * TODO
-     * Create a method to loop through each list element to make a new Excel row per item, mutiple items can have the same, url
-     * they will all share the same currItemArray
-     */
-
-    private ExcelRow naRescueExcelRow(String[] currItemArray, Map<String, String[]> webScrapedMap) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'medcoExcelRow'");
-    }
 
     //reads lines from csvRows and puts them into a new excel file
     public void createExcelCells() {
