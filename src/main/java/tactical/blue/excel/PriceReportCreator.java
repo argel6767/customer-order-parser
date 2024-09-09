@@ -25,6 +25,11 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import tactical.blue.csv.parsing.BoundTreeCSVParser;
+import tactical.blue.csv.parsing.CSVParser;
+import tactical.blue.csv.parsing.HenryScheinCSVParser;
+import tactical.blue.csv.parsing.MedcoCSVParser;
+import tactical.blue.csv.parsing.NARescueParser;
 import tactical.blue.excel.excelrows.BoundTreeExcelRow;
 import tactical.blue.excel.excelrows.ExcelRow;
 import tactical.blue.excel.excelrows.HenryScheinExcelRow;
@@ -40,6 +45,7 @@ public class PriceReportCreator{
     private List<ExcelRow> excelRows = new ArrayList<>();
     private XSSFWorkbook workbook;
     private HashMap<String,Integer> columnHeaderIndex = new HashMap<>();
+    private CSVParser csvParser;
    
     
     /*
@@ -62,6 +68,7 @@ public class PriceReportCreator{
      */
     public PriceReportCreator(File fileInOctoparsePath, File fileInItemDescription, String citeName) {
         this.citeName = citeName;
+        setCSVParser(citeName);
         try {
         this.bufferedReaderOcto = new BufferedReader(new FileReader(fileInOctoparsePath));
         this.bufferedReaderItemDescription = new BufferedReader(new FileReader(fileInItemDescription));
@@ -73,6 +80,22 @@ public class PriceReportCreator{
      * Testing purposes
      */
     public PriceReportCreator() {
+    }
+
+    private void setCSVParser(String siteName) {
+        switch (siteName) {
+            case "Bound Tree":
+                this.csvParser = new BoundTreeCSVParser();
+                break;
+            case "Henry Schein":
+                this.csvParser = new HenryScheinCSVParser();
+            case "Medco":
+                this.csvParser = new MedcoCSVParser();
+            case "NA Rescue":
+                this.csvParser = new NARescueParser();
+            default:
+                break;
+        }
     }
 
     public void setExcelRows(List<ExcelRow> excelRows) {
@@ -96,16 +119,16 @@ public class PriceReportCreator{
 
         // Step 1: Read Web Scrape Data CSV into a map (URL -> row data)
         Map<String, List<String[]>> webScrapedMap = new HashMap<>();
-            String currLineOctoparse;
+            String currLineDataScrape;
             int iteration = 0;
-            while ((currLineOctoparse = bufferedReaderOcto.readLine()) != null) {
+            while ((currLineDataScrape = bufferedReaderOcto.readLine()) != null) {
                 if (iteration == 0) { // Skip headers
                     iteration++; 
-                    String[] columnHeaders = currLineOctoparse.split(",");
+                    String[] columnHeaders = currLineDataScrape.split(",");
                     getExcelColumnNames(columnHeaders);
                     continue;
                 }
-                String[] currWebScrapedDataArray = currLineOctoparse.split(",");
+                String[] currWebScrapedDataArray = currLineDataScrape.split(",");
                 if (currWebScrapedDataArray.length >= 5) { // Ensure the array has enough columns
                     String productURL = currWebScrapedDataArray[currWebScrapedDataArray.length-1]; //url of item in octoparse file
                     if (webScrapedMap.containsKey(productURL)) {
@@ -118,7 +141,6 @@ public class PriceReportCreator{
                        webScrapedMap.put(productURL, urlValList);
                     }
                     
-                    System.out.println(productURL);
                 }
             }
         
@@ -132,7 +154,7 @@ public class PriceReportCreator{
                     continue;
                 }
                 String[] currItemArray = currLineItemDescription.split(",");
-                List<ExcelRow> currentRows = parseRowBasedOnSite(currItemArray, webScrapedMap);
+                List<ExcelRow> currentRows = parseRows(currItemArray, webScrapedMap);
                 if (currentRows != null) { //checks if valid rows, will be null if not
                     this.excelRows.addAll(currentRows);
                 }
@@ -150,6 +172,10 @@ public class PriceReportCreator{
         for (int i = 0; i < columnHeaders.length; i++) {
             columnHeaderIndex.put(columnHeaders[i], i);
         }
+    }
+
+    private List<ExcelRow> parseRows(String[] currItemArray, Map<String, List<String[]>> webScrapedMap) {
+        return csvParser.parseRow(currItemArray, webScrapedMap, columnHeaderIndex);
     }
 
     /*
@@ -245,7 +271,7 @@ public class PriceReportCreator{
                         double msrpBulk = Double.parseDouble(currWebScrapedDataArray[columnHeaderIndex.get("List_Price_Bulk")]);
                         String packagingBulk = currWebScrapedDataArray[columnHeaderIndex.get("Bulk_Packaging")];
                         productRows.add(new BoundTreeExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, packaging, msrp, wholesalePrice, itemUrl)); 
-                        productRows.add(new BoundTreeExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, packagingBulk, msrpBulk, wholesaleBulk, packaging)); 
+                        productRows.add(new BoundTreeExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, packagingBulk, msrpBulk, wholesaleBulk, itemUrl)); 
 
                     }
                     /*

@@ -87,7 +87,7 @@ public class ExcelRow{
      * return the value back otherwise
      */
     private Object determineIfMSRPIsPresent(Double msrp) {
-        if (msrp == 0.0) {
+        if (msrp.equals(0.0)) {
             return "N/A";
         }
         return msrp;
@@ -207,6 +207,7 @@ public class ExcelRow{
 
 
     //getters and setters
+    
     public String getItemName() {
         return this.itemName;
     }
