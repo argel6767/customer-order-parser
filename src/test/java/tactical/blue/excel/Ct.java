@@ -2,7 +2,7 @@ package tactical.blue.excel;
 
 import org.junit.jupiter.api.Test;
 
-public class CleanExcelFileTest {
+public class Ct {
 
     @Test
     public void testWriteExcelCells() {

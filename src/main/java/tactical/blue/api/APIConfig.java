@@ -1,4 +1,4 @@
-package tactical.blue.excel.api;
+package tactical.blue.api;
 
 import java.io.FileInputStream;
 import java.io.IOException;

@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import tactical.blue.excel.ui.ExcelFileCreatorUIBuilder;
+import tactical.blue.ui.ExcelFileCreatorUIBuilder;
 
 public class App extends Application {
     @Override

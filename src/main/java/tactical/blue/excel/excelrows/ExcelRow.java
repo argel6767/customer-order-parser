@@ -2,8 +2,7 @@ package tactical.blue.excel.excelrows;
 
 import java.text.NumberFormat;
 
-import tactical.blue.excel.api.OpenAIClient;
-import java.util.Comparator;
+import tactical.blue.api.OpenAIClient;
 
 public class ExcelRow{
     private static Integer row = 1;

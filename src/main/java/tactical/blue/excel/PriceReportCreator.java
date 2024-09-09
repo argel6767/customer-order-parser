@@ -72,6 +72,7 @@ public class PriceReportCreator{
             System.out.println("Something went wrong!");
         }
     }
+    
     /*
      * Testing purposes
      */
@@ -119,6 +120,7 @@ public class PriceReportCreator{
         createExcelCells();
         generateExcelFile();
     }
+
     //reads csv file that is put in
    private void readCSVFiles() throws IOException {
         System.out.println("readCSVFiles() was called");
