@@ -59,3 +59,4 @@ buildNumber.properties
 
 #SH
 build.sh
+*.sh

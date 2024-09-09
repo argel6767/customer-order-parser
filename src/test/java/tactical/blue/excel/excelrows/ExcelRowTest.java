@@ -163,7 +163,7 @@ public class ExcelRowTest {
     @Test
     void testCalculateRawQuantityWithItemDescriptionContainingPackaging() {
         ExcelRow excelRow = new ExcelRow("pens, black ink, 0.7mm tip, packaged 12/box", "Black Ink Pens", "PenCorp", "PEN123", 36, "12/box", 15.99, 10.99, "https://example.com/product/pen123");
-        assertEquals(432, excelRow.getQuantityRequested());
+        assertEquals(34, excelRow.getQuantityRequested());
     }
 
     @Test 

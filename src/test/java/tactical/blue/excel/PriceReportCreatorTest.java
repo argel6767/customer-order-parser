@@ -2,7 +2,7 @@ package tactical.blue.excel;
 
 import org.junit.jupiter.api.Test;
 
-public class Ct {
+public class PriceReportCreatorTest {
 
     @Test
     public void testWriteExcelCells() {
