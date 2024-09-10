@@ -272,7 +272,7 @@ public class PriceReportCreator{
         }
 
         public static void main(String[] args) {
-            PriceReportCreator cleanExcelFile = new PriceReportCreator("/Users/argelhernandezamaya/Desktop/Blue-Tactical/product-orders/HenryScheinScrapeExample.csv", "/Users/argelhernandezamaya/Desktop/Blue-Tactical/product-orders/Henry-Shein-Order-Example.csv", "Henry Schein");
+            PriceReportCreator cleanExcelFile = new PriceReportCreator("/Users/argelhernandezamaya/Desktop/Blue-Tactical/product-orders/Henry-Schein-Scrape.csv", "/Users/argelhernandezamaya/Desktop/Blue-Tactical/product-orders/Henry-Shein-Order-Example.csv", "Henry Schein");
             cleanExcelFile.makeNewExcelFile();
         }
 

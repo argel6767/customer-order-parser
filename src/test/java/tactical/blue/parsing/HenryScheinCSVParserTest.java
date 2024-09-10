@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import tactical.blue.excel.excelrows.ExcelRow;
@@ -34,7 +35,7 @@ public class HenryScheinCSVParserTest {
 
         // Example scraped data
         List<String[]> webScrapedData1 = new ArrayList<>();
-        webScrapedData1.add(new String[] { "https://www.henryschein.com/us-en/Search.aspx?searchkeyWord=Ankle+Brace+X-Small", "Actimove Ar Wlkr Boot Ank/Ft/Lg Sz Men Up to 4.5 / Women Up to 6 X-Small Lft/Rt1467977 | BSN Medical, Inc - 7627255", "$66.99", "1 @ $32.69", "EA\nEach" });
+        webScrapedData1.add(new String[] { "https://www.henryschein.com/us-en/Search.aspx?searchkeyWord=Ankle+Brace+X-Small", "Actimove Ar Wlkr Boot Ank/Ft/Lg Sz Men Up to 4.5 / Women Up to 6 X-Small Lft/Rt1467977 | BSN Medical, Inc - 7627255", "$66.99", "1 @ $32.69", "Each" });
         webScrapedMap.put("https://www.henryschein.com/us-en/Search.aspx?searchkeyWord=Ankle+Brace+X-Small", webScrapedData1);
 
         List<String[]> webScrapedData2 = new ArrayList<>();

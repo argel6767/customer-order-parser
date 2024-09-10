@@ -34,6 +34,7 @@ public class HenryScheinCSVParser implements CSVParser {
                     Double msrp = cleanScrapedMSRP(unCleanedMSRP);
                     
                     String unCleanedWholesale = currWebScrapedDataArray[columnHeaderIndex.get("\"HenrySchein_Wholesale\"")];
+                    String bob = unCleanedWholesale;
                     double wholesale = cleanScrapedWholsale(unCleanedWholesale);
                     productRows.add(new HenryScheinExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, packaging, msrp, wholesale, itemUrl)); //then add current row to all the will be returned
                 }
@@ -56,7 +57,7 @@ public class HenryScheinCSVParser implements CSVParser {
         String itemNameAndHenryScheinNumber = firstSplit[0];
         String itemName = itemNameAndHenryScheinNumber.replaceAll("\\d+$", "");
         String manufacturerAndSKU = firstSplit[1];
-        String[] secondSplit = manufacturerAndSKU.split(" - ");
+        String[] secondSplit = manufacturerAndSKU.split(" \\- ");
         String sku = secondSplit[1];
         String manufacturer = secondSplit[0];
 
@@ -70,10 +71,9 @@ public class HenryScheinCSVParser implements CSVParser {
      * Cleans scraped MSRP by getting rid of $ sign and lingering ""
      */
     private Double cleanScrapedMSRP(String msrp) {
-        msrp = msrp.replace("$", "");
-        msrp = msrp.replaceAll("\"", msrp);
-
-        return Double.valueOf(msrp);
+        String msrpCleaned = msrp.replace("$", "").replaceAll("\"", "");
+        
+        return Double.valueOf(msrpCleaned);
 
     }
 
