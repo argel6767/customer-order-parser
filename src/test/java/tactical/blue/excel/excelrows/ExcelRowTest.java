@@ -150,14 +150,15 @@ public class ExcelRowTest {
     // Test for manufacturer and SKU extraction
     @Test
     void testSetManufactuerAndSKUHenrySchein() {
+        //String customerDescription, String itemName, String manufacturer, String sku, int quantityRequested, String packaging, double msrp, double wholeSalePrice, String productURL) {
         // Creating an ExcelRow object with manufacturer info for Henry Schein
-        ExcelRow row = new HenryScheinExcelRow("Product", "1190394\n\n PDI Professional Disposables\n\n H04082", 10, "10/Pack", 49.99, 20.00, "https://www.henryschein.com/product/456");
+        ExcelRow row = new HenryScheinExcelRow("some cool product yo","Product 9000", "Rizzlers RUS","556655", 10, "10/Pack", 49.99, 20.00, "https://www.henryschein.com/product/456");
 
         // Assert that the manufacturer is set correctly
-        assertEquals("PDI Professional Disposables", row.getManufacturer());
+        assertEquals("Rizzlers RUS", row.getManufacturer());
 
         // Assert that the SKU is set correctly
-        assertEquals("H04082", row.getSku());
+        assertEquals("556655", row.getSku());
     }
 
     @Test

@@ -206,6 +206,20 @@ public class ExcelRow{
 
 
     //getters and setters
+
+    public void setMsrp(Object msrp) {
+        this.msrp = msrp;
+    }
+
+
+    public Double getWholeSalePrice() {
+        return wholeSalePrice;
+    }
+
+
+    public void setWholeSalePrice(Double wholeSalePrice) {
+        this.wholeSalePrice = wholeSalePrice;
+    }    
     
     public String getItemName() {
         return this.itemName;

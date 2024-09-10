@@ -32,10 +32,10 @@ import tactical.blue.parsing.MedcoCSVParser;
 import tactical.blue.parsing.NARescueParser;
 
 public class PriceReportCreator{
-    private File fileInOctoparse;
-    private File fileInItemDescription;
-    private String citeName;
-    private BufferedReader bufferedReaderOcto;
+    private File fileInWebScrape;
+    private File fileInCustomerOrderInfo;
+    private String siteName;
+    private BufferedReader bufferedReaderWebScrape;
     private BufferedReader bufferedReaderItemDescription;
     private List<ExcelRow> excelRows = new ArrayList<>();
     private XSSFWorkbook workbook;
@@ -46,14 +46,14 @@ public class PriceReportCreator{
     /*
      * constructor that sets up bufferedreader object, used when path is put in constrcutor as String
      */
-    public PriceReportCreator(String fileInOctoparsePath, String fileInItemDescription, String citeName) {
-        this.fileInOctoparse = new File(fileInOctoparsePath);
-        this.fileInItemDescription = new File(fileInItemDescription);
-        this.citeName = citeName;
-        setCSVParser(citeName);
+    public PriceReportCreator(String fileInOctoparsePath, String fileInCustomerOrderInfo, String siteName) {
+        this.fileInWebScrape = new File(fileInOctoparsePath);
+        this.fileInCustomerOrderInfo = new File(fileInCustomerOrderInfo);
+        this.siteName = siteName;
+        setCSVParser(siteName);
         try {
-        this.bufferedReaderOcto = new BufferedReader(new FileReader(fileInOctoparse));
-        this.bufferedReaderItemDescription = new BufferedReader(new FileReader(fileInItemDescription));
+        this.bufferedReaderWebScrape = new BufferedReader(new FileReader(fileInWebScrape));
+        this.bufferedReaderItemDescription = new BufferedReader(new FileReader(fileInCustomerOrderInfo));
         } catch (FileNotFoundException ex) {
             System.out.println("Something went wrong!");
         }
@@ -62,12 +62,12 @@ public class PriceReportCreator{
     /*
      * Constructor used when File objects are given
      */
-    public PriceReportCreator(File fileInOctoparsePath, File fileInItemDescription, String citeName) {
-        this.citeName = citeName;
-        setCSVParser(citeName);
+    public PriceReportCreator(File fileInOctoparsePath, File fileInCustomerOrderInfo, String siteName) {
+        this.siteName = siteName;
+        setCSVParser(siteName);
         try {
-        this.bufferedReaderOcto = new BufferedReader(new FileReader(fileInOctoparsePath));
-        this.bufferedReaderItemDescription = new BufferedReader(new FileReader(fileInItemDescription));
+        this.bufferedReaderWebScrape = new BufferedReader(new FileReader(fileInOctoparsePath));
+        this.bufferedReaderItemDescription = new BufferedReader(new FileReader(fileInCustomerOrderInfo));
         } catch (FileNotFoundException ex) {
             System.out.println("Something went wrong!");
         }
@@ -129,7 +129,7 @@ public class PriceReportCreator{
         Map<String, List<String[]>> webScrapedMap = new HashMap<>();
             String currLineDataScrape;
             int iteration = 0;
-            while ((currLineDataScrape = bufferedReaderOcto.readLine()) != null) {
+            while ((currLineDataScrape = bufferedReaderWebScrape.readLine()) != null) {
                 if (iteration == 0) { // Skip headers
                     iteration++; 
                     String[] columnHeaders = currLineDataScrape.split(",");
@@ -138,7 +138,11 @@ public class PriceReportCreator{
                 }
                 String[] currWebScrapedDataArray = currLineDataScrape.split(",");
                 if (currWebScrapedDataArray.length >= 5) { // Ensure the array has enough columns
-                    String productURL = currWebScrapedDataArray[currWebScrapedDataArray.length-1]; //url of item in octoparse file
+                    String productURL = currWebScrapedDataArray[currWebScrapedDataArray.length-1]; //url of item in octoparse fil
+                    if (this.siteName.equals("Henry Schein")) {
+                        productURL = currWebScrapedDataArray[0].replaceAll("\"", ""); //henry schein is the only with url first
+                    }
+                    
                     if (webScrapedMap.containsKey(productURL)) {
                         List<String[]> urValList = webScrapedMap.get(productURL);
                         urValList.add(currWebScrapedDataArray);
@@ -198,7 +202,7 @@ public class PriceReportCreator{
         System.out.println("createExcelCells() called");
         
         this.workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet("weekly price report for " + this.citeName + " " + LocalDate.now());
+        XSSFSheet sheet = workbook.createSheet("weekly price report for " + this.siteName + " " + LocalDate.now());
 
         Map<String, Object[]> dataSheetInfo = new LinkedHashMap<>(); //use LinkedHashMap to keep order
         dataSheetInfo.put("1", new Object[] {"Row","Item", "Manfucturer", "Source", "SKU", "Packaging", "Quantity", "MSRP", "Wholesale Price", "Cost of Goods", "Markup", "Unit Price", "Extended Price", "Contribution", "Product URL"}); //headers
@@ -254,7 +258,7 @@ public class PriceReportCreator{
                 }
             }
         try {
-            Path filePath = folderPath.resolve(citeName + "-Report-" + LocalDate.now() + ".xlsx");
+            Path filePath = folderPath.resolve(siteName + "-Report-" + LocalDate.now() + ".xlsx");
              // Open a FileOutputStream using the Path to write the Excel file
             try (FileOutputStream excelOutput = new FileOutputStream(filePath.toFile())) {
                     this.workbook.write(excelOutput);
@@ -268,7 +272,7 @@ public class PriceReportCreator{
         }
 
         public static void main(String[] args) {
-            PriceReportCreator cleanExcelFile = new PriceReportCreator("/Users/argelhernandezamaya/Desktop/Blue-Tactical/product-orders/Bound-Tree-Scrape.csv", "/Users/argelhernandezamaya/Desktop/Blue-Tactical/product-orders/Bound-Tree-Order-Example.csv", "Bound Tree");
+            PriceReportCreator cleanExcelFile = new PriceReportCreator("/Users/argelhernandezamaya/Desktop/Blue-Tactical/product-orders/HenryScheinScrapeExample.csv", "/Users/argelhernandezamaya/Desktop/Blue-Tactical/product-orders/Henry-Shein-Order-Example.csv", "Henry Schein");
             cleanExcelFile.makeNewExcelFile();
         }
 
