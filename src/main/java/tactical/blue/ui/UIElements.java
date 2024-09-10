@@ -8,7 +8,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 
 /*
- * Abstract Class that houses the styles that will exist throughout the program
+ * Abstract Class that houses the styles and components that will exist throughout the program
  */
 public abstract class UIElements {
     private final String buttonStyle = "-fx-background-color: #2E5698; -fx-border: none; -fx-text-fill: white; -fx-padding: 10px 20px; -fx-font-size: 16px; -fx-background-radius: 16px;";

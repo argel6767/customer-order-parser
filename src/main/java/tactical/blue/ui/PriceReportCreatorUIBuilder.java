@@ -19,16 +19,16 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import tactical.blue.excel.PriceReportCreator;
 
-public class ExcelFileCreatorUIBuilder extends UIElements{
+public class PriceReportCreatorUIBuilder extends UIElements{
 
     private String siteName;
     private File fileInWebScrapedData;
     private File fileInCustomerOrderData;
-    
+
     /*
      * Builds the entire Scene object
      */
-    public Scene buildExcelFileCreatorUI(Stage primaryStage) throws FileNotFoundException {
+    public Scene build(Stage primaryStage) throws FileNotFoundException {
         FileChooser fileChooserWebScraped = createFileChooser("Web Scraped Data File");
         Button buttonWebScrape = createWebScrapeFileButton(primaryStage, fileChooserWebScraped);
 
