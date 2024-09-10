@@ -2,9 +2,7 @@ package tactical.blue.ui;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -141,18 +139,6 @@ public class PriceReportCreatorUIBuilder extends UIElements{
         button.setStyle(getButtonStyle());
         return button;
     }
-    
-    /*
-     * Makes Button that ends program when pressed
-     */
-    private Button createEndProgramButton() {
-        Button button = new Button("End Program");
-        button.setOnAction(e -> {
-            Platform.exit();
-        });
-        button.setStyle(getButtonStyle());
-        return button;
-    }
 
     /*
      * Makes HBox of RadioButtons through ToggleGroup
@@ -167,15 +153,6 @@ public class PriceReportCreatorUIBuilder extends UIElements{
         hBox.setPadding(new Insets(5));
         hBox.setAlignment(Pos.CENTER);
         return hBox;
-    }
-
-    /*
-     * Creates HBox for housing logo
-     */
-    private HBox createLogoBox() throws FileNotFoundException {
-        HBox logoBox = new HBox(createLogoImageView());
-        logoBox.setAlignment(Pos.TOP_LEFT);
-        return logoBox;
     }
 
 

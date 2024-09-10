@@ -1,11 +1,14 @@
 package tactical.blue.ui;
 
 import java.io.FileNotFoundException;
+import java.time.LocalTime;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import tactical.blue.navigation.UINavigation;
 
@@ -21,13 +24,46 @@ public class MainPageUIBuilder extends UIElements{
         return super.getScene();
     }
 
+    /*
+     * builds the UI
+     */
     public void build(Stage primaryStage) throws FileNotFoundException {
-        HBox hBox = new HBox(createLogoImageView());
-        Button buttonGoToPriceReport = createGoToPriceReportPage("Create A Price Report");
-        Button buttonGoToConsolidateExcelFiles = createGoToConsolidateExcelFilesPage("Consolidate Price Reports Created");
-        HBox buttonContainer = new HBox(buttonGoToPriceReport, buttonGoToConsolidateExcelFiles);
-        buttonContainer.setSpacing(10);
-        VBox vBox = new VBox(hBox, buttonContainer);
-        super.setScene(new Scene(vBox, getPageWidth(), getPageHeight()));
+        super.setScene(new Scene(createVboxContainer(), getPageWidth(), getPageHeight()));
     }
+
+    /*
+     * Creates the VBox that holds everything
+     */
+    private VBox createVboxContainer() throws FileNotFoundException {
+        VBox vBox = new VBox(createLogoAndHeadingBox(createGreetingHeading()),createGoToPriceReportPage("Create A Price Report"), createGoToConsolidateExcelFilesPage("Consolidate Price Reports"), createEndProgramButton());
+        vBox.setStyle(getContainerStyle());
+        vBox.setSpacing(25);
+        vBox.setPadding(new Insets(10));
+        vBox.setAlignment(Pos.TOP_CENTER);
+        return vBox;
+    }
+
+    /*
+     * Creates a Label that greets the user based off time
+     */
+    private Text createGreetingHeading() {
+        LocalTime time = LocalTime.now();
+        Text heading = new Text();
+        heading.setFill(Color.web("#2E5698"));
+        heading.setStyle(getHeaderStyle());
+        
+        if(time.isBefore(LocalTime.of(12, 0))) {
+            heading.setText("Good Morning");
+        }
+        else if (time.isBefore(LocalTime.of(18,0))) {
+            heading.setText("Good Afternoon");
+        }
+        else {
+            heading.setText("Good Evening");
+        }
+
+        return heading;
+    }
+
+
 }

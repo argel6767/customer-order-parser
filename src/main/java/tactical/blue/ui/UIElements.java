@@ -3,10 +3,15 @@ package tactical.blue.ui;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import tactical.blue.navigation.UINavigation;
 
@@ -17,11 +22,12 @@ public abstract class UIElements {
     private Scene scene;
     private final String buttonStyle = "-fx-background-color: #2E5698; -fx-border: none; -fx-text-fill: white; -fx-padding: 10px 20px; -fx-font-size: 16px; -fx-background-radius: 16px;";
     private final String containerStyle = "-fx-font-family: \"Arial\", sans-serif;  -fx-padding: 20px;  -fx-pref-width: 600px; -fx-background-color: #f0f0f0; -fx-padding: 20px; -fx-border-radius: 5px;";
+    private final String headerStyle = "-fx-font-size: 36px; -fx-font-weight: bold;-fx-font-family: \"Arial\", sans-serif;";
     private final String logoAddress = "/static/Blue-Tactical-Logo.png";
     private final int pageWidth = 950;
     private final int pageHeight = 534;
     private UINavigation uiNavigation;
-
+    
     public UIElements(UINavigation uiNavigation) {
         this.uiNavigation = uiNavigation;
     }
@@ -50,8 +56,21 @@ public abstract class UIElements {
         return containerStyle;
     }
 
+    protected String getHeaderStyle() {
+        return headerStyle;
+    }
+
     protected UINavigation geUINavigation() {
         return uiNavigation;
+    }
+
+    /*
+     * Creates HBox for housing logo
+     */
+    protected HBox createLogoBox() throws FileNotFoundException {
+        HBox logoBox = new HBox(createLogoImageView());
+        logoBox.setAlignment(Pos.TOP_LEFT);
+        return logoBox;
     }
 
       protected ImageView createLogoImageView() throws FileNotFoundException {
@@ -60,8 +79,6 @@ public abstract class UIElements {
         blueTacticalLogo.setFitWidth(250);
         blueTacticalLogo.setPreserveRatio(true);
         return blueTacticalLogo;
-        
-        
     }
 
      /*
@@ -89,7 +106,7 @@ public abstract class UIElements {
         button.setStyle(buttonStyle);
         return button;
     }
-    
+
     /*
      * Makes a button to navigate to the Price Report Creator Page
      */
@@ -121,5 +138,30 @@ public abstract class UIElements {
         });
         button.setStyle(buttonStyle);
         return button;
+    }
+
+       /*
+     * Makes Button that ends program when pressed
+     */
+    protected Button createEndProgramButton() {
+        Button button = new Button("End Program");
+        button.setOnAction(e -> {
+            Platform.exit();
+        });
+        button.setStyle(getButtonStyle());
+        return button;
+    }
+
+    /*
+     * Creates an HBox that holds both the Logo and Header
+     * uses Region to have more space between objects
+     */
+    protected HBox createLogoAndHeadingBox(Text heading) throws FileNotFoundException {
+        Region paddingRegion = new Region();
+        paddingRegion.setMinWidth(41);
+        HBox hBox = new HBox(createLogoBox(), paddingRegion, heading);
+        hBox.setSpacing(20);
+        hBox.setAlignment(Pos.CENTER_LEFT);
+        return hBox;
     }
 }
