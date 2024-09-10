@@ -18,17 +18,30 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import tactical.blue.excel.PriceReportCreator;
+import tactical.blue.navigation.UINavigation;
 
 public class PriceReportCreatorUIBuilder extends UIElements{
+
+    public PriceReportCreatorUIBuilder(UINavigation uiNavigation, Stage primaryStage) throws FileNotFoundException {
+        super(uiNavigation);
+        build(primaryStage);
+    }
+
 
     private String siteName;
     private File fileInWebScrapedData;
     private File fileInCustomerOrderData;
 
+
+    public Scene getScene() {
+        return super.getScene();
+    }
+
+    
     /*
      * Builds the entire Scene object
      */
-    public Scene build(Stage primaryStage) throws FileNotFoundException {
+    private void build(Stage primaryStage) throws FileNotFoundException {
         FileChooser fileChooserWebScraped = createFileChooser("Web Scraped Data File");
         Button buttonWebScrape = createWebScrapeFileButton(primaryStage, fileChooserWebScraped);
 
@@ -48,7 +61,7 @@ public class PriceReportCreatorUIBuilder extends UIElements{
         StackPane root = new StackPane(vBox);
         Scene scene = new Scene(root, 950, 534);
         
-        return scene;
+        super.setScene(scene);
     }
 
 
