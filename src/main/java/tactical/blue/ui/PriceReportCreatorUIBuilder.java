@@ -59,7 +59,7 @@ public class PriceReportCreatorUIBuilder extends UIElements{
 
         VBox vBox = createVbox(logoBox,buttonWebScrape, buttonCustomerOrder, hBox, buttonMakeFile, buttonEndProgram);
         StackPane root = new StackPane(vBox);
-        Scene scene = new Scene(root, 950, 534);
+        Scene scene = new Scene(root, getPageWidth(), getPageHeight());
         
         super.setScene(scene);
     }

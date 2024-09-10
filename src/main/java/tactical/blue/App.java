@@ -12,15 +12,9 @@ public class App extends Application {
     private UINavigation uiNavigation;
     @Override
     public void start(Stage primaryStage) throws FileNotFoundException {
-        //create UI Builder then call the UI building method
-        MainPageUIBuilder mainPageUI = new MainPageUIBuilder(uiNavigation, primaryStage);
-        Scene mainScene = mainPageUI.getScene();
-        PriceReportCreatorUIBuilder excelFileCreatorUIBuilder = new PriceReportCreatorUIBuilder(uiNavigation, primaryStage);
-        Scene fileCreator = excelFileCreatorUIBuilder.getScene();
-        
-        // Set the scene and show the stage
-        primaryStage.setScene(mainScene);
-        primaryStage.setTitle("Product Information Excel File Generator");
+        //instantiated UINavigation object and set it to the mainpage
+        uiNavigation = new UINavigation(primaryStage);
+        uiNavigation.setSceneToMainPage();
         primaryStage.show();
     }
     
