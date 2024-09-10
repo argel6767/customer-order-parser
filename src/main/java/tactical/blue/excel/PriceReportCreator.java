@@ -24,12 +24,12 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import tactical.blue.csv.parsing.BoundTreeCSVParser;
-import tactical.blue.csv.parsing.CSVParser;
-import tactical.blue.csv.parsing.HenryScheinCSVParser;
-import tactical.blue.csv.parsing.MedcoCSVParser;
-import tactical.blue.csv.parsing.NARescueParser;
 import tactical.blue.excel.excelrows.ExcelRow;
+import tactical.blue.parsing.BoundTreeCSVParser;
+import tactical.blue.parsing.CSVParser;
+import tactical.blue.parsing.HenryScheinCSVParser;
+import tactical.blue.parsing.MedcoCSVParser;
+import tactical.blue.parsing.NARescueParser;
 
 public class PriceReportCreator{
     private File fileInOctoparse;
@@ -72,7 +72,7 @@ public class PriceReportCreator{
             System.out.println("Something went wrong!");
         }
     }
-    
+
     /*
      * Testing purposes
      */
