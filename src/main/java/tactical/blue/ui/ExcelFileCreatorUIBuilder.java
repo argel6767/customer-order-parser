@@ -1,7 +1,6 @@
 package tactical.blue.ui;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
@@ -13,25 +12,19 @@ import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import tactical.blue.excel.PriceReportCreator;
 
-public class ExcelFileCreatorUIBuilder {
+public class ExcelFileCreatorUIBuilder extends UIElements{
 
     private String siteName;
     private File fileInWebScrapedData;
     private File fileInCustomerOrderData;
-    private final String buttonStyle = "-fx-background-color: #2E5698; -fx-border: none; -fx-text-fill: white; -fx-padding: 10px 20px; -fx-font-size: 16px; -fx-background-radius: 16px;";
-                
-    private final String container = "-fx-font-family: \"Arial\", sans-serif;  -fx-padding: 20px;  -fx-pref-width: 600px; -fx-background-color: #f0f0f0; -fx-padding: 20px; -fx-border-radius: 5px;";
-
+    
     /*
      * Builds the entire Scene object
      */
@@ -58,14 +51,6 @@ public class ExcelFileCreatorUIBuilder {
         return scene;
     }
 
-    /*
-     * Creates a FileChooseObject
-     */
-    private FileChooser createFileChooser(String title) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(title);
-        return fileChooser;
-    }
 
     /*
      * Creates Button that allows uploading web scraped data file
@@ -78,7 +63,7 @@ public class ExcelFileCreatorUIBuilder {
             System.out.println("Selected file: " +this.fileInWebScrapedData.getAbsolutePath());
         });
         
-        button.setStyle(buttonStyle);
+        button.setStyle(getButtonStyle());
         return button;
     }
 
@@ -93,7 +78,7 @@ public class ExcelFileCreatorUIBuilder {
             this.fileInCustomerOrderData = fileChooser.showOpenDialog(primaryStage); 
             System.out.println("Selected file: " +this.fileInCustomerOrderData.getAbsolutePath());
         });
-        button.setStyle(buttonStyle);
+        button.setStyle(getButtonStyle());
         return button;
     }
 
@@ -140,7 +125,7 @@ public class ExcelFileCreatorUIBuilder {
             PriceReportCreator priceReportCreator = new PriceReportCreator(this.fileInWebScrapedData, this.fileInCustomerOrderData, this.siteName);
             priceReportCreator.makeNewExcelFile();  
         });
-        button.setStyle(buttonStyle);
+        button.setStyle(getButtonStyle());
         return button;
     }
     
@@ -152,7 +137,7 @@ public class ExcelFileCreatorUIBuilder {
         button.setOnAction(e -> {
             Platform.exit();
         });
-        button.setStyle(buttonStyle);
+        button.setStyle(getButtonStyle());
         return button;
     }
 
@@ -171,26 +156,22 @@ public class ExcelFileCreatorUIBuilder {
         return hBox;
     }
 
+    /*
+     * Creates HBox for housing logo
+     */
     private HBox createLogoBox() throws FileNotFoundException {
         HBox logoBox = new HBox(createLogoImageView());
         logoBox.setAlignment(Pos.TOP_LEFT);
         return logoBox;
     }
 
-    private ImageView createLogoImageView() throws FileNotFoundException {
-        InputStream logo = getClass().getResourceAsStream("/static/Blue-Tactical-Logo.png");
-        ImageView blueTacticalLogo = new ImageView(new Image(logo));
-        blueTacticalLogo.setFitWidth(250);
-        blueTacticalLogo.setPreserveRatio(true);
-        return blueTacticalLogo;
-        
-        
-    }
 
-    
+    /*
+    * Creates Container that houses everything
+    */    
     private VBox createVbox(HBox logoBox, Button buttonWebScrape, Button buttonCustomerOrder, HBox hBox, Button buttonMakeFile, Button buttonEndProgram) {
         VBox vBox = new VBox(logoBox, buttonWebScrape, buttonCustomerOrder, hBox, buttonMakeFile, buttonEndProgram);
-        vBox.setStyle(container);
+        vBox.setStyle(getContainerStyle());
         vBox.setSpacing(15);
         vBox.setPadding(new Insets(10));
         vBox.setAlignment(Pos.TOP_CENTER);
