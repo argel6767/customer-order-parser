@@ -48,14 +48,7 @@ public class PriceReportCreatorUIBuilder extends UIElements{
 
         ToggleGroup eccomerceSites = createRadioButtons();
 
-        Button buttonMakeFile = createMakeExcelFileButton();
-        Button buttonEndProgram = createEndProgramButton();
-
-        HBox hBox = createRadioButtonHBox(eccomerceSites);
-        HBox logoBox = createLogoBox();
-
-
-        VBox vBox = createVbox(logoBox,buttonWebScrape, buttonCustomerOrder, hBox, buttonMakeFile, buttonEndProgram);
+        VBox vBox = createVbox(createLogoBox(),buttonWebScrape, buttonCustomerOrder, createRadioButtonHBox(eccomerceSites), createMakeExcelFileButton(), createGoBackAndEndProgramButtonsHBox());
         StackPane root = new StackPane(vBox);
         Scene scene = new Scene(root, getPageWidth(), getPageHeight());
         
@@ -159,11 +152,11 @@ public class PriceReportCreatorUIBuilder extends UIElements{
     /*
     * Creates Container that houses everything
     */    
-    private VBox createVbox(HBox logoBox, Button buttonWebScrape, Button buttonCustomerOrder, HBox hBox, Button buttonMakeFile, Button buttonEndProgram) {
-        VBox vBox = new VBox(logoBox, buttonWebScrape, buttonCustomerOrder, hBox, buttonMakeFile, buttonEndProgram);
+    private VBox createVbox(HBox logoBox, Button buttonWebScrape, Button buttonCustomerOrder, HBox hBox, Button buttonMakeFile, HBox goBackAndEndProgramHBox)  {
+        VBox vBox = new VBox(logoBox, buttonWebScrape, buttonCustomerOrder, hBox, buttonMakeFile, goBackAndEndProgramHBox);
         vBox.setStyle(getContainerStyle());
-        vBox.setSpacing(15);
-        vBox.setPadding(new Insets(10));
+        vBox.setSpacing(20);
+        vBox.setPadding(new Insets(15));
         vBox.setAlignment(Pos.TOP_CENTER);
         return vBox;
     }

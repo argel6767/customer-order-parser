@@ -164,4 +164,11 @@ public abstract class UIElements {
         hBox.setAlignment(Pos.CENTER_LEFT);
         return hBox;
     }
+
+    protected HBox createGoBackAndEndProgramButtonsHBox() {
+        HBox hBox = new HBox(createGoToMainPage("Go Back"), createEndProgramButton());
+        hBox.setSpacing(26);
+        hBox.setAlignment(Pos.CENTER);
+        return hBox;
+    }
 }
