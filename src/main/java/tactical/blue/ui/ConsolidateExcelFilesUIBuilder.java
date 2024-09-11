@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.io.FileNotFoundException;
 import java.io.File;
 
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
@@ -23,26 +24,44 @@ public class ConsolidateExcelFilesUIBuilder extends UIElements{
         build(primaryStage);
     }
 
-    
+    public void build(Stage primaryStage) throws FileNotFoundException {
+        VBox vBox = new VBox(createLogoBox(), createMulitpleFilesButton(new FileChooser(), primaryStage),createRunConsolidateProgramButton(),createGoBackAndEndProgramButtonsHBox());
+        vBox.setSpacing(20);
+        vBox.setAlignment(Pos.TOP_CENTER);
+
+        super.setScene(new Scene(vBox, getPageWidth(), getPageHeight()));
+    }
 
     public Scene getScene() {
         return super.getScene();
     }
 
-    private FileChooser mutitpleFilesChooser() {
-        FileChooser filesChooser = new FileChooser();
-        return filesChooser;
+
+    private Button createRunConsolidateProgramButton() {
+        Button button = new Button("Consolidate Files");
+        
+        button.setOnAction(e -> {
+            //TODO create logic for creating Consolidating Object, once class is defined
+        });
+        button.setStyle(getButtonStyle());
+        return button;
     }
 
-    private Button createMulitpleFilesButton() {
+    private Button createMulitpleFilesButton(FileChooser fileChooser, Stage stage) {
         Button button = new Button("Upload Files");
+
+        button.setOnAction(e -> {
+            List<File> files = fileChooser.showOpenMultipleDialog(stage);
+            if (files != null) {
+                this.excelFilesUploaded.addAll(files);
+                excelFilesUploaded.forEach(file -> {
+                    System.out.println("File Uploaded: " + file);
+                });
+            }
+        });
+        button.setStyle(getButtonStyle());
+        return button;
     }
 
-    private void build(Stage primaryStage) throws FileNotFoundException {
-        VBox vBox = new VBox(createLogoBox(), createGoBackAndEndProgramButtonsHBox());
-        vBox.setSpacing(20);
-
-        super.setScene(new Scene(vBox, getPageWidth(), getPageHeight()));
-    }
 
 }
