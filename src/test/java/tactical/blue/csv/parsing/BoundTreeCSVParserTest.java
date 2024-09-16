@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import tactical.blue.excel.excelrows.BoundTreeExcelRow;
 import tactical.blue.excel.excelrows.ExcelRow;
-import tactical.blue.parsing.BoundTreeCSVParser;
+import tactical.blue.parsing.csv.BoundTreeCSVParser;
 
 public class BoundTreeCSVParserTest {
      private BoundTreeCSVParser parser;

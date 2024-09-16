@@ -15,8 +15,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import tactical.blue.excel.PriceReportCreator;
 import tactical.blue.navigation.UINavigation;
+import tactical.blue.services.PriceReportCreator;
 
 public class PriceReportCreatorUIBuilder extends UIElements{
 

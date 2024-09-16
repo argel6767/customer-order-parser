@@ -1,4 +1,4 @@
-package tactical.blue.excel;
+package tactical.blue.services;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -25,11 +25,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import tactical.blue.excel.excelrows.ExcelRow;
-import tactical.blue.parsing.BoundTreeCSVParser;
-import tactical.blue.parsing.CSVParser;
-import tactical.blue.parsing.HenryScheinCSVParser;
-import tactical.blue.parsing.MedcoCSVParser;
-import tactical.blue.parsing.NARescueParser;
+import tactical.blue.parsing.csv_parsing.*;
 
 public class PriceReportCreator{
     private File fileInWebScrape;

@@ -1,4 +1,4 @@
-package tactical.blue.parsing;
+package tactical.blue.parsing.csv_parsing;
 
 import java.util.ArrayList;
 import java.util.HashMap;
