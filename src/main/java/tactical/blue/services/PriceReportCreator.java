@@ -3,29 +3,24 @@ package tactical.blue.services;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+
 import java.io.FileReader;
 import java.io.IOException;
-import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
 import java.util.Collections;
 import java.util.Comparator;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.Files;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
+
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import tactical.blue.excel.excelrows.ExcelRow;
 import tactical.blue.parsing.csv_parsing.*;
+import tactical.blue.parsing.excel_parsing.ExcelWriter;
 
 public class PriceReportCreator{
     private File fileInWebScrape;
@@ -37,6 +32,7 @@ public class PriceReportCreator{
     private XSSFWorkbook workbook;
     private HashMap<String,Integer> columnHeaderIndex = new HashMap<>();
     private CSVParser csvParser; //strategy pattern
+    private ExcelWriter excelWriter = new ExcelWriter();
    
     
     /*
@@ -86,8 +82,10 @@ public class PriceReportCreator{
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        createExcelCells();
-        generateExcelFile();
+        excelWriter.createExcelCells(excelRows, "Weekly Customer Price Report for" + this.siteName);
+        //createExcelCells();
+        //generateExcelFile();
+        excelWriter.generateExcelFile(siteName + "-Report-");
     }
 
     /*
@@ -192,81 +190,6 @@ public class PriceReportCreator{
     private List<ExcelRow> parseRowsForExcelFile(String[] currItemArray, Map<String, List<String[]>> webScrapedMap) {
         return csvParser.parseRow(currItemArray, webScrapedMap, columnHeaderIndex);
     }
-
-
-    //reads lines from csvRows and puts them into a new excel file
-    public void createExcelCells() {
-        System.out.println("createExcelCells() called");
-        
-        this.workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet("weekly price report for " + this.siteName + " " + LocalDate.now());
-
-        Map<String, Object[]> dataSheetInfo = new LinkedHashMap<>(); //use LinkedHashMap to keep order
-        dataSheetInfo.put("1", new Object[] {"Row","Item Description","Item", "Manfucturer", "Source", "SKU", "Packaging", "Quantity", "MSRP", "Wholesale Price", "Cost of Goods", "Markup", "Unit Price", "Extended Price", "Contribution", "Product URL"}); //headers
-        
-        int index = 2;
-        //adds the excel rows into dataSheetInfo from List excelRows
-        System.out.println("Grabbing rows...");
-        for (ExcelRow excelRow : excelRows) {
-            dataSheetInfo.put(String.valueOf(index), excelRow.toArray());
-            index++;
-        }
-
-        
-
-        int rowNum = 0;
-        Set<String> keySet = dataSheetInfo.keySet();
-            for (String key : keySet) { 
-  
-            // Creating a new row in the sheet 
-                Row row = sheet.createRow(rowNum); 
-                rowNum++;
-                Object[] objArr = dataSheetInfo.get(key); 
-                
-                int cellnum = 0; 
-    
-                for (Object obj : objArr) { 
-                    // This line creates a cell in the next 
-                    //  column of that row 
-                    Cell cell = row.createCell(cellnum++); 
-                    
-                    if (obj == null) {
-                        cell.setCellValue("N/A");
-                    }
-                    if (obj instanceof Double) 
-                        cell.setCellValue((Double)obj); 
-    
-                    else if (obj instanceof Integer) 
-                        cell.setCellValue((Integer) obj); 
-                    else cell.setCellValue((String)obj);
-                } 
-            } 
-        }
-
-        private void generateExcelFile() {
-            System.out.println("generateExcelFile() Called");
-            String userHome = System.getProperty("user.home");
-            Path folderPath = Paths.get(userHome, "Desktop", "Blue-Tactical", "weekly-scrapes");
-            if (!Files.exists(folderPath)) {
-                try {
-                    Files.createDirectories(folderPath);
-                } catch (Exception e) {
-                    System.out.println("Creation of folder path: " + folderPath + ", failed!");
-                }
-            }
-        try {
-            Path filePath = folderPath.resolve(siteName + "-Report-" + LocalDate.now() + ".xlsx");
-             // Open a FileOutputStream using the Path to write the Excel file
-            try (FileOutputStream excelOutput = new FileOutputStream(filePath.toFile())) {
-                    this.workbook.write(excelOutput);
-                    excelOutput.close();
-                }
-        } catch (Exception e) {
-            System.out.println("File Not Found");
-            e.printStackTrace();
-        }
-
-        }
 
         public static void main(String[] args) {
             PriceReportCreator cleanExcelFile = new PriceReportCreator("/Users/argelhernandezamaya/Desktop/Blue-Tactical/product-orders/Henry-Schein-Scrape.csv", "/Users/argelhernandezamaya/Desktop/Blue-Tactical/product-orders/Henry-Shein-Order-Example.csv", "Henry Schein");
