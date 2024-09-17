@@ -14,6 +14,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import tactical.blue.navigation.UINavigation;
+import tactical.blue.services.ReportConsolidator;
 
 public class ConsolidateExcelFilesUIBuilder extends UIElements{
 
@@ -41,7 +42,7 @@ public class ConsolidateExcelFilesUIBuilder extends UIElements{
         Button button = new Button("Consolidate Files");
         
         button.setOnAction(e -> {
-            //TODO create logic for creating Consolidating Object, once class is defined
+            ReportConsolidator reportConsolidator = new ReportConsolidator(excelFilesUploaded);
         });
         button.setStyle(getButtonStyle());
         return button;

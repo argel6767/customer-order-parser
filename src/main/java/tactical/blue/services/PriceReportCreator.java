@@ -75,6 +75,21 @@ public class PriceReportCreator{
     public PriceReportCreator() {
     }
 
+     /*
+     * Abstracted overview of how a Excel file is created using the scraped data and order info given by customer
+     */
+    public void makeNewExcelFile() {
+        System.out.println("makeNewExcelFile() called");
+        try {
+            readCSVFiles();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        createExcelCells();
+        generateExcelFile();
+    }
+
     /*
      * Depending on what site the data is sourced the CSVParser object will be instantiated as the appropriate
      * strategy
@@ -102,20 +117,6 @@ public class PriceReportCreator{
         this.excelRows = excelRows;
     }
 
-    /*
-     * Abstracted overview of how a Excel file is created using the scraped data and order info given by customer
-     */
-    public void makeNewExcelFile() {
-        System.out.println("makeNewExcelFile() called");
-        try {
-            readCSVFiles();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        createExcelCells();
-        generateExcelFile();
-    }
 
     //reads csv file that is put in
    private void readCSVFiles() throws IOException {
@@ -201,7 +202,7 @@ public class PriceReportCreator{
         XSSFSheet sheet = workbook.createSheet("weekly price report for " + this.siteName + " " + LocalDate.now());
 
         Map<String, Object[]> dataSheetInfo = new LinkedHashMap<>(); //use LinkedHashMap to keep order
-        dataSheetInfo.put("1", new Object[] {"Row","Item", "Manfucturer", "Source", "SKU", "Packaging", "Quantity", "MSRP", "Wholesale Price", "Cost of Goods", "Markup", "Unit Price", "Extended Price", "Contribution", "Product URL"}); //headers
+        dataSheetInfo.put("1", new Object[] {"Row","Item Description","Item", "Manfucturer", "Source", "SKU", "Packaging", "Quantity", "MSRP", "Wholesale Price", "Cost of Goods", "Markup", "Unit Price", "Extended Price", "Contribution", "Product URL"}); //headers
         
         int index = 2;
         //adds the excel rows into dataSheetInfo from List excelRows
