@@ -6,6 +6,7 @@ import tactical.blue.api.OpenAIClient;
 
 public class ExcelRow{
     private static Integer row = 1;
+    private String itemDescription; //item description orginally given by customer
     private String itemName; //name of item
     private String manufacturer; //maker of item
     private String sku; //item sku
@@ -22,10 +23,33 @@ public class ExcelRow{
     private String source; //website item information was acquired from
     private String productURL; //url of product page
 
-   /*
+    
+
+   public ExcelRow(String itemDescription, String itemName, String manufacturer, String sku,
+            Integer quantityNeeded, String packaging, Object msrp, Double wholeSalePrice, Double costOfGoods,
+            Double unitPrice, Double extendedPrice, Double contribution, String source, String productURL) {
+        this.itemDescription = itemDescription;
+        this.itemName = itemName;
+        this.manufacturer = manufacturer;
+        this.sku = sku;
+        this.quantityNeeded = quantityNeeded;
+        this.packaging = packaging;
+        this.msrp = msrp;
+        this.wholeSalePrice = wholeSalePrice;
+        this.costOfGoods = costOfGoods;
+        this.unitPrice = unitPrice;
+        this.extendedPrice = extendedPrice;
+        this.contribution = contribution;
+        this.source = source;
+        this.productURL = productURL;
+    }
+
+
+    /*
    Need to find raw quantity of item using item description
    */
     public ExcelRow(String itemDescription ,String itemName, String manufacturer, String sku, Integer quantityRequested, String packaging, Double msrp, Double wholeSalePrice, String productURL) {
+        this.itemDescription = itemDescription;
         this.itemName = itemName;
         this.manufacturer = manufacturer;
         this.sku = sku;
@@ -43,6 +67,7 @@ public class ExcelRow{
      * If no packaging info is found, an item descrition can be used to get packaging type
      */
     public ExcelRow(String itemDescription, String itemName, String manufacturer, String sku, Integer quantityRequested, Double msrp, Double wholeSalePrice, String productURL) {
+        this.itemDescription = itemDescription;
         this.itemName = itemName;
         this.manufacturer = manufacturer;
         this.sku = sku;
@@ -86,6 +111,13 @@ public class ExcelRow{
      * return the value back otherwise
      */
     private Object determineIfMSRPIsPresent(Double msrp) {
+        if (msrp.equals(0.0)) {
+            return "N/A";
+        }
+        return msrp;
+    }
+
+    private Object determineIfMSRPIsPresent(Object msrp) {
         if (msrp.equals(0.0)) {
             return "N/A";
         }
@@ -207,8 +239,25 @@ public class ExcelRow{
 
     //getters and setters
 
+
+    
     public void setMsrp(Object msrp) {
         this.msrp = msrp;
+    }
+
+
+    public String getItemDescription() {
+        return itemDescription;
+    }
+
+
+    public void setItemDescription(String itemDescription) {
+        this.itemDescription = itemDescription;
+    }
+
+
+    public Double getContribution() {
+        return contribution;
     }
 
 
@@ -355,6 +404,7 @@ public class ExcelRow{
     @Override
 public String toString() {
     return "ExcelRow{" +
+            "itemDescription='" + itemDescription + '\''+
             "itemName='" + itemName + '\'' +
             ", manufacturer='" + manufacturer + '\'' +
             ", sku='" + sku + '\'' +
@@ -378,7 +428,7 @@ public String toString() {
      * Line Item, Product Name, Manufacturer, Source, SKU, Packaging, Quantity, MSRP, Wholesale, Cost of Goods, Markup, Unit Price, Extended Price, Contribution, Product URL
      */
     public Object[] toArray() {
-        return new Object[]{ExcelRow.row++, this.itemName, this.manufacturer, this.source, this.sku, this.packaging, this.quantityNeeded, this.msrp, this.wholeSalePrice, this.costOfGoods, convertToPercent(this.MARKUP), this.unitPrice, this.extendedPrice, this.contribution, this.productURL};
+        return new Object[]{ExcelRow.row++, this.itemDescription, this.itemName, this.manufacturer, this.source, this.sku, this.packaging, this.quantityNeeded, this.msrp, this.wholeSalePrice, this.costOfGoods, convertToPercent(this.MARKUP), this.unitPrice, this.extendedPrice, this.contribution, this.productURL};
     }
 
     /*

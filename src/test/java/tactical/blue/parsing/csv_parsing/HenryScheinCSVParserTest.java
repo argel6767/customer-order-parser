@@ -1,4 +1,4 @@
-package tactical.blue.parsing;
+package tactical.blue.parsing.csv_parsing;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import tactical.blue.excel.excelrows.ExcelRow;
 import tactical.blue.excel.excelrows.HenryScheinExcelRow;
-import tactical.blue.parsing.csv.HenryScheinCSVParser;
+import tactical.blue.parsing.csv_parsing.HenryScheinCSVParser;
 
 public class HenryScheinCSVParserTest {
         private HenryScheinCSVParser parser;

@@ -1,4 +1,4 @@
-package tactical.blue.csv.parsing;
+package tactical.blue.parsing.csv_parsing;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import tactical.blue.excel.excelrows.BoundTreeExcelRow;
 import tactical.blue.excel.excelrows.ExcelRow;
-import tactical.blue.parsing.csv.BoundTreeCSVParser;
+import tactical.blue.parsing.csv_parsing.BoundTreeCSVParser;
 
 public class BoundTreeCSVParserTest {
      private BoundTreeCSVParser parser;
