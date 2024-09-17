@@ -117,12 +117,6 @@ public class ExcelRow{
         return msrp;
     }
 
-    private Object determineIfMSRPIsPresent(Object msrp) {
-        if (msrp.equals(0.0)) {
-            return "N/A";
-        }
-        return msrp;
-    }
     
     /*
      * Finds the packaging via customer description of item, then multplies by quantity requested in order to get raw value, as opposed to packaged value

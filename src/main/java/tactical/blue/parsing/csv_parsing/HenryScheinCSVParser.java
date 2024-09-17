@@ -34,7 +34,6 @@ public class HenryScheinCSVParser implements CSVParser {
                     Double msrp = cleanScrapedMSRP(unCleanedMSRP);
                     
                     String unCleanedWholesale = currWebScrapedDataArray[columnHeaderIndex.get("\"HenrySchein_Wholesale\"")];
-                    String bob = unCleanedWholesale;
                     double wholesale = cleanScrapedWholsale(unCleanedWholesale);
                     productRows.add(new HenryScheinExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, packaging, msrp, wholesale, itemUrl)); //then add current row to all the will be returned
                 }

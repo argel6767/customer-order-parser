@@ -8,7 +8,6 @@ import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
 
 public class OpenAIClient {
-    private String itemDescription;
     private final String BEGINNING_OF_PROMPT = "Using the following item description, indentify what its packaging is. It will typicaly be in the form of XX/package, XX/box, X per case, etc. If no packaging is found it is safe to assume it is just each, and so return each. Only return the value and packaging type. Here is the item description: ";
     private String entirePrompt;
     private final String API_KEY = getAPIKey();
@@ -16,8 +15,7 @@ public class OpenAIClient {
 
 
     public OpenAIClient(String itemDescription) {
-        this.itemDescription = itemDescription;
-        entirePrompt = BEGINNING_OF_PROMPT + itemDescription;
+        this.entirePrompt = BEGINNING_OF_PROMPT + itemDescription;
     }
 
     //makes the API Call to OpenAI gpt-4o-mini to get packaging

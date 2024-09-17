@@ -12,11 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import java.util.Collections;
-import java.util.Comparator;
-
-
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import tactical.blue.excel.excelrows.ExcelRow;
 import tactical.blue.parsing.csv_parsing.*;
@@ -29,7 +24,6 @@ public class PriceReportCreator{
     private BufferedReader bufferedReaderWebScrape;
     private BufferedReader bufferedReaderItemDescription;
     private List<ExcelRow> excelRows = new ArrayList<>();
-    private XSSFWorkbook workbook;
     private HashMap<String,Integer> columnHeaderIndex = new HashMap<>();
     private CSVParser csvParser; //strategy pattern
     private ExcelWriter excelWriter = new ExcelWriter();
@@ -83,8 +77,6 @@ public class PriceReportCreator{
             e.printStackTrace();
         }
         excelWriter.createExcelCells(excelRows, "Weekly Customer Price Report for" + this.siteName);
-        //createExcelCells();
-        //generateExcelFile();
         excelWriter.generateExcelFile(siteName + "-Report-");
     }
 

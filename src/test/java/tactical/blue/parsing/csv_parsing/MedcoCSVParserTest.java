@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 
 import tactical.blue.excel.excelrows.ExcelRow;
 import tactical.blue.excel.excelrows.MedcoSportsMedicineExcelRow;
-import tactical.blue.parsing.csv_parsing.MedcoCSVParser;
 
 public class MedcoCSVParserTest {
     private MedcoCSVParser parser;

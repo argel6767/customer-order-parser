@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 
-import tactical.blue.api.OpenAIClient;
 
 public class OpenAIClientTest {
     @Test

@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.poi.hpsf.Array;
+
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
+
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 
@@ -68,19 +68,6 @@ public class PriceReportParser {
         }
     }
 
-    /*
-     * Determines the type of the Cell then returns a String representation, casting if necessary
-     */
-    private String determineCellType(Cell cell) {
-        switch (cell.getCellType()) {
-            case NUMERIC:
-                return String.valueOf(cell.getNumericCellValue());
-            case STRING:
-                return cell.getStringCellValue();        
-            default:
-                return "";
-        }
-    }
     
     /*
      * TODO eventually add checking for empty rows
