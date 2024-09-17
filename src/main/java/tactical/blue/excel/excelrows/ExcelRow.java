@@ -5,7 +5,7 @@ import java.text.NumberFormat;
 import tactical.blue.api.OpenAIClient;
 
 public class ExcelRow{
-    private static Integer row = 1;
+    protected static Integer row = 1;
     private String itemDescription; //item description orginally given by customer
     private String itemName; //name of item
     private String manufacturer; //maker of item

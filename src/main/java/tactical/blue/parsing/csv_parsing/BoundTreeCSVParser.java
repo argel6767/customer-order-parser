@@ -7,6 +7,7 @@ import java.util.Map;
 
 import tactical.blue.excel.excelrows.BoundTreeExcelRow;
 import tactical.blue.excel.excelrows.ExcelRow;
+import tactical.blue.excel.excelrows.NoItemFoundExcelRow;
 
 /*
     * Bound Tree Data Scrape Structure:
@@ -21,9 +22,14 @@ public class BoundTreeCSVParser implements CSVParser{
         if (currItemArray.length >= 3) {
         String itemUrl = currItemArray[2];
         if (webScrapedMap.containsKey(itemUrl)) {
-            List<String[]> urlValList = webScrapedMap.get(itemUrl); //grabs all products found under url
+            if (isRowEmpty(currItemArray)) {
+                NoItemFoundExcelRow emptyRow = new NoItemFoundExcelRow(currItemArray[0], itemUrl);
+                productRows.add(emptyRow);
+            }
+            else {
+                List<String[]> urlValList = webScrapedMap.get(itemUrl); //grabs all products found under url
 
-            for (String[] currWebScrapedDataArray : urlValList) { //makes new objects for each one
+                for (String[] currWebScrapedDataArray : urlValList) { //makes new objects for each one
                 
                     /*
                      * Grab all scraped Info to make row objects
@@ -56,6 +62,7 @@ public class BoundTreeCSVParser implements CSVParser{
                     catch(NullPointerException npe) {
                         productRows.add(new BoundTreeExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, packaging, msrp, wholesalePrice, itemUrl)); 
                     }
+                }
 
             }
                 
@@ -65,10 +72,6 @@ public class BoundTreeCSVParser implements CSVParser{
     return null;
     }
 
-    @Override
-    public boolean isRowEmpty(String[] currentWebScrapedData) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isRowEmpty'");
-    }
+    
 
 }

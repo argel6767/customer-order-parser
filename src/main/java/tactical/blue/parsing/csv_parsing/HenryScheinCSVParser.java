@@ -7,6 +7,7 @@ import java.util.Map;
 
 import tactical.blue.excel.excelrows.ExcelRow;
 import tactical.blue.excel.excelrows.HenryScheinExcelRow;
+import tactical.blue.excel.excelrows.NoItemFoundExcelRow;
 
 public class HenryScheinCSVParser implements CSVParser {
 
@@ -17,10 +18,16 @@ public class HenryScheinCSVParser implements CSVParser {
         if (currItemArray.length >= 3) {
         String itemUrl = currItemArray[2];
         if (webScrapedMap.containsKey(itemUrl)) {
-            List<String[]> urlValList = webScrapedMap.get(itemUrl); //grabs all products found under url
+            if (isRowEmpty(currItemArray)) {
+                NoItemFoundExcelRow emptyRow = new NoItemFoundExcelRow(currItemArray[0], itemUrl);
+                productRows.add(emptyRow);
+            }
+
+            else {
+                List<String[]> urlValList = webScrapedMap.get(itemUrl); //grabs all products found under url
             
-            for (String[] currWebScrapedDataArray : urlValList) { //makes new objects for each one
-                if (!currWebScrapedDataArray[1].equals("\"\"")){ //check if it's not an empty row
+                for (String[] currWebScrapedDataArray : urlValList) { //makes new objects for each one
+                    if (!currWebScrapedDataArray[1].equals("\"\"")) { //check if it's not an empty row
                     String customerDescription = currItemArray[0]; //objects with same URL with have the same customer description
                     String[] seperatedProductInfo = getItemNameManufactuerAndSKUFromExtractedElement(currWebScrapedDataArray[columnHeaderIndex.get("\"HenrySchein_Product_And_Manufacturer\"")]);
                     String itemName = seperatedProductInfo[0];
@@ -36,6 +43,7 @@ public class HenryScheinCSVParser implements CSVParser {
                     String unCleanedWholesale = currWebScrapedDataArray[columnHeaderIndex.get("\"HenrySchein_Wholesale\"")];
                     double wholesale = cleanScrapedWholsale(unCleanedWholesale);
                     productRows.add(new HenryScheinExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, packaging, msrp, wholesale, itemUrl)); //then add current row to all the will be returned
+                    }
                 }
             }
             
@@ -85,6 +93,7 @@ public class HenryScheinCSVParser implements CSVParser {
 
         return Double.valueOf(wholesale);
     }
+
 
 } 
 
