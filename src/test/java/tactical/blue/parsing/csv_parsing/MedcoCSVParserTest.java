@@ -64,9 +64,7 @@ public class MedcoCSVParserTest {
     @Test
     public void testParseRowWithInvalidUrl() {
         String[] currItemArray = { "Invalid Product", "1", "http://example.com/invalid" };
-
         List<ExcelRow> result = parser.parseRow(currItemArray, webScrapedMap, columnHeaderIndex);
-
         assertNull(result);  // No match for the URL, expecting null
     }
 
