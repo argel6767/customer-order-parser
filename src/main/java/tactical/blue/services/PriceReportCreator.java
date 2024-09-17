@@ -165,12 +165,6 @@ public class PriceReportCreator{
                 if (currentRows != null) { //checks if valid rows, will be null if not
                     this.excelRows.addAll(currentRows);
                 }
-                Collections.sort(excelRows, new Comparator<ExcelRow>() {
-                    @Override
-                    public int compare(ExcelRow row1, ExcelRow row2) {
-                        return row1.getProductURL().compareTo(row2.getProductURL());
-                    }
-                });
             }
         
     }

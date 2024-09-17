@@ -43,6 +43,7 @@ public class ConsolidateExcelFilesUIBuilder extends UIElements{
         
         button.setOnAction(e -> {
             ReportConsolidator reportConsolidator = new ReportConsolidator(excelFilesUploaded);
+            reportConsolidator.consolidateReports();
         });
         button.setStyle(getButtonStyle());
         return button;

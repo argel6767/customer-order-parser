@@ -8,10 +8,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.poi.hpsf.Array;
-import org.apache.poi.sl.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 
@@ -37,7 +38,7 @@ public class PriceReportParser {
      */
     public List<ExcelRow> parseFile() {
         List<List<String>> rowsList = new ArrayList<>();
-        Sheet sheet = (Sheet) workbook.getSheetAt(0);
+        Sheet sheet =  workbook.getSheetAt(0);
         //use iterator to grab rows of data
         Iterator<Row> rowIterator = sheet.iterator();
         grabRowsFromExcelFile(rowsList, rowIterator);
@@ -48,7 +49,13 @@ public class PriceReportParser {
      * Grabs all rows from the Excel File and makes each of them into a String List
      */
     private void grabRowsFromExcelFile(List<List<String>> rowsList, Iterator<Row> rowIterator) {
+        int index = 0;
         while (rowIterator.hasNext()) {
+            if (index == 0) {
+                rowIterator.next();
+                index++;
+                continue;
+            }
             Row currentRow =  rowIterator.next();
             Iterator<Cell> cellIterator = currentRow.cellIterator();
 
@@ -84,13 +91,13 @@ public class PriceReportParser {
     private List<ExcelRow> createExcelRowObjects(List<List<String>> rowList) {
         List<ExcelRow> excelRows = new ArrayList<>();
         for (List<String> list : rowList) {
-            String itemDescription = list.get(1);
+            String itemDescription = list.get(1).replaceAll("\"","");
             String itemName = list.get(2);
             String manufacturer = list.get(3);
             String source = list.get(4);
             String sku = list.get(5);
             String packaging = list.get(6);
-            Integer quantity = Integer.valueOf(list.get(7));
+            Integer quantity = (int)Double.parseDouble(list.get(7));
             Double msrp = isMSRPPresent(list.get(8));
             Double wholesale = Double.valueOf(list.get(9));
             Double costOfGoods = Double.valueOf(list.get(10));

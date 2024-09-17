@@ -2,19 +2,19 @@ package tactical.blue.services;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import tactical.blue.excel.excelrows.ExcelRow;
+import tactical.blue.parsing.excel_parsing.ExcelWriter;
 import tactical.blue.parsing.excel_parsing.PriceReportParser;
 
 public class ReportConsolidator {
 
     List<File> files;
     LinkedHashMap<String, List<ExcelRow>> itemDescriptionMappedRows = new LinkedHashMap<>();
-    private XSSFWorkbook workbook;
+    ExcelWriter excelWriter = new ExcelWriter();
 
     
     public ReportConsolidator(List<File> files) {
@@ -26,6 +26,8 @@ public class ReportConsolidator {
      */
     public void consolidateReports() {
         groupExcelRowsByItemDescription(grabAllRowsFromEveryFile());
+        excelWriter.createExcelCells(sortGroupedLists(), "Combined Weekly Report");
+        excelWriter.generateExcelFile("Combined Weekly Report");
 
     }
 
@@ -52,10 +54,30 @@ public class ReportConsolidator {
                 groupedRows.add(row);
             }
             else {
-                List<ExcelRow> mappedRow = List.of(row);
+                List<ExcelRow> mappedRow = new ArrayList<>();
+                mappedRow.add(row);
                 this.itemDescriptionMappedRows.put(itemDescription, mappedRow);
             }
         }
+    }
+
+    /*
+     * Grabs All List values from the LinkedHashMap then sorts each group by wholesale
+     * then combines all the lists into one
+     */
+    private List<ExcelRow> sortGroupedLists() {
+        Comparator<ExcelRow> comparator = Comparator.comparing(ExcelRow::getWholeSalePrice);
+        List<List<ExcelRow>> allGroups = new ArrayList<>(this.itemDescriptionMappedRows.values());
+        for (List<ExcelRow> excelRows : allGroups) {
+            excelRows.sort(comparator);
+        }
+
+        List<ExcelRow> sortedRows = new ArrayList<>();
+        for (List<ExcelRow> excelRows : allGroups) {
+            sortedRows.addAll(excelRows);
+        }
+
+        return sortedRows;
     }
 
     

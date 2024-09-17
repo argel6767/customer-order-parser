@@ -3,10 +3,8 @@ package tactical.blue;
 import java.io.FileNotFoundException;
 
 import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import tactical.blue.navigation.UINavigation;
-import tactical.blue.ui.*;
 
 public class App extends Application {
     private UINavigation uiNavigation;
