@@ -6,5 +6,7 @@ package tactical.blue.excel.excelrows;
  * If no item is found, an object of this class will be instantiated, as opposed to whichever site object that would have been made
  */
 public class NoItemFoundExcelRow extends ExcelRow{
-
+    public NoItemFoundExcelRow(String itemDescription) {
+        super.setItemDescription(itemDescription);
+    }
 }

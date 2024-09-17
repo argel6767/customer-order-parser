@@ -65,4 +65,10 @@ public class BoundTreeCSVParser implements CSVParser{
     return null;
     }
 
+    @Override
+    public boolean isRowEmpty(String[] currentWebScrapedData) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'isRowEmpty'");
+    }
+
 }
