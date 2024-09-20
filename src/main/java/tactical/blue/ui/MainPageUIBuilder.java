@@ -12,7 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import tactical.blue.navigation.UINavigation;
 
-public class MainPageUIBuilder extends UIElements{
+public class MainPageUIBuilder extends UIComponents{
 
 
     public MainPageUIBuilder(UINavigation uiNavigation, Stage primaryStage) throws FileNotFoundException {

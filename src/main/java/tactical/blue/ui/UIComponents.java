@@ -18,7 +18,7 @@ import tactical.blue.navigation.UINavigation;
 /*
  * Abstract Class that houses the styles and components that will exist throughout the program
  */
-public abstract class UIElements {
+public abstract class UIComponents {
     private Scene scene;
     private final String buttonStyle = "-fx-background-color: #2E5698; -fx-border: none; -fx-text-fill: white; -fx-padding: 10px 20px; -fx-font-size: 16px; -fx-background-radius: 16px;";
     private final String containerStyle = "-fx-font-family: \"Arial\", sans-serif;  -fx-padding: 20px;  -fx-pref-width: 600px; -fx-background-color: #f0f0f0; -fx-padding: 20px; -fx-border-radius: 5px;";
@@ -28,7 +28,7 @@ public abstract class UIElements {
     private final int pageHeight = 534;
     private UINavigation uiNavigation;
     
-    public UIElements(UINavigation uiNavigation) {
+    public UIComponents(UINavigation uiNavigation) {
         this.uiNavigation = uiNavigation;
     }
 

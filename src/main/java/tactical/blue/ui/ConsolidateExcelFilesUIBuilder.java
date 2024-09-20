@@ -11,14 +11,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import tactical.blue.navigation.UINavigation;
 import tactical.blue.services.ReportConsolidator;
 
-public class ConsolidateExcelFilesUIBuilder extends UIElements{
+public class ConsolidateExcelFilesUIBuilder extends UIComponents{
 
     private List<File> excelFilesUploaded = new ArrayList<>();
+    private File customerOrderInfoFile;
 
     public ConsolidateExcelFilesUIBuilder(UINavigation uiNavigation, Stage primaryStage) throws FileNotFoundException {
         super(uiNavigation);
@@ -26,7 +26,8 @@ public class ConsolidateExcelFilesUIBuilder extends UIElements{
     }
 
     public void build(Stage primaryStage) throws FileNotFoundException {
-        VBox vBox = new VBox(createLogoBox(), createMulitpleFilesButton(new FileChooser(), primaryStage),createRunConsolidateProgramButton(),createGoBackAndEndProgramButtonsHBox());
+        
+        VBox vBox = new VBox(createLogoBox(), createMulitpleFilesButton(new FileChooser(), primaryStage),createCustomerOrderFileButton(primaryStage, createFileChooser("Upload Customer Infomation")),createRunConsolidateProgramButton(),createGoBackAndEndProgramButtonsHBox());
         vBox.setSpacing(20);
         vBox.setAlignment(Pos.TOP_CENTER);
 
@@ -35,6 +36,20 @@ public class ConsolidateExcelFilesUIBuilder extends UIElements{
 
     public Scene getScene() {
         return super.getScene();
+    }
+
+    /*
+     * Creates Button that allows uploding a customer order data file
+     */
+    private Button createCustomerOrderFileButton(Stage primaryStage, FileChooser fileChooser) {
+        Button button = new Button("Upload Customer Order Data Here");
+        
+        button.setOnAction(e -> {
+            this.customerOrderInfoFile= fileChooser.showOpenDialog(primaryStage); 
+            System.out.println("Selected file: " +this.customerOrderInfoFile.getAbsolutePath());
+        });
+        button.setStyle(getButtonStyle());
+        return button;
     }
 
 
