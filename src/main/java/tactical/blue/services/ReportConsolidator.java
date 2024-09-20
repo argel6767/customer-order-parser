@@ -7,20 +7,21 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import tactical.blue.excel.excelrows.ExcelRow;
+import tactical.blue.parsing.csv_parsing.CustomerOrderInformationParser;
 import tactical.blue.parsing.excel_parsing.ExcelWriter;
 import tactical.blue.parsing.excel_parsing.PriceReportParser;
 
 public class ReportConsolidator {
 
     private List<File> priceReportFiles;
-    private File customerOrderInfo;
     private LinkedHashMap<String, List<ExcelRow>> itemDescriptionMappedRows = new LinkedHashMap<>();
     private ExcelWriter excelWriter = new ExcelWriter();
+    CustomerOrderInformationParser customerOrderInformationParser = new CustomerOrderInformationParser();
 
     
     public ReportConsolidator(List<File> priceReportFiles, File customerOrderInfo) {
         this.priceReportFiles = priceReportFiles;
-        this.customerOrderInfo = customerOrderInfo;
+        this.itemDescriptionMappedRows = customerOrderInformationParser.getItemDescriptions(customerOrderInfo);
 
     }
 
@@ -52,16 +53,8 @@ public class ReportConsolidator {
      */
     private void groupExcelRowsByItemDescription(List<ExcelRow> excelRows) {
         for (ExcelRow row: excelRows) {
-            String itemDescription = row.getItemDescription();
-            if (this.itemDescriptionMappedRows.containsKey(itemDescription)) {
-                List<ExcelRow> groupedRows = this.itemDescriptionMappedRows.get(itemDescription);
-                groupedRows.add(row);
-            }
-            else {
-                List<ExcelRow> mappedRow = new ArrayList<>();
-                mappedRow.add(row);
-                this.itemDescriptionMappedRows.put(itemDescription, mappedRow);
-            }
+            List<ExcelRow> excelRowGroup = itemDescriptionMappedRows.get(row.getItemDescription());
+            excelRowGroup.add(row);
         }
     }
 
