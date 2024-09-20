@@ -12,13 +12,16 @@ import tactical.blue.parsing.excel_parsing.PriceReportParser;
 
 public class ReportConsolidator {
 
-    List<File> files;
-    LinkedHashMap<String, List<ExcelRow>> itemDescriptionMappedRows = new LinkedHashMap<>();
-    ExcelWriter excelWriter = new ExcelWriter();
+    private List<File> priceReportFiles;
+    private File customerOrderInfo;
+    private LinkedHashMap<String, List<ExcelRow>> itemDescriptionMappedRows = new LinkedHashMap<>();
+    private ExcelWriter excelWriter = new ExcelWriter();
 
     
-    public ReportConsolidator(List<File> files) {
-        this.files = files;
+    public ReportConsolidator(List<File> priceReportFiles, File customerOrderInfo) {
+        this.priceReportFiles = priceReportFiles;
+        this.customerOrderInfo = customerOrderInfo;
+
     }
 
     /*
@@ -36,12 +39,13 @@ public class ReportConsolidator {
      */
     private List<ExcelRow> grabAllRowsFromEveryFile() {
         List<ExcelRow> consolidatedRows = new ArrayList<>();
-        for (File file : this.files) {
+        for (File file : this.priceReportFiles) {
             PriceReportParser priceReportParser = new PriceReportParser(file);
             consolidatedRows.addAll(priceReportParser.parseFile());
         }
         return consolidatedRows;
     }
+
 
     /*
      * Groups ExcelRows by Item Description and keeps original order due to LinkedHashMap

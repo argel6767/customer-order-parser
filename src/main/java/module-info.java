@@ -11,4 +11,5 @@ module excel_cleaner {
     requires jdk.jsobject;
     requires unirest.java;
     requires javafx.graphics;
+    requires opencsv;
 }
