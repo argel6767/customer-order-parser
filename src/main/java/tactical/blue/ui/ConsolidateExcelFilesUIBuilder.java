@@ -27,11 +27,7 @@ public class ConsolidateExcelFilesUIBuilder extends UIComponents{
 
     public void build(Stage primaryStage) throws FileNotFoundException {
         
-        VBox vBox = new VBox(createLogoBox(), createMulitpleFilesButton(new FileChooser(), primaryStage),createCustomerOrderFileButton(primaryStage, createFileChooser("Upload Customer Infomation")),createRunConsolidateProgramButton(),createGoBackAndEndProgramButtonsHBox());
-        vBox.setSpacing(20);
-        vBox.setAlignment(Pos.TOP_CENTER);
-
-        super.setScene(new Scene(vBox, getPageWidth(), getPageHeight()));
+        super.setScene(new Scene(createConsolidatorUIVBox(primaryStage), getPageWidth(), getPageHeight()));
     }
 
     public Scene getScene() {
@@ -52,7 +48,9 @@ public class ConsolidateExcelFilesUIBuilder extends UIComponents{
         return button;
     }
 
-
+    /*
+     * Creates Button that allows the ReportConsolidator object to be made and run .consolidatReports()
+     */
     private Button createRunConsolidateProgramButton() {
         Button button = new Button("Consolidate Files");
         
@@ -64,6 +62,9 @@ public class ConsolidateExcelFilesUIBuilder extends UIComponents{
         return button;
     }
 
+    /*
+     * Creates Button that allows user to upload all price reports created to combine
+     */
     private Button createMulitpleFilesButton(FileChooser fileChooser, Stage stage) {
         Button button = new Button("Upload Files");
 
@@ -80,5 +81,15 @@ public class ConsolidateExcelFilesUIBuilder extends UIComponents{
         return button;
     }
 
+    /*
+     * Creates container that holds all UI Components 
+     */
+    private VBox createConsolidatorUIVBox(Stage primaryStage) throws FileNotFoundException {
+        VBox vBox = new VBox(createLogoBox(), createMulitpleFilesButton(new FileChooser(), primaryStage),createCustomerOrderFileButton(primaryStage, createFileChooser("Upload Customer Infomation")),createRunConsolidateProgramButton(),createGoBackAndEndProgramButtonsHBox());
+        vBox.setSpacing(20);
+        vBox.setAlignment(Pos.TOP_CENTER);
+        vBox.setStyle(getContainerStyle());
+        return vBox;
+    }
 
 }
