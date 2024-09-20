@@ -22,11 +22,6 @@ public class BoundTreeCSVParser implements CSVParser{
         if (currItemArray.length >= 3) {
         String itemUrl = currItemArray[2];
         if (webScrapedMap.containsKey(itemUrl)) {
-            if (isRowEmpty(currItemArray)) {
-                NoItemFoundExcelRow emptyRow = new NoItemFoundExcelRow(currItemArray[0], itemUrl);
-                productRows.add(emptyRow);
-            }
-            else {
                 List<String[]> urlValList = webScrapedMap.get(itemUrl); //grabs all products found under url
 
                 for (String[] currWebScrapedDataArray : urlValList) { //makes new objects for each one
@@ -64,8 +59,7 @@ public class BoundTreeCSVParser implements CSVParser{
                     }
                 }
 
-            }
-                
+   
             return productRows;
         }
     }

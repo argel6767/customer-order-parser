@@ -428,7 +428,7 @@ public String toString() {
     /*
      * Converts contribution to the desired percent format in the Excel Sheet
      */
-    private String convertToPercent(Double decimal) {
+    protected String convertToPercent(Double decimal) {
         NumberFormat percentConverter = NumberFormat.getPercentInstance();
         percentConverter.setMaximumFractionDigits(0);
         return percentConverter.format(decimal);

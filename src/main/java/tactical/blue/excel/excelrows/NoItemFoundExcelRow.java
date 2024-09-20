@@ -19,6 +19,6 @@ public class NoItemFoundExcelRow extends ExcelRow{
      */
     @Override
     public Object[] toArray() {
-        return new Object[] {ExcelRow.row++, super.getItemDescription(), "No Item Found Matching Customer Description", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", super.getMARKUP(), "N/A", "N/A", "N/A", super.getProductURL()};
+        return new Object[] {ExcelRow.row++, super.getItemDescription(), "No Item Found Matching Customer Description", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", convertToPercent(super.getMARKUP()), "N/A", "N/A", "N/A", super.getProductURL()};
     }
 }

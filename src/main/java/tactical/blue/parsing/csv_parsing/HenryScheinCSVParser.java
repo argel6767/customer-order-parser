@@ -15,43 +15,40 @@ public class HenryScheinCSVParser implements CSVParser {
     @Override
     public List<ExcelRow> parseRow(String[] currItemArray, Map<String, List<String[]>> webScrapedMap, HashMap<String, Integer> columnHeaderIndex) {
         List<ExcelRow> productRows = new ArrayList<>();
-        if (currItemArray.length >= 3) {
+        
         String itemUrl = currItemArray[2];
         if (webScrapedMap.containsKey(itemUrl)) {
-            if (isRowEmpty(currItemArray)) {
-                NoItemFoundExcelRow emptyRow = new NoItemFoundExcelRow(currItemArray[0], itemUrl);
-                productRows.add(emptyRow);
-            }
-
-            else {
                 List<String[]> urlValList = webScrapedMap.get(itemUrl); //grabs all products found under url
             
                 for (String[] currWebScrapedDataArray : urlValList) { //makes new objects for each one
                     if (!currWebScrapedDataArray[1].equals("\"\"")) { //check if it's not an empty row
-                    String customerDescription = currItemArray[0]; //objects with same URL with have the same customer description
-                    String[] seperatedProductInfo = getItemNameManufactuerAndSKUFromExtractedElement(currWebScrapedDataArray[columnHeaderIndex.get("\"HenrySchein_Product_And_Manufacturer\"")]);
-                    String itemName = seperatedProductInfo[0];
-                    String manufacturer = seperatedProductInfo[1];
-                    String sku = seperatedProductInfo[2];
-                    int quantityRequested = Integer.parseInt(currItemArray[1]);
-                    String packaging = currWebScrapedDataArray[columnHeaderIndex.get("\"HenrySchein_Packaging\"")];
+                        String customerDescription = currItemArray[0]; //objects with same URL with have the same customer description
+                        String[] seperatedProductInfo = getItemNameManufactuerAndSKUFromExtractedElement(currWebScrapedDataArray[columnHeaderIndex.get("\"HenrySchein_Product_And_Manufacturer\"")]);
+                        String itemName = seperatedProductInfo[0];
+                        String manufacturer = seperatedProductInfo[1];
+                        String sku = seperatedProductInfo[2];
+                        int quantityRequested = Integer.parseInt(currItemArray[1]);
+                        String packaging = currWebScrapedDataArray[columnHeaderIndex.get("\"HenrySchein_Packaging\"")];
 
-                    
-                    String unCleanedMSRP = currWebScrapedDataArray[columnHeaderIndex.get("\"HenrySchein_MSRP\"")];
-                    Double msrp = cleanScrapedMSRP(unCleanedMSRP);
-                    
-                    String unCleanedWholesale = currWebScrapedDataArray[columnHeaderIndex.get("\"HenrySchein_Wholesale\"")];
-                    double wholesale = cleanScrapedWholsale(unCleanedWholesale);
-                    productRows.add(new HenryScheinExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, packaging, msrp, wholesale, itemUrl)); //then add current row to all the will be returned
+                        
+                        String unCleanedMSRP = currWebScrapedDataArray[columnHeaderIndex.get("\"HenrySchein_MSRP\"")];
+                        Double msrp = cleanScrapedMSRP(unCleanedMSRP);
+                        
+                        String unCleanedWholesale = currWebScrapedDataArray[columnHeaderIndex.get("\"HenrySchein_Wholesale\"")];
+                        double wholesale = cleanScrapedWholsale(unCleanedWholesale);
+                        productRows.add(new HenryScheinExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, packaging, msrp, wholesale, itemUrl)); //then add current row to all the will be returned
+                    }
+
+                    else {
+                        String itemDescription = currItemArray[0];
+                        productRows.add(new NoItemFoundExcelRow(itemDescription, itemUrl));
                     }
                 }
-            }
             
             return productRows;
-        }
-
-        }
-        return null; //will return null if line is not valid
+        } 
+        return null; //Non valid row
+        
     }
 
      /*
