@@ -17,6 +17,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 
 import tactical.blue.excel.excelrows.ExcelRow;
+import tactical.blue.excel.excelrows.NoItemFoundExcelRow;
 
 
 
@@ -78,25 +79,34 @@ public class PriceReportParser {
     private List<ExcelRow> createExcelRowObjects(List<List<String>> rowList) {
         List<ExcelRow> excelRows = new ArrayList<>();
         for (List<String> list : rowList) {
-            String itemDescription = list.get(1).replaceAll("\"","");
-            String itemName = list.get(2);
-            String manufacturer = list.get(3);
-            String source = list.get(4);
-            String sku = list.get(5);
-            String packaging = list.get(6);
-            Integer quantity = (int)Double.parseDouble(list.get(7));
-            Double msrp = isMSRPPresent(list.get(8));
-            Double wholesale = Double.valueOf(list.get(9));
-            Double costOfGoods = Double.valueOf(list.get(10));
-            Double unitPrice = Double.valueOf(list.get(12));
-            Double extendedPrice = Double.valueOf(list.get(13));
-            Double contribution =  Double.valueOf(list.get(14));
-            String productUrl = list.get(15);
+            try
+            {
+                String itemDescription = list.get(1).replaceAll("\"","");
+                String itemName = list.get(2);
+                String manufacturer = list.get(3);
+                String source = list.get(4);
+                String sku = list.get(5);
+                String packaging = list.get(6);
+                Integer quantity = (int)Double.parseDouble(list.get(7));
+                Double msrp = isMSRPPresent(list.get(8));
+                Double wholesale = Double.valueOf(list.get(9));
+                Double costOfGoods = Double.valueOf(list.get(10));
+                Double unitPrice = Double.valueOf(list.get(12));
+                Double extendedPrice = Double.valueOf(list.get(13));
+                Double contribution =  Double.valueOf(list.get(14));
+                String productUrl = list.get(15);
 
-            ExcelRow excelRow = new ExcelRow(itemDescription, itemName, manufacturer, sku, quantity, packaging,
-            msrp, wholesale, costOfGoods, unitPrice, extendedPrice, contribution, source, productUrl);
+                ExcelRow excelRow = new ExcelRow(itemDescription, itemName, manufacturer, sku, quantity, packaging,
+                msrp, wholesale, costOfGoods, unitPrice, extendedPrice, contribution, source, productUrl);
 
-            excelRows.add(excelRow);
+                excelRows.add(excelRow);
+            }
+            //TODO find out what list is causing this to fail, they should all be the same length!
+            catch(NumberFormatException nfe) {
+                String itemDescription = list.get(1).replaceAll("\"","");
+                String productUrl = list.get(15);
+                excelRows.add(new NoItemFoundExcelRow(itemDescription, productUrl));
+            }
         }
         return excelRows;
     }
