@@ -71,8 +71,6 @@ public class PriceReportParser {
 
     
     /*
-     * TODO eventually add checking for empty rows
-     * 
      * creates the necessary objects to construct an ExcelRow Object then adds it to a list
      * then returns them all
      */

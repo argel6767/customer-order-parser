@@ -177,9 +177,4 @@ public class PriceReportCreator{
         return csvParser.parseRow(currItemArray, webScrapedMap, columnHeaderIndex);
     }
 
-        public static void main(String[] args) {
-            PriceReportCreator cleanExcelFile = new PriceReportCreator("/Users/argelhernandezamaya/Desktop/Blue-Tactical/product-orders/Henry-Schein-Scrape.csv", "/Users/argelhernandezamaya/Desktop/Blue-Tactical/product-orders/Henry-Shein-Order-Example.csv", "Henry Schein");
-            cleanExcelFile.makeNewExcelFile();
-        }
-
 }

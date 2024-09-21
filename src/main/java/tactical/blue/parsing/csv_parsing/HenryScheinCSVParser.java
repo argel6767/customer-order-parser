@@ -22,7 +22,7 @@ public class HenryScheinCSVParser implements CSVParser {
             
                 for (String[] currWebScrapedDataArray : urlValList) { //makes new objects for each one
                     if (!currWebScrapedDataArray[1].equals("\"\"")) { //check if it's not an empty row
-                        String customerDescription = currItemArray[0]; //objects with same URL with have the same customer description
+                        String customerDescription = currItemArray[0].replace("\"", ""); //objects with same URL with have the same customer description
                         String[] seperatedProductInfo = getItemNameManufactuerAndSKUFromExtractedElement(currWebScrapedDataArray[columnHeaderIndex.get("\"HenrySchein_Product_And_Manufacturer\"")]);
                         String itemName = seperatedProductInfo[0];
                         String manufacturer = seperatedProductInfo[1];

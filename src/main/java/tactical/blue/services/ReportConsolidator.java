@@ -54,7 +54,9 @@ public class ReportConsolidator {
     private void groupExcelRowsByItemDescription(List<ExcelRow> excelRows) {
         for (ExcelRow row: excelRows) {
             List<ExcelRow> excelRowGroup = itemDescriptionMappedRows.get(row.getItemDescription());
-            excelRowGroup.add(row);
+            if (excelRowGroup != null) {
+                excelRowGroup.add(row); 
+            }
         }
     }
 
@@ -63,10 +65,15 @@ public class ReportConsolidator {
      * then combines all the lists into one
      */
     private List<ExcelRow> sortGroupedLists() {
-        Comparator<ExcelRow> comparator = Comparator.comparing(ExcelRow::getWholeSalePrice);
+        Comparator<ExcelRow> comparator = Comparator.comparing(
+            excelRow -> excelRow.getWholeSalePrice() != null ? excelRow.getWholeSalePrice() : Double.MAX_VALUE
+        ); //Will check if wholesale price is null ie is part of an ItemNotFoundExcelRow Object
         List<List<ExcelRow>> allGroups = new ArrayList<>(this.itemDescriptionMappedRows.values());
         for (List<ExcelRow> excelRows : allGroups) {
-            excelRows.sort(comparator);
+            if (excelRows.size() != 0) {
+                excelRows.sort(comparator);
+            }
+            
         }
 
         List<ExcelRow> sortedRows = new ArrayList<>();
