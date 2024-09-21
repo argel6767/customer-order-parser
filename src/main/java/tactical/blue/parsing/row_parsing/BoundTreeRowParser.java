@@ -1,4 +1,4 @@
-package tactical.blue.parsing.csv_parsing;
+package tactical.blue.parsing.row_parsing;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +14,7 @@ import tactical.blue.excel.excelrows.NoItemFoundExcelRow;
     * Results, Product, Manufacturer, SKU, Wholesale, List_Price, Packaging, Whole_Sale_Bulk, List_Price_Bulk, Bulk_Packaging, Original_URL
 */
 
-public class BoundTreeCSVParser implements CSVParser{
+public class BoundTreeRowParser implements RowParser{
     @Override
     public List<ExcelRow> parseRow(String[] currItemArray, Map<String, List<String[]>> webScrapedMap,
             HashMap<String, Integer> columnHeaderIndex) {

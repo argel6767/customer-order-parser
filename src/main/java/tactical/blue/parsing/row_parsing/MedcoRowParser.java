@@ -1,4 +1,4 @@
-package tactical.blue.parsing.csv_parsing;
+package tactical.blue.parsing.row_parsing;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import tactical.blue.excel.excelrows.ExcelRow;
 import tactical.blue.excel.excelrows.MedcoSportsMedicineExcelRow;
 import tactical.blue.excel.excelrows.NoItemFoundExcelRow;
 
-public class MedcoCSVParser implements CSVParser{
+public class MedcoRowParser implements RowParser{
 
     @Override
     public List<ExcelRow> parseRow(String[] currItemArray, Map<String, List<String[]>> webScrapedMap,

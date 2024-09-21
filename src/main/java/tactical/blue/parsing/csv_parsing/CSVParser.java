@@ -1,24 +1,30 @@
 package tactical.blue.parsing.csv_parsing;
 
-import java.util.HashMap;
+import java.io.File;
+import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import tactical.blue.excel.excelrows.ExcelRow;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 
-public interface CSVParser {
-    public List<ExcelRow> parseRow(String[] currItemArray, Map<String, List<String[]>> webScrapedMap, HashMap<String, Integer> columnHeaderIndex);
+public abstract class CSVParser {
 
-    private boolean isRowEmptyLogic(String[] currentWebScrapedData, int index) {
-        for (int i = index; i < currentWebScrapedData.length;i++) {
-            if (currentWebScrapedData[i] != null) {
-                return false;
-            }
+        /*
+     * This method returns the rows of the Customer Order Information CSV file
+     * as a List of String[]
+     */
+    public List<String[]> getCSVRows(File customerInfo) {
+        try {
+           FileReader fileReader = new FileReader(customerInfo);
+        CSVReader csvReader = new CSVReaderBuilder(fileReader) .withSkipLines(1).build(); 
+        List<String[]> rows = csvReader.readAll();
+        return rows; 
+        } 
+        catch (Exception e) {
+            System.out.println("Something went wrong!");
+            e.printStackTrace();
         }
-        return true;
-    }
-
-    default boolean isRowEmpty(String[] currentWebScrapedData, int index) {
-        return isRowEmptyLogic(currentWebScrapedData, index);
+        return new ArrayList<String[]>();
     }
 }

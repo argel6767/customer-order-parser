@@ -1,34 +1,25 @@
 package tactical.blue.parsing.csv_parsing;
 
 import java.io.File;
-import java.io.FileReader;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ArrayList;
-
-import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
 
 import tactical.blue.excel.excelrows.ExcelRow;
 
 /*
  * Houses the logic of mapping the order of the item descriptions in the Customer Order to ensure items are group correctly in the excel file
  */
-public class CustomerOrderInformationParser {
+public class CustomerOrderInformationCSVParser extends CSVParser{
 
 /*
- * Main method that creates a CSVReader Object that does all the parsing for us
+ * This methods returns the Item Descriptions of products wanted by the customer
+ * as a LinkedHashMap object with the format
+ * <String, List<ExcelRow>>
  */
     public LinkedHashMap<String, List<ExcelRow>> getItemDescriptions(File customerInfo) {
-        try {
-            FileReader fileReader = new FileReader(customerInfo);
-            CSVReader csvReader = new CSVReaderBuilder(fileReader) .withSkipLines(1).build(); 
-            List<String[]> rows = csvReader.readAll();
+            List<String[]> rows = getCSVRows(customerInfo);
             return mapItemDescriptions(rows);
-        } catch (Exception e) {
-            System.out.println("File not found!");
-        }
-        return new LinkedHashMap<>();
     }
 
     /*
@@ -43,4 +34,5 @@ public class CustomerOrderInformationParser {
         }
         return itemDescriptionsMap;
     }
+
 }

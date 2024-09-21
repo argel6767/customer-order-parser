@@ -1,4 +1,4 @@
-package tactical.blue.parsing.csv_parsing;
+package tactical.blue.parsing.row_parsing;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import tactical.blue.excel.excelrows.ExcelRow;
 import tactical.blue.excel.excelrows.HenryScheinExcelRow;
 import tactical.blue.excel.excelrows.NoItemFoundExcelRow;
 
-public class HenryScheinCSVParser implements CSVParser {
+public class HenryScheinRowParser implements RowParser {
 
 
     @Override

@@ -12,10 +12,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.opencsv.CSVParser;
 
 import tactical.blue.excel.excelrows.ExcelRow;
-import tactical.blue.parsing.csv_parsing.*;
+import tactical.blue.parsing.csv_parsing.CustomerOrderInformationCSVParser;
+import tactical.blue.parsing.csv_parsing.ScrapedDataCSVParser;
 import tactical.blue.parsing.excel_parsing.ExcelWriter;
+import tactical.blue.parsing.row_parsing.*;
 
 public class PriceReportCreator{
     private File fileInWebScrape;
@@ -25,7 +28,7 @@ public class PriceReportCreator{
     private BufferedReader bufferedReaderItemDescription;
     private List<ExcelRow> excelRows = new ArrayList<>();
     private HashMap<String,Integer> columnHeaderIndex = new HashMap<>();
-    private CSVParser csvParser; //strategy pattern
+    private RowParser csvParser; //strategy pattern
     private ExcelWriter excelWriter = new ExcelWriter();
    
     
@@ -87,16 +90,16 @@ public class PriceReportCreator{
     private void setCSVParser(String siteName) {
         switch (siteName) {
             case "Bound Tree":
-                this.csvParser = new BoundTreeCSVParser();
+                this.csvParser = new BoundTreeRowParser();
                 break;
             case "Henry Schein":
-                this.csvParser = new HenryScheinCSVParser();
+                this.csvParser = new HenryScheinRowParser();
                 break;
             case "Medco":
-                this.csvParser = new MedcoCSVParser();
+                this.csvParser = new MedcoRowParser();
                 break;
             case "NA Rescue":
-                this.csvParser = new NARescueParser();
+                this.csvParser = new NARescueRowParser();
                 break;
             default:
                 System.out.println("Not a valid option!");
@@ -111,6 +114,14 @@ public class PriceReportCreator{
     //reads csv file that is put in
    private void readCSVFiles() throws IOException {
         System.out.println("readCSVFiles() was called");
+
+        ScrapedDataCSVParser scrapedDataCSVParser = new ScrapedDataCSVParser();
+        String scrapeDataHeaders = bufferedReaderWebScrape.readLine();
+        bufferedReaderWebScrape.close();
+        getExcelColumnNames(scrapeDataHeaders.split(","));
+        scrapedDataCSVParser.mapRows(this.fileInWebScrape, this.siteName);
+        CustomerOrderInformationCSVParser customerOrderInformationCSVParser = new CustomerOrderInformationCSVParser();
+        String[] orderItems = 
 
         // Step 1: Read Web Scrape Data CSV into a map (URL -> row data)
         Map<String, List<String[]>> webScrapedMap = new HashMap<>();
@@ -143,7 +154,7 @@ public class PriceReportCreator{
                 }
             }
         
-
+        //TODO replace this with OrderInformationParser.getItemDescriptions() method
         // Step 2: Iterate over Item Description CSV and match URLs
             String currLineItemDescription;
             iteration = 0;

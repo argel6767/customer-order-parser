@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import tactical.blue.excel.excelrows.ExcelRow;
-import tactical.blue.parsing.csv_parsing.CustomerOrderInformationParser;
+import tactical.blue.parsing.csv_parsing.CustomerOrderInformationCSVParser;
 import tactical.blue.parsing.excel_parsing.ExcelWriter;
 import tactical.blue.parsing.excel_parsing.PriceReportParser;
 
@@ -16,7 +16,7 @@ public class ReportConsolidator {
     private List<File> priceReportFiles;
     private LinkedHashMap<String, List<ExcelRow>> itemDescriptionMappedRows = new LinkedHashMap<>();
     private ExcelWriter excelWriter = new ExcelWriter();
-    CustomerOrderInformationParser customerOrderInformationParser = new CustomerOrderInformationParser();
+    CustomerOrderInformationCSVParser customerOrderInformationParser = new CustomerOrderInformationCSVParser();
 
     
     public ReportConsolidator(List<File> priceReportFiles, File customerOrderInfo) {

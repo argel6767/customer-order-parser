@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import tactical.blue.excel.excelrows.ExcelRow;
 import tactical.blue.excel.excelrows.HenryScheinExcelRow;
+import tactical.blue.parsing.row_parsing.HenryScheinCSVParser;
 
 public class HenryScheinCSVParserTest {
         private HenryScheinCSVParser parser;
