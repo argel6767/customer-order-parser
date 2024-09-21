@@ -38,7 +38,7 @@ public class CustomerOrderInformationParser {
     private LinkedHashMap<String, List<ExcelRow>> mapItemDescriptions(List<String[]> rows) {
         LinkedHashMap<String, List<ExcelRow>> itemDescriptionsMap = new LinkedHashMap<>();
         for (String[] row : rows) {
-            String itemDescription = row[0].replace("\"", ""); //Get rids of any left over "'s
+            String itemDescription = row[0].replace("\"", ""); //Get rid of any left over "'s
             itemDescriptionsMap.put(itemDescription, new ArrayList<>());
         }
         return itemDescriptionsMap;

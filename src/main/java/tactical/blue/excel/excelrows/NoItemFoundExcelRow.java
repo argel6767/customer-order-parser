@@ -9,6 +9,7 @@ public class NoItemFoundExcelRow extends ExcelRow{
     public NoItemFoundExcelRow(String itemDescription, String productURl) {
         super.setItemDescription(itemDescription);
         super.setProductURL(productURl);
+        super.determineSourceUsingProductURL();
     }
 
     /*
@@ -19,6 +20,6 @@ public class NoItemFoundExcelRow extends ExcelRow{
      */
     @Override
     public Object[] toArray() {
-        return new Object[] {ExcelRow.row++, super.getItemDescription(), "No Item Found Matching Customer Description", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", convertToPercent(super.getMARKUP()), "N/A", "N/A", "N/A", super.getProductURL()};
+        return new Object[] {ExcelRow.row++, super.getItemDescription(), "No Item Found Matching Customer Description", "N/A", super.getSource(), "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", convertToPercent(super.getMARKUP()), "N/A", "N/A", "N/A", super.getProductURL()};
     }
 }

@@ -187,7 +187,7 @@ public class ExcelRow{
     }
 
     //find the source of the item bought using the url of the product page
-    private void determineSourceUsingProductURL() {
+    protected void determineSourceUsingProductURL() {
         String urlLowerCase = this.productURL.toLowerCase(); // Convert to lowercase for easier matching
         
         if (urlLowerCase.contains("boundtree") || urlLowerCase.contains("boundtree.com")) {
