@@ -12,9 +12,10 @@ import com.opencsv.CSVReaderBuilder;
 import tactical.blue.excel.excelrows.ExcelRow;
 
 /*
- * Contains the logic of mapping the order of the item descriptions in the Customer Order to ensure items are group correctly in the excel file
+ * Houses the logic of mapping the order of the item descriptions in the Customer Order to ensure items are group correctly in the excel file
  */
 public class CustomerOrderInformationParser {
+
 /*
  * Main method that creates a CSVReader Object that does all the parsing for us
  */
