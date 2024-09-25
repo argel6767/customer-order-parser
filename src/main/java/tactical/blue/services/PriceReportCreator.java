@@ -28,6 +28,7 @@ public class PriceReportCreator{
     private BufferedReader bufferedReaderItemDescription;
     private List<ExcelRow> excelRows = new ArrayList<>();
     private HashMap<String,Integer> columnHeaderIndex = new HashMap<>();
+    private ScrapedDataCSVParser scrapedDataCSVParser = new ScrapedDataCSVParser();
     private RowParser csvParser; //strategy pattern
     private ExcelWriter excelWriter = new ExcelWriter();
    
@@ -117,9 +118,30 @@ public class PriceReportCreator{
     private void method() throws IOException {
         String columnTitles = bufferedReaderWebScrape.readLine();
         getExcelColumnNames(columnTitles.split(","));
-        ScrapedDataCSVParser scrapedDataParser = new ScrapedDataCSVParser();
-        HashMap<String, List<String[]>> webScrapedMap = scrapedDataParser.mapRows(fileInWebScrape, siteName);
-        List<String[]> orderInfoRows = scrapedDataParser.getCSVRows(fileInCustomerOrderInfo);        
+        HashMap<String, List<String[]>> webScrapedMap = mapScrapedRows();
+        List<String[]> orderInfoRows = getOrderInfoRows();        
+        parseScrapedRowsToExcelRows(webScrapedMap, orderInfoRows);
+    }
+
+    /*
+     * Calls scrapedDataCSVParser.mapRows()
+     */
+    private HashMap<String, List<String[]>> mapScrapedRows() {
+        return scrapedDataCSVParser.mapRows(fileInWebScrape, siteName);
+    }
+
+    /*
+     * Calls scrapedDataCSVParser.getRows()
+     */
+    private List<String[]> getOrderInfoRows() {
+        return scrapedDataCSVParser.getCSVRows(fileInCustomerOrderInfo);
+    }
+
+    /*
+     * Creates ExcelRow objects, by calling parseRowsForExcelFiles
+     * then adds the returned objects to the entire list excelRows if not null
+     */
+    private void parseScrapedRowsToExcelRows(HashMap<String, List<String[]>> webScrapedMap, List<String[]> orderInfoRows) {
         for (String[] row: orderInfoRows) {
             List<ExcelRow> currentRows = parseRowsForExcelFile(row, webScrapedMap);
             if (currentRows != null) { //checks if valid rows, will be null if not
@@ -127,6 +149,7 @@ public class PriceReportCreator{
             }
         }
     }
+
     //reads csv file that is put in
    private void readCSVFiles() throws IOException {
         System.out.println("readCSVFiles() was called");
