@@ -99,7 +99,6 @@ public class PriceReportParser {
 
                 excelRows.add(excelRow);
             }
-            //TODO find out what list is causing this to fail, they should all be the same length!
             catch(NumberFormatException nfe) {
                 String itemDescription = list.get(1).replaceAll("\"","");
                 String productUrl = list.get(15);

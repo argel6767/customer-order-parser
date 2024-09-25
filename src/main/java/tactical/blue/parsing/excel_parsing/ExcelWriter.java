@@ -79,7 +79,7 @@ public class ExcelWriter {
     public void generateExcelFile(String fileTitle) {
             System.out.println("generateExcelFile() Called");
             String userHome = System.getProperty("user.home");
-            Path folderPath = Paths.get(userHome, "Desktop", "Blue-Tactical", "weekly-scrapes");
+            Path folderPath = Paths.get(userHome, "Desktop", "Weekly-Reports");
             if (!Files.exists(folderPath)) {
                 try {
                     Files.createDirectories(folderPath);

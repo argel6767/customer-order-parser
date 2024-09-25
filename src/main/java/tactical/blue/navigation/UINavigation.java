@@ -33,7 +33,7 @@ public class UINavigation {
     public void setSceneToConsolidateExcelFiles() throws FileNotFoundException {
         ConsolidateExcelFilesUIBuilder consolidateExcelFilesUIBuilder = new ConsolidateExcelFilesUIBuilder(this, stage);
         stage.setScene(consolidateExcelFilesUIBuilder.getScene());
-        stage.setTitle("Combine All Parsed Data");
+        stage.setTitle("Price Report Consolidator");
     }
 
 }
