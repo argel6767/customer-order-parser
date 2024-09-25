@@ -57,10 +57,11 @@ public class HenryScheinRowParser implements RowParser {
      */
 
      private String[] getItemNameManufactuerAndSKUFromExtractedElement(String itemAndManufacturerInfo) {
-        String[] firstSplit = itemAndManufacturerInfo.split(" \\| ");
+        String[] firstSplit = itemAndManufacturerInfo.split("\\s*\\|\\s*");
+        //TODO BROKEN NO IDEA HOW WITH NEW METHOD IS USE IN REPORT PASER
         String itemNameAndHenryScheinNumber = firstSplit[0];
         String itemName = itemNameAndHenryScheinNumber.replaceAll("\\d+$", "");
-        String manufacturerAndSKU = firstSplit[1];
+        String manufacturerAndSKU = firstSplit[1];  
         String[] secondSplit = manufacturerAndSKU.split(" \\- ");
         String sku = secondSplit[1];
         String manufacturer = secondSplit[0];

@@ -52,6 +52,8 @@ public class PriceReportCreator{
      * Constructor used when File objects are given
      */
     public PriceReportCreator(File fileInOctoparsePath, File fileInCustomerOrderInfo, String siteName) {
+        this.fileInWebScrape = fileInOctoparsePath;
+        this.fileInCustomerOrderInfo = fileInCustomerOrderInfo;
         this.siteName = siteName;
         setCSVParser(siteName);
         try {
@@ -75,6 +77,7 @@ public class PriceReportCreator{
         System.out.println("makeNewExcelFile() called");
         try {
             readCSVFiles();
+            //method();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -111,6 +114,19 @@ public class PriceReportCreator{
     }
 
 
+    private void method() throws IOException {
+        String columnTitles = bufferedReaderWebScrape.readLine();
+        getExcelColumnNames(columnTitles.split(","));
+        ScrapedDataCSVParser scrapedDataParser = new ScrapedDataCSVParser();
+        HashMap<String, List<String[]>> webScrapedMap = scrapedDataParser.mapRows(fileInWebScrape, siteName);
+        List<String[]> orderInfoRows = scrapedDataParser.getCSVRows(fileInCustomerOrderInfo);        
+        for (String[] row: orderInfoRows) {
+            List<ExcelRow> currentRows = parseRowsForExcelFile(row, webScrapedMap);
+            if (currentRows != null) { //checks if valid rows, will be null if not
+                this.excelRows.addAll(currentRows);
+            }
+        }
+    }
     //reads csv file that is put in
    private void readCSVFiles() throws IOException {
         System.out.println("readCSVFiles() was called");
