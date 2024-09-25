@@ -115,14 +115,6 @@ public class PriceReportCreator{
    private void readCSVFiles() throws IOException {
         System.out.println("readCSVFiles() was called");
 
-        ScrapedDataCSVParser scrapedDataCSVParser = new ScrapedDataCSVParser();
-        String scrapeDataHeaders = bufferedReaderWebScrape.readLine();
-        bufferedReaderWebScrape.close();
-        getExcelColumnNames(scrapeDataHeaders.split(","));
-        scrapedDataCSVParser.mapRows(this.fileInWebScrape, this.siteName);
-        CustomerOrderInformationCSVParser customerOrderInformationCSVParser = new CustomerOrderInformationCSVParser();
-        String[] orderItems = 
-
         // Step 1: Read Web Scrape Data CSV into a map (URL -> row data)
         Map<String, List<String[]>> webScrapedMap = new HashMap<>();
             String currLineDataScrape;

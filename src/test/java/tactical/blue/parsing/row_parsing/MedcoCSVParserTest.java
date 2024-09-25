@@ -1,4 +1,4 @@
-package tactical.blue.parsing.csv_parsing;
+package tactical.blue.parsing.row_parsing;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -14,16 +14,16 @@ import org.junit.jupiter.api.Test;
 
 import tactical.blue.excel.excelrows.ExcelRow;
 import tactical.blue.excel.excelrows.MedcoSportsMedicineExcelRow;
-import tactical.blue.parsing.row_parsing.MedcoCSVParser;
+import tactical.blue.parsing.row_parsing.MedcoRowParser;
 
 public class MedcoCSVParserTest {
-    private MedcoCSVParser parser;
+    private MedcoRowParser parser;
     private Map<String, List<String[]>> webScrapedMap;
     private HashMap<String, Integer> columnHeaderIndex;
 
     @BeforeEach
     public void setUp() {
-        parser = new MedcoCSVParser();
+        parser = new MedcoRowParser();
         webScrapedMap = new HashMap<>();
         columnHeaderIndex = new HashMap<>();
 

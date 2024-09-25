@@ -1,4 +1,4 @@
-package tactical.blue.parsing.csv_parsing;
+package tactical.blue.parsing.row_parsing;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -14,16 +14,16 @@ import org.junit.jupiter.api.Test;
 
 import tactical.blue.excel.excelrows.BoundTreeExcelRow;
 import tactical.blue.excel.excelrows.ExcelRow;
-import tactical.blue.parsing.row_parsing.BoundTreeCSVParser;
+import tactical.blue.parsing.row_parsing.BoundTreeRowParser;
 
-public class BoundTreeCSVParserTest {
-     private BoundTreeCSVParser parser;
+public class BoundTreeRowParserTest {
+     private BoundTreeRowParser parser;
     private Map<String, List<String[]>> webScrapedMap;
     private HashMap<String, Integer> columnHeaderIndex;
     
     @BeforeEach
     public void setUp() {
-        parser = new BoundTreeCSVParser();
+        parser = new BoundTreeRowParser();
         webScrapedMap = new HashMap<>();
         columnHeaderIndex = new HashMap<>();
 

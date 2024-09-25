@@ -11,7 +11,7 @@ import java.io.FileWriter;
 import java.util.List;
 import java.util.LinkedHashMap;
 
-public class CustomerOrderInformationParserTest {
+public class CustomerOrderInformationCSVParserTest {
 
     @Test
     public void testGetItemDescriptionsWithTemporaryFile() throws Exception {
@@ -28,7 +28,7 @@ public class CustomerOrderInformationParserTest {
         }
 
         // Instantiate your parser and call the method
-        CustomerOrderInformationParser parser = new CustomerOrderInformationParser();
+        CustomerOrderInformationCSVParser parser = new CustomerOrderInformationCSVParser();
         LinkedHashMap<String, List<ExcelRow>> result = parser.getItemDescriptions(tempFile);
 
         // Perform assertions
