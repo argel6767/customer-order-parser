@@ -72,8 +72,7 @@ public class ReportConsolidator {
         for (List<ExcelRow> excelRows : allGroups) {
             if (excelRows.size() != 0) {
                 excelRows.sort(comparator);
-            }
-            
+            }  
         }
 
         List<ExcelRow> sortedRows = new ArrayList<>();
@@ -84,6 +83,4 @@ public class ReportConsolidator {
         return sortedRows;
     }
 
-    
-    
 }

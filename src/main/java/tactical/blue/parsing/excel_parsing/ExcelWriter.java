@@ -12,13 +12,17 @@ import java.util.Set;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import tactical.blue.excel.excelrows.ExcelRow;
 
 public class ExcelWriter {
-    private XSSFWorkbook workbook;
+    private XSSFWorkbook workbook = new XSSFWorkbook();
+    private CellStyle cellStyle = workbook.createCellStyle();
+    private boolean applyStyling = false;
 
     public ExcelWriter() {}
 
@@ -28,7 +32,6 @@ public class ExcelWriter {
       public void createExcelCells(List<ExcelRow> excelRows, String sheetTitle) {
         System.out.println("createExcelCells() called");
         
-        this.workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet(sheetTitle + " " + LocalDate.now());
 
         Map<String, Object[]> dataSheetInfo = new LinkedHashMap<>(); //use LinkedHashMap to keep order
@@ -43,6 +46,9 @@ public class ExcelWriter {
         }
 
         
+        if (applyStyling) {
+            addBestDealStyling();
+        }
 
         int rowNum = 0;
         Set<String> keySet = dataSheetInfo.keySet();
@@ -99,5 +105,10 @@ public class ExcelWriter {
             e.printStackTrace();
         }
 
-        }
+    }
+
+    private void addBestDealStyling() {
+        this.cellStyle.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+    }
+
 }
