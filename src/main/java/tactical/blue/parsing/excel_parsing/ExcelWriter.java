@@ -69,9 +69,9 @@ public class ExcelWriter {
                 Row row = sheet.createRow(rowNum); 
                 rowNum++;
                 Object[] objArr = dataSheetInfo.get(key); 
-                currItem = String.valueOf(objArr[1]);
+                String isFirstGroupItem = String.valueOf(objArr[objArr.length-1]);
                 int cellnum = 0; 
-                if (applyStyling && !currItem.equals(prevItem)) {
+                if (applyStyling && isFirstGroupItem(isFirstGroupItem)) {
                     addBestDealStyling();
                     //Arrow function that is defined to style if necessary when the item is the best deal
                     CellStyler cellStyler = (cell) -> {
@@ -81,30 +81,37 @@ public class ExcelWriter {
 
                 }
                 else writeRows(row, objArr, cellnum, null); 
-                prevItem = currItem;
             } 
         }
     
+    
+    /*
+     * checks whether the current row has been flagged as a first group item, aka the best deal
+     * in order to highlight it in Excel File
+     */
+    private boolean isFirstGroupItem(String isFirstGroupItem) {
+        return (isFirstGroupItem.equals("true"));
+    }
 
     /*
      * this method writes the cells for each row and checks their type to make sure they are displayed correctly
      * in the Excel File
      */
     private void writeRows(Row row, Object[] objArr, int cellnum, CellStyler cellStyler) {
-        for (Object obj : objArr) { 
+        for (int i = 0; i < objArr.length - 1; i++) { 
             // This line creates a cell in the next 
             //  column of that row 
             Cell cell = row.createCell(cellnum++); 
             
-            if (obj == null) {
+            if (objArr[i] == null) {
                 cell.setCellValue("N/A");
             }
-            if (obj instanceof Double) 
-                cell.setCellValue((Double)obj); 
+            if (objArr[i] instanceof Double) 
+                cell.setCellValue((Double)objArr[i]); 
    
-            else if (obj instanceof Integer) 
-                cell.setCellValue((Integer) obj); 
-            else cell.setCellValue((String)obj);
+            else if (objArr[i] instanceof Integer) 
+                cell.setCellValue((Integer) objArr[i]); 
+            else cell.setCellValue((String)objArr[i]);
 
             if (cellStyler != null) cellStyler.customize(cell);
         }
@@ -139,7 +146,7 @@ public class ExcelWriter {
     }
 
     private void addBestDealStyling() {
-        this.cellStyle.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+        this.cellStyle.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
         this.cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
     }
 

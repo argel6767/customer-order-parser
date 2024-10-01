@@ -78,6 +78,10 @@ public class ReportConsolidator {
 
         List<ExcelRow> sortedRows = new ArrayList<>();
         for (List<ExcelRow> excelRows : allGroups) {
+            if (excelRows.size() != 0) {
+                ExcelRow bestDeal = excelRows.get(0);
+                bestDeal.setIsFirstGroupItem(); //flags each best deal
+            }
             sortedRows.addAll(excelRows);
         }
 
