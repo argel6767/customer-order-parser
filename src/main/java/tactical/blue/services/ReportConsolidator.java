@@ -30,6 +30,7 @@ public class ReportConsolidator {
      */
     public void consolidateReports() {
         groupExcelRowsByItemDescription(grabAllRowsFromEveryFile());
+        excelWriter.allowStyling();
         excelWriter.createExcelCells(sortGroupedLists(), "Combined Weekly Report");
         excelWriter.generateExcelFile("Combined-Weekly-Report-");
 

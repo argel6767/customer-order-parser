@@ -13,6 +13,7 @@ import java.util.Set;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -25,6 +26,14 @@ public class ExcelWriter {
     private boolean applyStyling = false;
 
     public ExcelWriter() {}
+
+    /*
+     * allows for the the applyStyling flag to become true
+     * this is typically only done by the Price Consolidator
+     */
+    public void allowStyling() {
+        applyStyling = true;
+    }
 
     /*
      * creates the necesssary cells from the ExcelRows that will be written into the ExcelFile
@@ -62,15 +71,28 @@ public class ExcelWriter {
                 Object[] objArr = dataSheetInfo.get(key); 
                 currItem = String.valueOf(objArr[1]);
                 if (!currItem.equals(prevItem)) {
+                    addBestDealStyling();
+                }
+                prevItem = currItem;
+                int cellnum = 0; 
+                if (applyStyling) {
+                    //Arrow function that is defined to style if necessary when the item is the best deal
+                    CellStyler cellStyler = (cell) -> {
+                        cell.setCellStyle(cellStyle);
+                    };
+                    writeRows(row, objArr, cellnum, cellStyler); 
 
                 }
-                int cellnum = 0; 
-    
-                writeRows(row, objArr, cellnum); 
+                else writeRows(row, objArr, cellnum, null); 
             } 
         }
+    
 
-    private void writeRows(Row row, Object[] objArr, int cellnum) {
+    /*
+     * this method writes the cells for each row and checks their type to make sure they are displayed correctly
+     * in the Excel File
+     */
+    private void writeRows(Row row, Object[] objArr, int cellnum, CellStyler cellStyler) {
         for (Object obj : objArr) { 
             // This line creates a cell in the next 
             //  column of that row 
@@ -85,6 +107,8 @@ public class ExcelWriter {
             else if (obj instanceof Integer) 
                 cell.setCellValue((Integer) obj); 
             else cell.setCellValue((String)obj);
+
+            if (cellStyler != null) cellStyler.customize(cell);
         }
     }
 
@@ -118,6 +142,7 @@ public class ExcelWriter {
 
     private void addBestDealStyling() {
         this.cellStyle.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+        this.cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
     }
 
 }
