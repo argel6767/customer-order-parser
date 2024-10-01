@@ -70,12 +70,9 @@ public class ExcelWriter {
                 rowNum++;
                 Object[] objArr = dataSheetInfo.get(key); 
                 currItem = String.valueOf(objArr[1]);
-                if (!currItem.equals(prevItem)) {
-                    addBestDealStyling();
-                }
-                prevItem = currItem;
                 int cellnum = 0; 
-                if (applyStyling) {
+                if (applyStyling && !currItem.equals(prevItem)) {
+                    addBestDealStyling();
                     //Arrow function that is defined to style if necessary when the item is the best deal
                     CellStyler cellStyler = (cell) -> {
                         cell.setCellStyle(cellStyle);
@@ -84,6 +81,7 @@ public class ExcelWriter {
 
                 }
                 else writeRows(row, objArr, cellnum, null); 
+                prevItem = currItem;
             } 
         }
     
