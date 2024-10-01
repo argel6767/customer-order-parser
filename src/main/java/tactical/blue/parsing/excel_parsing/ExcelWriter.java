@@ -51,6 +51,8 @@ public class ExcelWriter {
         }
 
         int rowNum = 0;
+        String currItem = "";
+        String prevItem = "";
         Set<String> keySet = dataSheetInfo.keySet();
             for (String key : keySet) { 
   
@@ -58,26 +60,33 @@ public class ExcelWriter {
                 Row row = sheet.createRow(rowNum); 
                 rowNum++;
                 Object[] objArr = dataSheetInfo.get(key); 
-                
+                currItem = String.valueOf(objArr[1]);
+                if (!currItem.equals(prevItem)) {
+
+                }
                 int cellnum = 0; 
     
-                for (Object obj : objArr) { 
-                    // This line creates a cell in the next 
-                    //  column of that row 
-                    Cell cell = row.createCell(cellnum++); 
-                    
-                    if (obj == null) {
-                        cell.setCellValue("N/A");
-                    }
-                    if (obj instanceof Double) 
-                        cell.setCellValue((Double)obj); 
-    
-                    else if (obj instanceof Integer) 
-                        cell.setCellValue((Integer) obj); 
-                    else cell.setCellValue((String)obj);
-                } 
+                writeRows(row, objArr, cellnum); 
             } 
         }
+
+    private void writeRows(Row row, Object[] objArr, int cellnum) {
+        for (Object obj : objArr) { 
+            // This line creates a cell in the next 
+            //  column of that row 
+            Cell cell = row.createCell(cellnum++); 
+            
+            if (obj == null) {
+                cell.setCellValue("N/A");
+            }
+            if (obj instanceof Double) 
+                cell.setCellValue((Double)obj); 
+   
+            else if (obj instanceof Integer) 
+                cell.setCellValue((Integer) obj); 
+            else cell.setCellValue((String)obj);
+        }
+    }
 
     /*
      * Creates an Excel File in Desktop/Blue-Tactical/weekly-scrapes currently
