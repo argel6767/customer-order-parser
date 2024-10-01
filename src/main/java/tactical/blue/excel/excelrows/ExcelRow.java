@@ -22,6 +22,7 @@ public class ExcelRow{
     private Double contribution;//the money earned above
     private String source; //website item information was acquired from
     private String productURL; //url of product page
+    private Boolean isFirstGroupItem = false;
 
     
 
@@ -105,6 +106,12 @@ public class ExcelRow{
         calculatePricingAndQuantities(packaging);
     }
 
+    /*
+     * sets isFirstGroupItem flag to true which allows for the first items of each group, ie the best deal to be turned green to highlight
+     */
+    public void setIsFirstGroupItem() {
+        this.isFirstGroupItem = true;
+    }
 
     /*
      * Will Check if MSRP is null, ie the Store Front Does not have an MSRP and return "N/A"
@@ -422,7 +429,7 @@ public String toString() {
      * Line Item, Product Name, Manufacturer, Source, SKU, Packaging, Quantity, MSRP, Wholesale, Cost of Goods, Markup, Unit Price, Extended Price, Contribution, Product URL
      */
     public Object[] toArray() {
-        return new Object[]{ExcelRow.row++, this.itemDescription, this.itemName, this.manufacturer, this.source, this.sku, this.packaging, this.quantityNeeded, this.msrp, this.wholeSalePrice, this.costOfGoods, convertToPercent(this.MARKUP), this.unitPrice, this.extendedPrice, this.contribution, this.productURL};
+        return new Object[]{ExcelRow.row++, this.itemDescription, this.itemName, this.manufacturer, this.source, this.sku, this.packaging, this.quantityNeeded, this.msrp, this.wholeSalePrice, this.costOfGoods, convertToPercent(this.MARKUP), this.unitPrice, this.extendedPrice, this.contribution, this.productURL, this.isFirstGroupItem};
     }
 
     /*
