@@ -60,8 +60,6 @@ public class ExcelWriter {
         }
 
         int rowNum = 0;
-        String currItem = "";
-        String prevItem = "";
         Set<String> keySet = dataSheetInfo.keySet();
             for (String key : keySet) { 
   
