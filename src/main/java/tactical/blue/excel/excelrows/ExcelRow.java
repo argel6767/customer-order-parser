@@ -233,7 +233,7 @@ public class ExcelRow{
     }
 
     private void calculateContribution() {
-        Double contribution = this.extendedPrice - this.costOfGoods;
+        Double contribution = (this.extendedPrice - this.costOfGoods) * this.quantityNeeded;
         setContribution(contribution);
     }
 
@@ -428,8 +428,8 @@ public String toString() {
      * Excel Row Format:
      * Line Item, Product Name, Manufacturer, Source, SKU, Packaging, Quantity, MSRP, Wholesale, Cost of Goods, Markup, Unit Price, Extended Price, Contribution, Product URL
      */
-    public Object[] toArray() {
-        return new Object[]{ExcelRow.row++, this.itemDescription, this.itemName, this.manufacturer, this.source, this.sku, this.packaging, this.quantityNeeded, this.msrp, this.wholeSalePrice, this.costOfGoods, convertToPercent(this.MARKUP), this.unitPrice, this.extendedPrice, this.contribution, this.productURL, this.isFirstGroupItem};
+    public Object[] toArray() { //TODO fix contribution bug, this is temporary fix
+        return new Object[]{ExcelRow.row++, this.itemDescription, this.itemName, this.manufacturer, this.source, this.sku, this.packaging, this.quantityNeeded, this.msrp, this.wholeSalePrice, this.costOfGoods, convertToPercent(this.MARKUP), this.unitPrice, this.extendedPrice, this.contribution*this.quantityNeeded, this.productURL, this.isFirstGroupItem};
     }
 
     /*
