@@ -233,7 +233,7 @@ public class ExcelRow{
     }
 
     private void calculateContribution() {
-        Double contribution = this.unitPrice - this.wholeSalePrice;
+        Double contribution = this.extendedPrice - this.costOfGoods;
         setContribution(contribution);
     }
 
