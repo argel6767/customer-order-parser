@@ -44,7 +44,7 @@ public class ExcelWriter {
         XSSFSheet sheet = workbook.createSheet(sheetTitle + " " + LocalDate.now());
 
         Map<String, Object[]> dataSheetInfo = new LinkedHashMap<>(); //use LinkedHashMap to keep order
-        dataSheetInfo.put("1", new Object[] {"Row","Item Description","Item", "Manfucturer", "Source", "SKU", "Packaging", "Quantity", "MSRP", "Wholesale Price", "Cost of Goods", "Markup", "Unit Price", "Extended Price", "Contribution", "Product URL"}); //headers
+        dataSheetInfo.put("1", new Object[] {"Row","Item Description","Item", "Manfucturer", "Source", "SKU", "Packaging", "Quantity", "MSRP", "Wholesale Price", "Cost of Goods", "Markup", "Unit Price", "Extended Price", "Contribution", "Product URL", ""}); //headers, empty string to allow for Product URL to be written
         
         int index = 2;
         //adds the excel rows into dataSheetInfo from List excelRows
