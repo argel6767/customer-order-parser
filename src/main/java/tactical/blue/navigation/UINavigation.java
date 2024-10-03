@@ -31,39 +31,60 @@ public class UINavigation {
         consolidateExcelFilesUIBuilder = new ConsolidateExcelFilesUIBuilder(this, stage);
     }
 
+    /*
+     * When called switches the scene to the Main page
+     */
     public void setSceneToMainPage() throws FileNotFoundException {
         switchScene(mainPageUIBuilder.getScene(), "Blue Tactical Customer Order Parser");
     }
 
+    /*
+     * When called switches scene to the Price Report Creator page
+     */
     public void setSceneToPriceReportCreator() throws FileNotFoundException {
         switchScene(priceReportCreatorUIBuilder.getScene(), "Scraped Data Price Report Creator");
     }
 
+    /*
+     * When called switches scene to the Consolidate Excel Files page
+     */
     public void setSceneToConsolidateExcelFiles() throws FileNotFoundException {
         switchScene(consolidateExcelFilesUIBuilder.getScene(), "Price Report Consolidator");
     }
 
+    /*
+     * Houses the switching of scenes logic
+     * checks if the current scene is null currently (ie the application was just booted up), if so the newScene is set as the current scene
+     * as well with the title parameter
+     * Otherwise a FadeTransition object is made to allow for there to be a transation affect between pages to give a more natural transition feel
+     */
      private void switchScene(Scene newScene, String title) {
         if (stage.getScene() == null) {
             stage.setScene(newScene);
             stage.setTitle(title);
-            return;
+            getFadeIn(newScene, 1000);
         }
-        FadeTransition fadeOut = new FadeTransition(Duration.millis(350), stage.getScene().getRoot());
-        fadeOut.setFromValue(1.0);
-        fadeOut.setToValue(0.0);
+        else {
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(350), stage.getScene().getRoot());
+            fadeOut.setFromValue(1.0);
+            fadeOut.setToValue(0.0);
 
-        fadeOut.setOnFinished(event -> {
-            stage.setScene(newScene);
-            stage.setTitle(title);
+            fadeOut.setOnFinished(event -> {
+                stage.setScene(newScene);
+                stage.setTitle(title);
 
-            FadeTransition fadeIn = new FadeTransition(Duration.millis(350), newScene.getRoot());
-            fadeIn.setFromValue(0.0);
-            fadeIn.setToValue(1.0);
-            fadeIn.play();
-        });
+                getFadeIn(newScene, 350);
+            });
 
-        fadeOut.play();
+            fadeOut.play();
+        }
+    }
+
+    private void getFadeIn(Scene newScene, int time) {
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(time), newScene.getRoot());
+        fadeIn.setFromValue(0.0);
+        fadeIn.setToValue(1.0);
+        fadeIn.play();
     }
 
 }
