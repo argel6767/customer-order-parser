@@ -60,31 +60,40 @@ public class UINavigation {
      */
      private void switchScene(Scene newScene, String title) {
         if (stage.getScene() == null) {
-            stage.setScene(newScene);
-            stage.setTitle(title);
+            setSceneValues(newScene, title);
             getFadeIn(newScene, 1000);
         }
         else {
             FadeTransition fadeOut = new FadeTransition(Duration.millis(350), stage.getScene().getRoot());
             setFadeValues(fadeOut, 1, 0);
-
             fadeOut.setOnFinished(event -> {
-                stage.setScene(newScene);
-                stage.setTitle(title);
-
+                setSceneValues(newScene, title);
                 getFadeIn(newScene, 350);
             });
-
             fadeOut.play();
         }
     }
 
+    /*
+     * Sets necessary values for stage
+     */
+    private void setSceneValues(Scene newScene, String title) {
+        stage.setScene(newScene);
+        stage.setTitle(title);
+    }
+
+    /*
+     * Creates a FadeTransiton object that transitions into scene
+     */
     private void getFadeIn(Scene newScene, int time) {
         FadeTransition fadeIn = new FadeTransition(Duration.millis(time), newScene.getRoot());
         setFadeValues(fadeIn, 0, 1);
         fadeIn.play();
     }
 
+    /*
+     * Sets necessary fade values for transition
+     */
     private void setFadeValues(FadeTransition fade, double from, double to) {
         fade.setFromValue(from);
         fade.setToValue(to);
