@@ -101,8 +101,11 @@ public class PriceReportParser {
             }
             catch(NumberFormatException nfe) {
                 String itemDescription = list.get(1).replaceAll("\"","");
-                String productUrl = list.get(15);
-                excelRows.add(new NoItemFoundExcelRow(itemDescription, productUrl));
+                String productURL = "No URL Listed -- Item Not Found"; //placeholder in case program is on Windows
+                if (list.size() == 16) { //program being run on mac
+                    productURL = list.get(15);
+                }                
+                excelRows.add(new NoItemFoundExcelRow(itemDescription, productURL));
             }
         }
         return excelRows;
