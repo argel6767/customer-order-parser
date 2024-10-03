@@ -2,7 +2,10 @@ package tactical.blue.navigation;
 
 import java.io.FileNotFoundException;
 
+import javafx.animation.FadeTransition;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import tactical.blue.ui.ConsolidateExcelFilesUIBuilder;
 import tactical.blue.ui.MainPageUIBuilder;
 import tactical.blue.ui.PriceReportCreatorUIBuilder;
@@ -29,19 +32,38 @@ public class UINavigation {
     }
 
     public void setSceneToMainPage() throws FileNotFoundException {
-        stage.setScene(mainPageUIBuilder.getScene());
-        stage.setTitle("Blue Tactical Customer Order Parser");
+        switchScene(mainPageUIBuilder.getScene(), "Blue Tactical Customer Order Parser");
     }
 
     public void setSceneToPriceReportCreator() throws FileNotFoundException {
-        stage.setScene(priceReportCreatorUIBuilder.getScene());
-        stage.setTitle("Scraped Data Price Report Creator");
+        switchScene(priceReportCreatorUIBuilder.getScene(), "Scraped Data Price Report Creator");
     }
 
     public void setSceneToConsolidateExcelFiles() throws FileNotFoundException {
-        stage.setScene(consolidateExcelFilesUIBuilder.getScene());
-        stage.setTitle("Price Report Consolidator");
+        switchScene(consolidateExcelFilesUIBuilder.getScene(), "Price Report Consolidator");
     }
 
+     private void switchScene(Scene newScene, String title) {
+        if (stage.getScene() == null) {
+            stage.setScene(newScene);
+            stage.setTitle(title);
+            return;
+        }
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(350), stage.getScene().getRoot());
+        fadeOut.setFromValue(1.0);
+        fadeOut.setToValue(0.0);
+
+        fadeOut.setOnFinished(event -> {
+            stage.setScene(newScene);
+            stage.setTitle(title);
+
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(350), newScene.getRoot());
+            fadeIn.setFromValue(0.0);
+            fadeIn.setToValue(1.0);
+            fadeIn.play();
+        });
+
+        fadeOut.play();
+    }
 
 }
