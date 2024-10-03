@@ -13,27 +13,35 @@ import tactical.blue.ui.PriceReportCreatorUIBuilder;
  */
 public class UINavigation {
     private Stage stage;
+    private MainPageUIBuilder mainPageUIBuilder;
+    private PriceReportCreatorUIBuilder priceReportCreatorUIBuilder;
+    private ConsolidateExcelFilesUIBuilder consolidateExcelFilesUIBuilder;
 
-    public UINavigation(Stage stage) {
+    public UINavigation(Stage stage) throws FileNotFoundException {
         this.stage = stage;
+        createUIBuilders(stage);
+    }
+
+    private void createUIBuilders(Stage stage) throws FileNotFoundException {
+        mainPageUIBuilder = new MainPageUIBuilder(this, stage);
+        priceReportCreatorUIBuilder = new PriceReportCreatorUIBuilder(this, stage);
+        consolidateExcelFilesUIBuilder = new ConsolidateExcelFilesUIBuilder(this, stage);
     }
 
     public void setSceneToMainPage() throws FileNotFoundException {
-        MainPageUIBuilder mainPageUIBuilder = new MainPageUIBuilder(this, stage);
         stage.setScene(mainPageUIBuilder.getScene());
         stage.setTitle("Blue Tactical Customer Order Parser");
     }
 
     public void setSceneToPriceReportCreator() throws FileNotFoundException {
-        PriceReportCreatorUIBuilder priceReportCreatorUIBuilder = new PriceReportCreatorUIBuilder(this, stage);
         stage.setScene(priceReportCreatorUIBuilder.getScene());
         stage.setTitle("Scraped Data Price Report Creator");
     }
 
     public void setSceneToConsolidateExcelFiles() throws FileNotFoundException {
-        ConsolidateExcelFilesUIBuilder consolidateExcelFilesUIBuilder = new ConsolidateExcelFilesUIBuilder(this, stage);
         stage.setScene(consolidateExcelFilesUIBuilder.getScene());
         stage.setTitle("Price Report Consolidator");
     }
+
 
 }
