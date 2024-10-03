@@ -66,8 +66,7 @@ public class UINavigation {
         }
         else {
             FadeTransition fadeOut = new FadeTransition(Duration.millis(350), stage.getScene().getRoot());
-            fadeOut.setFromValue(1.0);
-            fadeOut.setToValue(0.0);
+            setFadeValues(fadeOut, 1, 0);
 
             fadeOut.setOnFinished(event -> {
                 stage.setScene(newScene);
@@ -82,9 +81,13 @@ public class UINavigation {
 
     private void getFadeIn(Scene newScene, int time) {
         FadeTransition fadeIn = new FadeTransition(Duration.millis(time), newScene.getRoot());
-        fadeIn.setFromValue(0.0);
-        fadeIn.setToValue(1.0);
+        setFadeValues(fadeIn, 0, 1);
         fadeIn.play();
+    }
+
+    private void setFadeValues(FadeTransition fade, double from, double to) {
+        fade.setFromValue(from);
+        fade.setToValue(to);
     }
 
 }
