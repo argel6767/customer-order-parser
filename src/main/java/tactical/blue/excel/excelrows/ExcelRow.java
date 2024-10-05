@@ -107,6 +107,14 @@ public class ExcelRow{
     }
 
     /*
+     * resets the row value to make sure each new file has proper numbering starting at one
+     * allows for static calls
+     */
+    public static void resetRowNumber() {
+        ExcelRow.row = 1;
+    }
+
+    /*
      * sets isFirstGroupItem flag to true which allows for the first items of each group, ie the best deal to be turned green to highlight
      */
     public void setIsFirstGroupItem() {

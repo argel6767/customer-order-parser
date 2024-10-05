@@ -12,10 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.opencsv.CSVParser;
 
 import tactical.blue.excel.excelrows.ExcelRow;
-import tactical.blue.parsing.csv_parsing.CustomerOrderInformationCSVParser;
 import tactical.blue.parsing.csv_parsing.ScrapedDataCSVParser;
 import tactical.blue.parsing.excel_parsing.ExcelWriter;
 import tactical.blue.parsing.row_parsing.*;
@@ -85,6 +83,7 @@ public class PriceReportCreator{
         }
         excelWriter.createExcelCells(excelRows, "Weekly Customer Price Report for" + this.siteName);
         excelWriter.generateExcelFile(siteName + "-Report-");
+        ExcelRow.resetRowNumber();
     }
 
     /*
