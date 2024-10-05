@@ -23,7 +23,8 @@ public class HenryScheinRowParser implements RowParser {
                 for (String[] currWebScrapedDataArray : urlValList) { //makes new objects for each one
                     if (!currWebScrapedDataArray[1].equals("\"\"")) { //check if it's not an empty row
                         String customerDescription = currItemArray[0].replace("\"", ""); //objects with same URL with have the same customer description
-                        String[] seperatedProductInfo = getItemNameManufactuerAndSKUFromExtractedElement(currWebScrapedDataArray[columnHeaderIndex.get("\"HenrySchein_Product_And_Manufacturer\"")]);
+                        System.out.println(currWebScrapedDataArray[columnHeaderIndex.get("\"HenrySchein_Product_And_Manufacturer\"")]);
+                        String[] seperatedProductInfo = getItemNameManufactuerAndSKUFromExtractedElement(currWebScrapedDataArray[columnHeaderIndex.get("\"HenrySchein_Product_And_Manufacturer\"")].replace("\"", ""));
                         String itemName = seperatedProductInfo[0];
                         String manufacturer = seperatedProductInfo[1];
                         String sku = seperatedProductInfo[2];
@@ -58,13 +59,15 @@ public class HenryScheinRowParser implements RowParser {
 
      private String[] getItemNameManufactuerAndSKUFromExtractedElement(String itemAndManufacturerInfo) {
         String[] firstSplit = itemAndManufacturerInfo.split("\\s*\\|\\s*");
+        int indexOfLine = itemAndManufacturerInfo.indexOf("\\|");
+        String itemNameAndHenryScheinNumber = itemAndManufacturerInfo.substring(0, indexOfLine).trim();
+        
         //TODO BROKEN NO IDEA HOW WITH NEW METHOD IS USE IN REPORT PASER
-        String itemNameAndHenryScheinNumber = firstSplit[0];
-        String itemName = itemNameAndHenryScheinNumber.replaceAll("\\d+$", "");
-        String manufacturerAndSKU = firstSplit[1];  
-        String[] secondSplit = manufacturerAndSKU.split(" \\- ");
-        String sku = secondSplit[1];
-        String manufacturer = secondSplit[0];
+        String itemName = itemNameAndHenryScheinNumber.replace("\\d+", "");
+        String manufacturerAndSKU = itemAndManufacturerInfo.substring(indexOfLine+1).trim(); 
+        int indexOfDash = manufacturerAndSKU.indexOf("-");
+        String manufacturer = manufacturerAndSKU.substring(0, indexOfDash).trim();
+        String sku = manufacturerAndSKU.substring(indexOfDash+1).trim();
 
         String[] productInfo = {itemName, manufacturer, sku};
         return productInfo;
