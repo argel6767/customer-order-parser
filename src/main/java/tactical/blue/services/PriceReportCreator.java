@@ -29,7 +29,7 @@ public class PriceReportCreator{
     private List<ExcelRow> excelRows = new ArrayList<>();
     private HashMap<String,Integer> columnHeaderIndex = new HashMap<>();
     private ScrapedDataCSVParser scrapedDataCSVParser = new ScrapedDataCSVParser();
-    private RowParser csvParser; //strategy pattern
+    private RowParser rowParser; //strategy pattern
     private ExcelWriter excelWriter = new ExcelWriter();
    
     
@@ -40,7 +40,7 @@ public class PriceReportCreator{
         this.fileInWebScrape = new File(fileInOctoparsePath);
         this.fileInCustomerOrderInfo = new File(fileInCustomerOrderInfo);
         this.siteName = siteName;
-        setCSVParser(siteName);
+        setRowParser(siteName);
         try {
         this.bufferedReaderWebScrape = new BufferedReader(new FileReader(fileInWebScrape));
         this.bufferedReaderItemDescription = new BufferedReader(new FileReader(fileInCustomerOrderInfo));
@@ -56,7 +56,7 @@ public class PriceReportCreator{
         this.fileInWebScrape = fileInOctoparsePath;
         this.fileInCustomerOrderInfo = fileInCustomerOrderInfo;
         this.siteName = siteName;
-        setCSVParser(siteName);
+        setRowParser(siteName);
         try {
         this.bufferedReaderWebScrape = new BufferedReader(new FileReader(fileInOctoparsePath));
         this.bufferedReaderItemDescription = new BufferedReader(new FileReader(fileInCustomerOrderInfo));
@@ -77,8 +77,8 @@ public class PriceReportCreator{
     public void makeNewExcelFile() {
         System.out.println("makeNewExcelFile() called");
         try {
-            readCSVFiles();
-            //method();
+            //readCSVFiles();
+            method();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -88,22 +88,22 @@ public class PriceReportCreator{
     }
 
     /*
-     * Depending on what site the data is sourced the CSVParser object will be instantiated as the appropriate
+     * Depending on what site the data is sourced the RowParser object will be instantiated as the appropriate
      * strategy
      */
-    private void setCSVParser(String siteName) {
+    private void setRowParser(String siteName) {
         switch (siteName) {
             case "Bound Tree":
-                this.csvParser = new BoundTreeRowParser();
+                this.rowParser = new BoundTreeRowParser();
                 break;
             case "Henry Schein":
-                this.csvParser = new HenryScheinRowParser();
+                this.rowParser = new HenryScheinRowParser();
                 break;
             case "Medco":
-                this.csvParser = new MedcoRowParser();
+                this.rowParser = new MedcoRowParser();
                 break;
             case "NA Rescue":
-                this.csvParser = new NARescueRowParser();
+                this.rowParser = new NARescueRowParser();
                 break;
             default:
                 System.out.println("Not a valid option!");
@@ -216,7 +216,7 @@ public class PriceReportCreator{
      * calls the CSVParser parseRow() object to parse scraped data and have them formatted for the Excel table
      */
     private List<ExcelRow> parseRowsForExcelFile(String[] currItemArray, Map<String, List<String[]>> webScrapedMap) {
-        return csvParser.parseRow(currItemArray, webScrapedMap, columnHeaderIndex);
+        return rowParser.parseRow(currItemArray, webScrapedMap, columnHeaderIndex);
     }
 
 }
