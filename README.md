@@ -19,4 +19,7 @@ This program, developed for **Blue Tactical**, is designed to parse scraped web 
 2. **Excel Report Generation**: Generates individual Excel reports using Apache POI based on the parsed data.
 3. **Report Combination**: The program reads multiple Excel reports and combines them into a single file.
 
+## License
+
+This software is proprietary and is the property of **Blue Tactical**. Unauthorized use, distribution, or modification of this software is strictly prohibited.
 
