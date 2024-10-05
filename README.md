@@ -1,4 +1,4 @@
-# Web Data Parser and Report Generator
+# Blue Tactical Customer Order Parser
 
 This program, developed for **Blue Tactical**, is designed to parse scraped web data stored in CSV files, process that data, and generate reports in Excel format. It uses **OpenCSV** to read CSV files and **Apache POI** to write and manage Excel files. The program also reads multiple Excel reports and combines them into a singular, comprehensive report.
 
