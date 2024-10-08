@@ -24,43 +24,29 @@ public class PriceReportCreator{
     private File fileInCustomerOrderInfo;
     private String siteName;
     private BufferedReader bufferedReaderWebScrape;
-    private BufferedReader bufferedReaderItemDescription;
     private List<ExcelRow> excelRows = new ArrayList<>();
-    private HashMap<String,Integer> columnHeaderIndex = new HashMap<>();
-    private ScrapedDataCSVParser scrapedDataCSVParser = new ScrapedDataCSVParser();
+    private final HashMap<String,Integer> columnHeaderIndex = new HashMap<>();
+    private final ScrapedDataCSVParser scrapedDataCSVParser = new ScrapedDataCSVParser();
     private RowParser rowParser; //strategy pattern
-    private ExcelWriter excelWriter = new ExcelWriter();
+    private final ExcelWriter excelWriter = new ExcelWriter();
    
-    
     /*
-     * constructor that sets up bufferedreader object, used when path is put in constrcutor as String
+     * Constructor that is called by UI
      */
-    public PriceReportCreator(String fileInOctoparsePath, String fileInCustomerOrderInfo, String siteName) {
-        this.fileInWebScrape = new File(fileInOctoparsePath);
-        this.fileInCustomerOrderInfo = new File(fileInCustomerOrderInfo);
-        this.siteName = siteName;
-        setRowParser(siteName);
-        try {
-        this.bufferedReaderWebScrape = new BufferedReader(new FileReader(fileInWebScrape));
-        this.bufferedReaderItemDescription = new BufferedReader(new FileReader(fileInCustomerOrderInfo));
-        } catch (FileNotFoundException ex) {
-            System.out.println("Something went wrong!");
-        }
-    }
-
-    /*
-     * Constructor used when File objects are given
-     */
-    public PriceReportCreator(File fileInOctoparsePath, File fileInCustomerOrderInfo, String siteName) {
-        this.fileInWebScrape = fileInOctoparsePath;
+    public PriceReportCreator(File fileInWebScrape, File fileInCustomerOrderInfo, String siteName) {
+        this.fileInWebScrape = fileInWebScrape;
         this.fileInCustomerOrderInfo = fileInCustomerOrderInfo;
         this.siteName = siteName;
         setRowParser(siteName);
+        setBufferedReader(fileInWebScrape);
+
+    }
+
+    private void setBufferedReader(File file) {
         try {
-        this.bufferedReaderWebScrape = new BufferedReader(new FileReader(fileInOctoparsePath));
-        this.bufferedReaderItemDescription = new BufferedReader(new FileReader(fileInCustomerOrderInfo));
-        } catch (FileNotFoundException ex) {
-            System.out.println("Something went wrong!");
+            this.bufferedReaderWebScrape = new BufferedReader(new FileReader(file));
+        } catch (FileNotFoundException fnfe) {
+            System.out.println("File could not be found! Try again");
         }
     }
 
