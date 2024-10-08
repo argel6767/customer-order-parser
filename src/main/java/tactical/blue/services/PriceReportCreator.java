@@ -3,20 +3,21 @@ package tactical.blue.services;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-
 import java.io.FileReader;
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import tactical.blue.excel.excelrows.ExcelRow;
 import tactical.blue.parsing.csv_parsing.ScrapedDataCSVParser;
 import tactical.blue.parsing.excel_parsing.ExcelWriter;
-import tactical.blue.parsing.row_parsing.*;
+import tactical.blue.parsing.row_parsing.BoundTreeRowParser;
+import tactical.blue.parsing.row_parsing.HenryScheinRowParser;
+import tactical.blue.parsing.row_parsing.MedcoRowParser;
+import tactical.blue.parsing.row_parsing.NARescueRowParser;
+import tactical.blue.parsing.row_parsing.RowParser;
 
 public class PriceReportCreator{
     private File fileInWebScrape;

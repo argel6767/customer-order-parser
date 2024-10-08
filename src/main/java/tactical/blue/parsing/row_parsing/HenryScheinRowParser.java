@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import tactical.blue.excel.excelrows.ExcelRow;
 import tactical.blue.excel.excelrows.HenryScheinExcelRow;
@@ -19,9 +21,8 @@ public class HenryScheinRowParser implements RowParser {
         String itemUrl = currItemArray[2];
         if (webScrapedMap.containsKey(itemUrl)) {
                 List<String[]> urlValList = webScrapedMap.get(itemUrl); //grabs all products found under url
-            
                 for (String[] currWebScrapedDataArray : urlValList) { //makes new objects for each one
-                    if (!currWebScrapedDataArray[1].equals("\"\"")) { //check if it's not an empty row
+                    if (!currWebScrapedDataArray[1].equals("")) { //check if it's not an empty row
                         String customerDescription = currItemArray[0].replace("\"", ""); //objects with same URL with have the same customer description
                         System.out.println(currWebScrapedDataArray[columnHeaderIndex.get("\"HenrySchein_Product_And_Manufacturer\"")]);
                         String[] seperatedProductInfo = getItemNameManufactuerAndSKUFromExtractedElement(currWebScrapedDataArray[columnHeaderIndex.get("\"HenrySchein_Product_And_Manufacturer\"")].replace("\"", ""));
@@ -54,26 +55,51 @@ public class HenryScheinRowParser implements RowParser {
 
      /*
      * Must be used for HenrySchein data as item name, manufacturer and SKU are tied to the same element on the web page
-     * will seperate the three by using items that are used as dividors on actual website " - " and " | "
+     * seperates the values via 2 dividers
+     * 1 - a regex utlizing the un-needed Henry Schein code
+     * 2 - the "-" divider the site uses to seperate the manufacturer name and sku
      */
 
-     private String[] getItemNameManufactuerAndSKUFromExtractedElement(String itemAndManufacturerInfo) {
-        String[] firstSplit = itemAndManufacturerInfo.split("\\s*\\|\\s*");
-        int indexOfLine = itemAndManufacturerInfo.indexOf("\\|");
-        String itemNameAndHenryScheinNumber = itemAndManufacturerInfo.substring(0, indexOfLine).trim();
-        
-        //TODO BROKEN NO IDEA HOW WITH NEW METHOD IS USE IN REPORT PASER
-        String itemName = itemNameAndHenryScheinNumber.replace("\\d+", "");
-        String manufacturerAndSKU = itemAndManufacturerInfo.substring(indexOfLine+1).trim(); 
-        int indexOfDash = manufacturerAndSKU.indexOf("-");
-        String manufacturer = manufacturerAndSKU.substring(0, indexOfDash).trim();
-        String sku = manufacturerAndSKU.substring(indexOfDash+1).trim();
-
-        String[] productInfo = {itemName, manufacturer, sku};
+     private  String[] getItemNameManufactuerAndSKUFromExtractedElement(String itemAndManufacturerInfo) {
+        String[] split = seperateItemAndManufacturerInfo(itemAndManufacturerInfo);
+        String itemName = split[0];
+        String[] manufacturerAndSKU = seperateManufacturerInfo(split[1]);
+        String[] productInfo = {itemName, manufacturerAndSKU[0], manufacturerAndSKU[1]};
         return productInfo;
         
     }
 
+    /*
+     * Splits the itemAndManufacturerInfo String into two parts via regex
+     * returns the itemName and then the manufacturerInfo in a String[]
+     */
+    private String[] seperateItemAndManufacturerInfo(String itemAndManufacturerInfo) {
+        Matcher matcher = createMatcher("\\d{7,}", itemAndManufacturerInfo);
+        matcher.find();
+        String itemName = itemAndManufacturerInfo.substring(0, matcher.start());
+        String manufacturerAndSKU = itemAndManufacturerInfo.substring(matcher.end()+1);
+        return new String[] {itemName, manufacturerAndSKU};
+    }
+
+    /*
+     * Creates Matcher object to find desired Henry Schein number regex
+     */
+    private Matcher createMatcher(String regex, String input) {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(input);
+        return matcher;
+    }
+
+    /*
+     * Seperates the manufacturerInfo by the index of "-"
+     * returns manufacturer and sku in a String[]
+     */
+    private String[] seperateManufacturerInfo (String manufacturerAndSKU) {
+        int indexOfDash = manufacturerAndSKU.indexOf("-");
+        String manufacturer = manufacturerAndSKU.substring(0, indexOfDash).trim();
+        String sku = manufacturerAndSKU.substring(indexOfDash+1).trim();
+        return new String[] {manufacturer, sku};
+    }
 
     /*
      * Cleans scraped MSRP by getting rid of $ sign and lingering ""
@@ -95,6 +121,10 @@ public class HenryScheinRowParser implements RowParser {
         return Double.valueOf(wholesale);
     }
 
+    public static void main(String[] args) {
+        HenryScheinRowParser henryScheinRowParser = new HenryScheinRowParser();
+        henryScheinRowParser.getItemNameManufactuerAndSKUFromExtractedElement("Support Sleeve Unisex Thigh 22.25-25\" Large7760116 | Pro Orthopedic Devices - 500-3-01");
+    }
 
 } 
 
