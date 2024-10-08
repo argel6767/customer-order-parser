@@ -76,8 +76,7 @@ public class PriceReportCreator{
     public void makeNewExcelFile() {
         System.out.println("makeNewExcelFile() called");
         try {
-            //readCSVFiles();
-            method();
+            readCSVFiles();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -114,8 +113,14 @@ public class PriceReportCreator{
         this.excelRows = excelRows;
     }
 
-
-    private void method() throws IOException {
+    /*
+     * An abstracted view of readCSVFiles
+     * the column titles are found for dynamic grabbing of values
+     * the rows are are then red and mapped by their product url
+     * the Order Info file is read
+     * The rows are then converted to a proper format for Excel Rows and written to Excel File
+     */
+    private void readCSVFiles() throws IOException {
         String columnTitles = bufferedReaderWebScrape.readLine();
         getExcelColumnNames(columnTitles.split(","));
         HashMap<String, List<String[]>> webScrapedMap = mapScrapedRows();
@@ -148,59 +153,6 @@ public class PriceReportCreator{
                 this.excelRows.addAll(currentRows);
             }
         }
-    }
-
-    //reads csv file that is put in
-   private void readCSVFiles() throws IOException {
-        System.out.println("readCSVFiles() was called");
-
-        // Step 1: Read Web Scrape Data CSV into a map (URL -> row data)
-        Map<String, List<String[]>> webScrapedMap = new HashMap<>();
-            String currLineDataScrape;
-            int iteration = 0;
-            while ((currLineDataScrape = bufferedReaderWebScrape.readLine()) != null) {
-                if (iteration == 0) { // Skip headers
-                    iteration++; 
-                    String[] columnHeaders = currLineDataScrape.split(",");
-                    getExcelColumnNames(columnHeaders);
-                    continue;
-                }
-                String[] currWebScrapedDataArray = currLineDataScrape.split(",");
-                if (currWebScrapedDataArray.length >= 5) { // Ensure the array has enough columns
-                    String productURL = currWebScrapedDataArray[currWebScrapedDataArray.length-1]; //url of item in octoparse fil
-                    if (this.siteName.equals("Henry Schein")) {
-                        productURL = currWebScrapedDataArray[0].replaceAll("\"", ""); //henry schein is the only with url first
-                    }
-                    
-                    if (webScrapedMap.containsKey(productURL)) {
-                        List<String[]> urValList = webScrapedMap.get(productURL);
-                        urValList.add(currWebScrapedDataArray);
-                    }
-                    else {
-                       List<String[]> urlValList = new ArrayList<>();
-                       urlValList.add(currWebScrapedDataArray);
-                       webScrapedMap.put(productURL, urlValList);
-                    }
-                    
-                }
-            }
-        
-        //TODO replace this with OrderInformationParser.getItemDescriptions() method
-        // Step 2: Iterate over Item Description CSV and match URLs
-            String currLineItemDescription;
-            iteration = 0;
-            while ((currLineItemDescription = bufferedReaderItemDescription.readLine()) != null) { //getting current row of file
-                if (iteration == 0) { // Skip headers
-                    iteration++;
-                    continue;
-                }
-                String[] currItemArray = currLineItemDescription.split(",");
-                List<ExcelRow> currentRows = parseRowsForExcelFile(currItemArray, webScrapedMap);
-                if (currentRows != null) { //checks if valid rows, will be null if not
-                    this.excelRows.addAll(currentRows);
-                }
-            }
-        
     }
 
     /*
