@@ -24,7 +24,6 @@ public class HenryScheinRowParser implements RowParser {
                 for (String[] currWebScrapedDataArray : urlValList) { //makes new objects for each one
                     if (!currWebScrapedDataArray[1].equals("")) { //check if it's not an empty row
                         String customerDescription = currItemArray[0].replace("\"", ""); //objects with same URL with have the same customer description
-                        System.out.println(currWebScrapedDataArray[columnHeaderIndex.get("\"HenrySchein_Product_And_Manufacturer\"")]);
                         String[] seperatedProductInfo = getItemNameManufactuerAndSKUFromExtractedElement(currWebScrapedDataArray[columnHeaderIndex.get("\"HenrySchein_Product_And_Manufacturer\"")].replace("\"", ""));
                         String itemName = seperatedProductInfo[0];
                         String manufacturer = seperatedProductInfo[1];
@@ -62,7 +61,7 @@ public class HenryScheinRowParser implements RowParser {
 
      private  String[] getItemNameManufactuerAndSKUFromExtractedElement(String itemAndManufacturerInfo) {
         String[] split = seperateItemAndManufacturerInfo(itemAndManufacturerInfo);
-        String itemName = split[0];
+        String itemName = split[0].trim();
         String[] manufacturerAndSKU = seperateManufacturerInfo(split[1]);
         String[] productInfo = {itemName, manufacturerAndSKU[0], manufacturerAndSKU[1]};
         return productInfo;
@@ -77,7 +76,7 @@ public class HenryScheinRowParser implements RowParser {
         Matcher matcher = createMatcher("\\d{7,}", itemAndManufacturerInfo);
         matcher.find();
         String itemName = itemAndManufacturerInfo.substring(0, matcher.start());
-        String manufacturerAndSKU = itemAndManufacturerInfo.substring(matcher.end()+1);
+        String manufacturerAndSKU = itemAndManufacturerInfo.substring(matcher.end()+2).trim();
         return new String[] {itemName, manufacturerAndSKU};
     }
 

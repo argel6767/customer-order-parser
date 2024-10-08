@@ -17,7 +17,7 @@ import tactical.blue.excel.excelrows.HenryScheinExcelRow;
 import tactical.blue.parsing.row_parsing.HenryScheinRowParser;
 
 public class HenryScheinRowParserTest {
-        private HenryScheinRowParser parser;
+    private HenryScheinRowParser parser;
     private Map<String, List<String[]>> webScrapedMap;
     private HashMap<String, Integer> columnHeaderIndex;
 
