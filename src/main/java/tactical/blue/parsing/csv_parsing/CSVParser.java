@@ -25,6 +25,6 @@ public abstract class CSVParser {
             System.out.println("Something went wrong!");
             e.printStackTrace();
         }
-        return new ArrayList<String[]>();
+        return new ArrayList<>();
     }
 }
