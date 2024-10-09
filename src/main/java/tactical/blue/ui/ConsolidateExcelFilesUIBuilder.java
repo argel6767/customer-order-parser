@@ -18,7 +18,7 @@ import tactical.blue.services.ReportConsolidator;
 
 public class ConsolidateExcelFilesUIBuilder extends UIComponents{
 
-    private List<File> excelFilesUploaded = new ArrayList<>();
+    private final List<File> excelFilesUploaded = new ArrayList<>();
     private File customerOrderInfoFile;
 
     public ConsolidateExcelFilesUIBuilder(UINavigation uiNavigation, Stage primaryStage, ExecutorServiceHandler handler) throws FileNotFoundException {

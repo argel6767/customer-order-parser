@@ -128,8 +128,7 @@ public class PriceReportCreatorUIBuilder extends UIComponents{
     private Button createMakeExcelFileButton() {
         Button button = new Button("Create Price Report");
         button.setOnAction(e -> {
-            PriceReportCreator priceReportCreator = new PriceReportCreator(this.fileInWebScrapedData, this.fileInCustomerOrderData, this.siteName);
-            priceReportCreator.makeNewExcelFile();  
+            getHandler().makePriceReport(fileInWebScrapedData, fileInCustomerOrderData, siteName); 
         });
         button.setStyle(getButtonStyle());
         return button;
