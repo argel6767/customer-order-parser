@@ -58,8 +58,7 @@ public class ConsolidateExcelFilesUIBuilder extends UIComponents{
         Button button = new Button("Consolidate Files");
         
         button.setOnAction(e -> {
-            ReportConsolidator reportConsolidator = new ReportConsolidator(excelFilesUploaded, customerOrderInfoFile);
-            reportConsolidator.consolidateReports();
+            getHandler().makeReportConsolidation(excelFilesUploaded, customerOrderInfoFile);
         });
         button.setStyle(getButtonStyle());
         return button;
