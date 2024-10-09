@@ -32,6 +32,7 @@ public class PriceReportCreatorUIBuilder extends UIComponents{
     private File fileInCustomerOrderData;
 
 
+    @Override
     public Scene getScene() {
         return super.getScene();
     }

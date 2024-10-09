@@ -11,4 +11,5 @@ module excel_cleaner {
     requires unirest.java;
     requires javafx.graphics;
     requires opencsv;
+    requires org.apache.xmlbeans;
 }

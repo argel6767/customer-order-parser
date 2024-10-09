@@ -21,6 +21,7 @@ public class MainPageUIBuilder extends UIComponents{
         build(primaryStage);
     }
 
+    @Override
     public Scene getScene() {
         return super.getScene();
     }
@@ -28,7 +29,7 @@ public class MainPageUIBuilder extends UIComponents{
     /*
      * builds the UI
      */
-    public void build(Stage primaryStage) throws FileNotFoundException {
+    private void build(Stage primaryStage) throws FileNotFoundException {
         super.setScene(new Scene(createVboxContainer(), getPageWidth(), getPageHeight()));
     }
 

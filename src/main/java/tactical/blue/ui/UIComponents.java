@@ -27,9 +27,10 @@ public abstract class UIComponents {
     private final String logoAddress = "/static/Blue-Tactical-Logo.png";
     private final int pageWidth = 950;
     private final int pageHeight = 534;
-    private UINavigation uiNavigation;
-    private ExecutorServiceHandler handler; //shared handler throughout UI
-        
+    private final UINavigation uiNavigation;
+    private final ExecutorServiceHandler handler; //shared handler throughout UI
+
+
     public UIComponents(UINavigation uiNavigation, ExecutorServiceHandler handler) {
         this.uiNavigation = uiNavigation;
         this.handler = handler;
@@ -45,6 +46,10 @@ public abstract class UIComponents {
 
     protected Scene getScene() {
         return scene;
+    }
+
+    protected  ExecutorServiceHandler getHandler() {
+        return handler;
     }
 
     protected void setScene(Scene scene) {
