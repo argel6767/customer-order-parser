@@ -17,6 +17,14 @@ public class ExecutorServiceHandler {
         this.executorService = Executors.newFixedThreadPool(threadNumber);
    }
 
+   public ExecutorServiceHandler(ExecutorService executorService) {
+     this.executorService = executorService;
+   }
+
+   public ExecutorService getExecutorService() {
+     return this.executorService;
+   }
+
    /*
     * designates a thread with the task of creating a price report
     */
