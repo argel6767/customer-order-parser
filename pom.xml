@@ -13,17 +13,17 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>20.0.2</version>
+            <version>17.0.12</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>20</version>
+            <version>17.0.12</version>
         </dependency>
         <dependency>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-web</artifactId>
-        <version>20.0.2</version>
+        <version>17.0.12</version>
     </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
@@ -116,6 +116,8 @@
             </goals>
             <configuration>
                 <shadedArtifactAttached>false</shadedArtifactAttached> <!-- This avoids creating two JARs -->
+                <createDependencyReducedPom>false</createDependencyReducedPom> <!-- Disables the dependency-reduced POM -->
+
                 <transformers>
                     <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                         <mainClass>tactical.blue.App</mainClass>
