@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 
-class ExecutorServiceHandlerTest {
+public class ExecutorServiceHandlerTest {
 
     private ExecutorServiceHandler executorServiceHandler;
     private ExecutorService mockExecutorService;

@@ -8,10 +8,9 @@ import tactical.blue.excel.excelrows.ExcelRow;
 
 import java.io.*;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.List;
 
-class PriceReportCreatorTest {
+public class PriceReportCreatorTest {
 
     @TempDir
     Path tempDir;

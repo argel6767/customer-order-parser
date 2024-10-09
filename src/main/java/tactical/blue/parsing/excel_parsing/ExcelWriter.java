@@ -21,8 +21,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import tactical.blue.excel.excelrows.ExcelRow;
 
 public class ExcelWriter {
-    private XSSFWorkbook workbook = new XSSFWorkbook();
-    private CellStyle cellStyle = workbook.createCellStyle();
+    private final XSSFWorkbook workbook = new XSSFWorkbook();
+    private final CellStyle cellStyle = workbook.createCellStyle();
     private boolean applyStyling = false;
 
     public ExcelWriter() {}
@@ -83,6 +83,20 @@ public class ExcelWriter {
         }
     
     
+    
+        
+    public XSSFWorkbook getWorkbook() {
+        return workbook;
+    }
+
+    public CellStyle getCellStyle() {
+        return cellStyle;
+    }
+
+    public boolean isApplyStyling() {
+        return applyStyling;
+    }
+
     /*
      * checks whether the current row has been flagged as a first group item, aka the best deal
      * in order to highlight it in Excel File
