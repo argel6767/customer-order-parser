@@ -16,12 +16,13 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import tactical.blue.navigation.UINavigation;
+import tactical.blue.services.ExecutorServiceHandler;
 import tactical.blue.services.PriceReportCreator;
 
 public class PriceReportCreatorUIBuilder extends UIComponents{
 
-    public PriceReportCreatorUIBuilder(UINavigation uiNavigation, Stage primaryStage) throws FileNotFoundException {
-        super(uiNavigation);
+    public PriceReportCreatorUIBuilder(UINavigation uiNavigation, Stage primaryStage, ExecutorServiceHandler handler) throws FileNotFoundException {
+        super(uiNavigation, handler);
         build(primaryStage);
     }
 

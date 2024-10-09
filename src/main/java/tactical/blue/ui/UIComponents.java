@@ -14,6 +14,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import tactical.blue.navigation.UINavigation;
+import tactical.blue.services.ExecutorServiceHandler;
 
 /*
  * Abstract Class that houses the styles and components that will exist throughout the program
@@ -27,9 +28,11 @@ public abstract class UIComponents {
     private final int pageWidth = 950;
     private final int pageHeight = 534;
     private UINavigation uiNavigation;
-    
-    public UIComponents(UINavigation uiNavigation) {
+    private ExecutorServiceHandler handler; //shared handler throughout UI
+        
+    public UIComponents(UINavigation uiNavigation, ExecutorServiceHandler handler) {
         this.uiNavigation = uiNavigation;
+        this.handler = handler;
     }
 
     protected int getPageWidth() {

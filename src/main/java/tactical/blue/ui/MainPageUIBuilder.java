@@ -11,12 +11,13 @@ import javafx.scene.text.Text;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import tactical.blue.navigation.UINavigation;
+import tactical.blue.services.ExecutorServiceHandler;
 
 public class MainPageUIBuilder extends UIComponents{
 
 
-    public MainPageUIBuilder(UINavigation uiNavigation, Stage primaryStage) throws FileNotFoundException {
-        super(uiNavigation);
+    public MainPageUIBuilder(UINavigation uiNavigation, Stage primaryStage, ExecutorServiceHandler handler) throws FileNotFoundException {
+        super(uiNavigation, handler);
         build(primaryStage);
     }
 

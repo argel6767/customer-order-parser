@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import tactical.blue.navigation.UINavigation;
+import tactical.blue.services.ExecutorServiceHandler;
 import tactical.blue.services.ReportConsolidator;
 
 public class ConsolidateExcelFilesUIBuilder extends UIComponents{
@@ -20,8 +21,8 @@ public class ConsolidateExcelFilesUIBuilder extends UIComponents{
     private List<File> excelFilesUploaded = new ArrayList<>();
     private File customerOrderInfoFile;
 
-    public ConsolidateExcelFilesUIBuilder(UINavigation uiNavigation, Stage primaryStage) throws FileNotFoundException {
-        super(uiNavigation);
+    public ConsolidateExcelFilesUIBuilder(UINavigation uiNavigation, Stage primaryStage, ExecutorServiceHandler handler) throws FileNotFoundException {
+        super(uiNavigation, handler);
         build(primaryStage);
     }
 
