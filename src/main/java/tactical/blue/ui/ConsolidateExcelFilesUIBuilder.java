@@ -14,7 +14,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import tactical.blue.navigation.UINavigation;
 import tactical.blue.services.ExecutorServiceHandler;
-import tactical.blue.services.ReportConsolidator;
 
 public class ConsolidateExcelFilesUIBuilder extends UIComponents{
 
@@ -52,7 +51,7 @@ public class ConsolidateExcelFilesUIBuilder extends UIComponents{
     }
 
     /*
-     * Creates Button that allows the ReportConsolidator object to be made and run .consolidatReports()
+     * Creates Button that allows the ReportConsolidator object to be made and run .consolidatReports() on seperate thread
      */
     private Button createRunConsolidateProgramButton() {
         Button button = new Button("Consolidate Files");

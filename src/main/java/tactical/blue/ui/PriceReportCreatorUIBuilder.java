@@ -17,7 +17,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import tactical.blue.navigation.UINavigation;
 import tactical.blue.services.ExecutorServiceHandler;
-import tactical.blue.services.PriceReportCreator;
 
 public class PriceReportCreatorUIBuilder extends UIComponents{
 
@@ -123,7 +122,7 @@ public class PriceReportCreatorUIBuilder extends UIComponents{
     }
 
     /*
-     * The "Create Price Report Button"
+     * The "Create Price Report Button" runs makePriceReport on new thread
      */
     private Button createMakeExcelFileButton() {
         Button button = new Button("Create Price Report");
