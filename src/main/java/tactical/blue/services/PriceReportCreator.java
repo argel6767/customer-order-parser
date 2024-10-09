@@ -19,7 +19,7 @@ import tactical.blue.parsing.row_parsing.MedcoRowParser;
 import tactical.blue.parsing.row_parsing.NARescueRowParser;
 import tactical.blue.parsing.row_parsing.RowParser;
 
-public class PriceReportCreator{
+public final class PriceReportCreator{
     private File fileInWebScrape;
     private File fileInCustomerOrderInfo;
     private String siteName;
@@ -42,7 +42,7 @@ public class PriceReportCreator{
 
     }
 
-    private void setBufferedReader(File file) {
+    public void setBufferedReader(File file) {
         try {
             this.bufferedReaderWebScrape = new BufferedReader(new FileReader(file));
         } catch (FileNotFoundException fnfe) {
@@ -76,7 +76,7 @@ public class PriceReportCreator{
      * Depending on what site the data is sourced the RowParser object will be instantiated as the appropriate
      * strategy
      */
-    private void setRowParser(String siteName) {
+    void setRowParser(String siteName) {
         switch (siteName) {
             case "Bound Tree":
                 this.rowParser = new BoundTreeRowParser();
@@ -92,6 +92,7 @@ public class PriceReportCreator{
                 break;
             default:
                 System.out.println("Not a valid option!");
+                this.rowParser = null;
         }
     }
 
@@ -144,7 +145,7 @@ public class PriceReportCreator{
     /*
      * Grabs the column headers from scraped data to have dynamic indexes
      */
-    private void getExcelColumnNames(String[] columnHeaders) { //allows for dynamic indexes of headers, should they be in an unexpected order
+    void getExcelColumnNames(String[] columnHeaders) { //allows for dynamic indexes of headers, should they be in an unexpected order
         for (int i = 0; i < columnHeaders.length; i++) {
             columnHeaderIndex.put(columnHeaders[i], i);
         }
@@ -153,8 +154,63 @@ public class PriceReportCreator{
     /*
      * calls the CSVParser parseRow() object to parse scraped data and have them formatted for the Excel table
      */
-    private List<ExcelRow> parseRowsForExcelFile(String[] currItemArray, Map<String, List<String[]>> webScrapedMap) {
+    List<ExcelRow> parseRowsForExcelFile(String[] currItemArray, Map<String, List<String[]>> webScrapedMap) {
         return rowParser.parseRow(currItemArray, webScrapedMap, columnHeaderIndex);
     }
 
+    public List<ExcelRow> getExcelRows() {
+        return excelRows;
+    }
+
+    public File getFileInWebScrape() {
+        return fileInWebScrape;
+    }
+
+    public void setFileInWebScrape(File fileInWebScrape) {
+        this.fileInWebScrape = fileInWebScrape;
+    }
+
+    public File getFileInCustomerOrderInfo() {
+        return fileInCustomerOrderInfo;
+    }
+
+    public void setFileInCustomerOrderInfo(File fileInCustomerOrderInfo) {
+        this.fileInCustomerOrderInfo = fileInCustomerOrderInfo;
+    }
+
+    public String getSiteName() {
+        return siteName;
+    }
+
+    public void setSiteName(String siteName) {
+        this.siteName = siteName;
+    }
+
+    public BufferedReader getBufferedReaderWebScrape() {
+        return bufferedReaderWebScrape;
+    }
+
+    public void setBufferedReaderWebScrape(BufferedReader bufferedReaderWebScrape) {
+        this.bufferedReaderWebScrape = bufferedReaderWebScrape;
+    }
+
+    public HashMap<String, Integer> getColumnHeaderIndex() {
+        return columnHeaderIndex;
+    }
+
+    public ScrapedDataCSVParser getScrapedDataCSVParser() {
+        return scrapedDataCSVParser;
+    }
+
+    public RowParser getRowParser() {
+        return rowParser;
+    }
+
+    public void setRowParser(RowParser rowParser) {
+        this.rowParser = rowParser;
+    }
+
+    public ExcelWriter getExcelWriter() {
+        return excelWriter;
+    }
 }
