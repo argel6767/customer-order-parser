@@ -36,10 +36,16 @@ public class ExecutorServiceHandler {
         return priceReport;  
    }
 
+   /*
+    * designates a thread with the task of consolidating reports
+    */
    public void makeReportConsolidation(List<File> reports, File customerOrder) {
           this.executorService.execute(createReportConsolidatorRunnable(reports, customerOrder));
    }
    
+   /*
+    * create Runnable; runs consolidateReports()
+    */
    private Runnable createReportConsolidatorRunnable(List<File> reports, File customerOrder) {
        Runnable consolidator = () -> {
           ReportConsolidator reportConsolidator = new ReportConsolidator(reports, customerOrder);
