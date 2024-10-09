@@ -27,7 +27,6 @@ public class ConsolidateExcelFilesUIBuilder extends UIComponents{
 
     
     private void build(Stage primaryStage) throws FileNotFoundException {
-        
         super.setScene(new Scene(createConsolidatorUIVBox(primaryStage), getPageWidth(), getPageHeight()));
     }
 
