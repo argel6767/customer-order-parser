@@ -3,6 +3,8 @@ package tactical.blue.services;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.io.File;
@@ -30,8 +32,8 @@ class ExecutorServiceHandlerTest {
         // Spy on the class so we can override the actual executorService with a mock one
         executorServiceHandler = Mockito.spy(new ExecutorServiceHandler(5));
 
-        // Inject the mock executorService into the handler
-        Mockito.doReturn(mockExecutorService).when(executorServiceHandler).getExecutorService();
+          // Inject the mock executorService into the handler
+        executorServiceHandler = new ExecutorServiceHandler(mockExecutorService);
     }
 
     @Test
