@@ -448,11 +448,6 @@ public String toString() {
         percentConverter.setMaximumFractionDigits(0);
         return percentConverter.format(decimal);
     }
-
-
-    
-
-
-    
+ 
 }
 

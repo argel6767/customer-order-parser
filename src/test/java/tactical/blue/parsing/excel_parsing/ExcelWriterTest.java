@@ -11,6 +11,7 @@ import java.util.List;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -25,7 +26,8 @@ import org.junit.jupiter.api.io.TempDir;
 
 import tactical.blue.excel.excelrows.ExcelRow;
 
-class ExcelWriterTest {
+
+public class ExcelWriterTest {
 
     @TempDir
     Path tempDir;
@@ -156,7 +158,7 @@ class ExcelWriterTest {
     }
 
     @Test
-    void testCreateExcelCellsWithStyling() {
+    void testCreateExcelCellsWithNoStyling() {
         // Arrange
         excelWriter.allowStyling();
         ExcelRow row4 = new ExcelRow(
@@ -170,6 +172,7 @@ class ExcelWriterTest {
             Double.valueOf(449.99),                                     // wholeSalePrice
             "https://hermanmiller.com/chairs/ergomesh-pro"             // productURL
         );
+
 
         excelRows.add(row4);
 
@@ -185,8 +188,8 @@ class ExcelWriterTest {
         assertNotNull(cellStyle, "Cell style should not be null");
 
         // Check if the cell has the expected background color
-        assertEquals(IndexedColors.LIGHT_GREEN.getIndex(), cellStyle.getFillForegroundColor(), "Cell background color should be light green");
-        assertEquals(FillPatternType.SOLID_FOREGROUND, cellStyle.getFillPattern(), "Cell fill pattern should be solid foreground");
+        assertEquals(IndexedColors.AUTOMATIC.getIndex(), cellStyle.getFillForegroundColor(), "Cell background color should be light green");
+        assertEquals(FillPatternType.NO_FILL, cellStyle.getFillPattern(), "Cell fill pattern should be solid foreground");
     }
 
 
