@@ -63,3 +63,9 @@ buildNumber.properties
 #SH
 build.sh
 *.sh
+
+#custom-runtime
+custom-runtime/*
+
+#installer
+installer/*
