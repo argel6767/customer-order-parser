@@ -10,6 +10,7 @@
         <maven.compiler.target>21</maven.compiler.target>
     </properties>
     <dependencies>
+        <!-- TODO add jakarta naming! for JPackage to work -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -36,7 +37,6 @@
         <version>5.10.2</version>
         <scope>test</scope>
     </dependency>
-    
     <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-engine</artifactId>
