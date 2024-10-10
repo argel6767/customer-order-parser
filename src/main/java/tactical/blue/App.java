@@ -7,11 +7,10 @@ import javafx.stage.Stage;
 import tactical.blue.navigation.UINavigation;
 
 public class App extends Application {
-    private UINavigation uiNavigation;
     @Override
     public void start(Stage primaryStage) throws FileNotFoundException {
         //instantiated UINavigation object and set it to the mainpage
-        uiNavigation = new UINavigation(primaryStage);
+        UINavigation uiNavigation = new UINavigation(primaryStage);
         uiNavigation.setSceneToMainPage();
         primaryStage.show();
     }
