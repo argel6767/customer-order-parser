@@ -33,6 +33,9 @@ replay_pid*
 launch.json
 *.DS_Store
 
+# intelliJ
+.idea/
+.idea/*
 # Local History for Visual Studio Code
 .history/
 
