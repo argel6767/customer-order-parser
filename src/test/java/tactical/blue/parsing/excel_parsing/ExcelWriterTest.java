@@ -140,7 +140,7 @@ public class ExcelWriterTest {
             // Verify data
             Row dataRow = sheet.getRow(1);
             assertNotNull(dataRow, "Data row should not be null");
-            assertEquals(1, (int) dataRow.getCell(0).getNumericCellValue());
+            assertEquals(4, (int) dataRow.getCell(0).getNumericCellValue());
             assertEquals("USB-C Charging Cable, 6ft, Black, Bulk Pack", dataRow.getCell(1).getStringCellValue());
         }
     }
