@@ -18,16 +18,30 @@ import tactical.blue.ui.PriceReportCreatorUIBuilder;
 public class UINavigation {
     private Stage stage;
     private final int THREADS_COUNT = 5; //number of threads (currently a price report + 3 reports consolidated + 1)
-    private final ExecutorServiceHandler handler = new ExecutorServiceHandler(THREADS_COUNT);
+    private  ExecutorServiceHandler handler = new ExecutorServiceHandler(THREADS_COUNT);
     private MainPageUIBuilder mainPageUIBuilder;
     private PriceReportCreatorUIBuilder priceReportCreatorUIBuilder;
     private ConsolidateExcelFilesUIBuilder consolidateExcelFilesUIBuilder;
+
+    /*
+    * For Testing Purposes
+     */
+    public UINavigation(Stage stage, ExecutorServiceHandler handler, MainPageUIBuilder mainPageUIBuilder, PriceReportCreatorUIBuilder priceReportCreatorUIBuilder, ConsolidateExcelFilesUIBuilder consolidateExcelFilesUIBuilder) {
+        this.stage = stage;
+        this.handler = handler;
+        this.mainPageUIBuilder = mainPageUIBuilder;
+        this.priceReportCreatorUIBuilder = priceReportCreatorUIBuilder;
+        this.consolidateExcelFilesUIBuilder = consolidateExcelFilesUIBuilder;
+    }
 
     public UINavigation(Stage stage) throws FileNotFoundException {
         this.stage = stage;
         createUIBuilders(stage);
     }
 
+    /*
+    * Creates each new UI Page using the UINavigation itself, the stage, and handler
+     */
     private void createUIBuilders(Stage stage) throws FileNotFoundException {
         mainPageUIBuilder = new MainPageUIBuilder(this, stage, handler);
         priceReportCreatorUIBuilder = new PriceReportCreatorUIBuilder(this, stage, handler);
