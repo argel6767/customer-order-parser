@@ -10,7 +10,13 @@
         <maven.compiler.target>21</maven.compiler.target>
     </properties>
     <dependencies>
-        <!-- TODO add jakarta naming! for JPackage to work -->
+        <!-- https://mvnrepository.com/artifact/jakarta.platform/jakarta.jakartaee-api -->
+        <dependency>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-api</artifactId>
+            <version>8.0.0</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
