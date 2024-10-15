@@ -41,7 +41,7 @@ public class OpenAIClient {
 
     //utility method that calls APIConfig.getApiKey() for API_KEY value
     private static String getAPIKey() {
-            return APIConfig.getApiKey();
+        return APIConfig.getApiKey();
     }
 
     //creates the JSON request body for api call
