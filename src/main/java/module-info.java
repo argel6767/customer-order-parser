@@ -8,6 +8,7 @@ module excel_cleaner {
     requires java.base;
     requires org.apache.commons.lang3;
     requires jdk.jsobject;
+    requires java.naming;
     requires unirest.java;
     requires javafx.graphics;
     requires opencsv;

@@ -1,6 +1,8 @@
 package tactical.blue.api;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 
 /*
@@ -11,8 +13,15 @@ public class APIConfig {
     /*
      * Grabs OpenAI Key from sh file
      */
-    public static String getApiKey() throws IOException {
-        return System.getenv("OPENAI_API_KEY");
+    public static String getApiKey() {
+        Properties properties = new Properties();
+        try (InputStream input = APIConfig.class.getResourceAsStream("/config.properties")) {
+            properties.load(input);
+            return properties.getProperty("open.ai.key");
+        } catch (IOException ioe) {
+            System.out.println("Failed to load API Key!\nUsing ENV backup");
+            return System.getenv("OPENAI_API_KEY");
+        }
     }
 
 }
