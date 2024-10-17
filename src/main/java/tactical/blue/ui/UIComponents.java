@@ -1,16 +1,22 @@
 package tactical.blue.ui;
 
+import java.util.List;
+
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.concurrent.CompletableFuture;
 
 import javafx.application.Platform;
+import javafx.beans.Observable;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import tactical.blue.navigation.UINavigation;
@@ -29,6 +35,7 @@ public abstract class UIComponents {
     private final int pageHeight = 534;
     private final UINavigation uiNavigation;
     private final ExecutorServiceHandler handler; //shared handler throughout UI
+    private VBox container;
 
 
     public UIComponents(UINavigation uiNavigation, ExecutorServiceHandler handler) {
@@ -70,6 +77,10 @@ public abstract class UIComponents {
 
     protected UINavigation geUINavigation() {
         return uiNavigation;
+    }
+
+    protected void setContainer(VBox container) {
+        this.container = container;
     }
 
     /*
@@ -173,10 +184,50 @@ public abstract class UIComponents {
         return hBox;
     }
 
+    /*
+     * Creates HBox that contains the Go Back and End Program Button
+     */
     protected HBox createGoBackAndEndProgramButtonsHBox() {
         HBox hBox = new HBox(createGoToMainPage("Go Back"), createEndProgramButton());
         hBox.setSpacing(26);
         hBox.setAlignment(Pos.CENTER);
         return hBox;
     }
+
+    /*
+     * Creates a Text object to the current VBox container with the process message
+     * will be initially invisible until a process is started
+     */
+    protected Text createStatusText(String process) {
+        Text statusText = new Text(process);
+        statusText.setVisible(false);
+        return statusText;
+    }
+
+    /*
+     * Changes visibility to true to show Text, takes in the container that it will be in
+     */
+    protected void showStatusText() {
+        List<Node> components = this.container.getChildren();
+        components.get(components.size()-1).setVisible(true); //Text object will be last in list;
+    }
+
+    /*
+     * updates the UI based off the CompletableFuture object status, ie when it's done
+     */
+    protected void updateTextStatus(CompletableFuture<?> task, String newStatusText) {
+        task.thenRun( () -> {
+            Platform.runLater( () -> {changeStatusText(newStatusText);});
+        } );
+    }
+
+    /*
+     * Updates the text to complete
+     */
+    private void changeStatusText(String newStatusText) {
+        List<Node> components = this.container.getChildren();
+        Text text = (Text) components.get(components.size()-1);
+        text.setText(newStatusText);
+    }
+
 }

@@ -1,13 +1,15 @@
 package tactical.blue.services;
 
 import java.io.File;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.List;
+import java.util.concurrent.Future;
 
 
 /*
- * This class holds the ExecutorService that holds the threads needed for mulitthreading
+ * This class holds the ExecutorService that holds the threads needed for multithreading
  * and allowing for the UI not the freeze
  */
 public class ExecutorServiceHandler {
@@ -26,39 +28,42 @@ public class ExecutorServiceHandler {
    }
 
    /*
-    * designates a thread with the task of creating a price report
+    * designates a thread with the task of creating a price report, and returns a Future object
     */
-   public void makePriceReport(File webScrape, File customerOrder, String siteName) {
-        this.executorService.execute(createPriceReportRunnable(webScrape, customerOrder, siteName));
+   public CompletableFuture<Void> makePriceReportAsync(File webScrape, File customerOrder, String siteName) {
+       return CompletableFuture.runAsync(() -> {
+           PriceReportCreator priceReportCreator = new PriceReportCreator(webScrape, customerOrder, siteName);
+           priceReportCreator.makeNewExcelFile();
+       }, executorService);
    }
-   
-   /*
+
+
+
+    /*
     * creates the Runnable that will be executed by the executorService
     * and runs makeNewExcelFile()
     */
    private Runnable createPriceReportRunnable(File webScrape, File customerOrder, String sitename) {
-          Runnable priceReport = () -> {
-               PriceReportCreator priceReportCreator = new PriceReportCreator(webScrape, customerOrder, sitename);
-               priceReportCreator.makeNewExcelFile();
-          };
-        return priceReport;  
+       return () -> {
+            PriceReportCreator priceReportCreator = new PriceReportCreator(webScrape, customerOrder, sitename);
+            priceReportCreator.makeNewExcelFile();
+       };
    }
 
    /*
-    * designates a thread with the task of consolidating reports
+    * designates a thread with the task of consolidating reports and returns future object
     */
-   public void makeReportConsolidation(List<File> reports, File customerOrder) {
-          this.executorService.execute(createReportConsolidatorRunnable(reports, customerOrder));
+   public Future<?> makeReportConsolidation(List<File> reports, File customerOrder) {
+          return this.executorService.submit(createReportConsolidatorRunnable(reports, customerOrder));
    }
    
    /*
     * create Runnable; runs consolidateReports()
     */
    private Runnable createReportConsolidatorRunnable(List<File> reports, File customerOrder) {
-       Runnable consolidator = () -> {
+       return () -> {
           ReportConsolidator reportConsolidator = new ReportConsolidator(reports, customerOrder);
           reportConsolidator.consolidateReports();
        };
-       return consolidator;
    }
 }

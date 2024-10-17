@@ -2,6 +2,9 @@ package tactical.blue.ui;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -11,8 +14,8 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import tactical.blue.navigation.UINavigation;
@@ -20,16 +23,15 @@ import tactical.blue.services.ExecutorServiceHandler;
 
 public class PriceReportCreatorUIBuilder extends UIComponents{
 
-    public PriceReportCreatorUIBuilder(UINavigation uiNavigation, Stage primaryStage, ExecutorServiceHandler handler) throws FileNotFoundException {
-        super(uiNavigation, handler);
-        build(primaryStage);
-    }
-
-
     private String siteName;
     private File fileInWebScrapedData;
     private File fileInCustomerOrderData;
 
+
+    public PriceReportCreatorUIBuilder(UINavigation uiNavigation, Stage primaryStage, ExecutorServiceHandler handler) throws FileNotFoundException {
+        super(uiNavigation, handler);
+        build(primaryStage);
+    }
 
     @Override
     public Scene getScene() {
@@ -47,11 +49,12 @@ public class PriceReportCreatorUIBuilder extends UIComponents{
         FileChooser fileChooserCustomerOrder = createFileChooser("Customer Order Data");
         Button buttonCustomerOrder = createCustomerOrderFileButton(primaryStage, fileChooserCustomerOrder);
 
-        ToggleGroup eccomerceSites = createRadioButtons();
+        ToggleGroup ecommerceSites = createRadioButtons();
 
-        VBox vBox = createVbox(createLogoBox(),buttonWebScrape, buttonCustomerOrder, createRadioButtonHBox(eccomerceSites), createMakeExcelFileButton(), createGoBackAndEndProgramButtonsHBox());
-        StackPane root = new StackPane(vBox);
-        Scene scene = new Scene(root, getPageWidth(), getPageHeight());
+        VBox vBox = createVbox(createLogoBox(),buttonWebScrape, buttonCustomerOrder, createRadioButtonHBox(ecommerceSites), createMakeExcelFileButton(), createGoBackAndEndProgramButtonsHBox(), createStatusText("Creating Price Report..."));
+        setContainer(vBox);
+
+        Scene scene = new Scene(vBox, getPageWidth(), getPageHeight());
         
         super.setScene(scene);
     }
@@ -78,7 +81,6 @@ public class PriceReportCreatorUIBuilder extends UIComponents{
      */
     private Button createCustomerOrderFileButton(Stage primaryStage, FileChooser fileChooser) {
         Button button = new Button("Upload Customer Order Data Here");
-        
         button.setOnAction(e -> {
             this.fileInCustomerOrderData = fileChooser.showOpenDialog(primaryStage); 
             System.out.println("Selected file: " +this.fileInCustomerOrderData.getAbsolutePath());
@@ -114,7 +116,6 @@ public class PriceReportCreatorUIBuilder extends UIComponents{
             else {
                    this.siteName = "NARescue";
                 }
-
             System.out.println(this.siteName);
         });
        
@@ -127,7 +128,9 @@ public class PriceReportCreatorUIBuilder extends UIComponents{
     private Button createMakeExcelFileButton() {
         Button button = new Button("Create Price Report");
         button.setOnAction(e -> {
-            getHandler().makePriceReport(fileInWebScrapedData, fileInCustomerOrderData, siteName); 
+            CompletableFuture<Void> task = getHandler().makePriceReportAsync(fileInWebScrapedData, fileInCustomerOrderData, siteName);
+            showStatusText();
+            updateTextStatus(task, "Price Report complete! Check the Weekly-Reports folder.");
         });
         button.setStyle(getButtonStyle());
         return button;
@@ -152,8 +155,8 @@ public class PriceReportCreatorUIBuilder extends UIComponents{
     /*
     * Creates Container that houses everything
     */    
-    private VBox createVbox(HBox logoBox, Button buttonWebScrape, Button buttonCustomerOrder, HBox hBox, Button buttonMakeFile, HBox goBackAndEndProgramHBox)  {
-        VBox vBox = new VBox(logoBox, buttonWebScrape, buttonCustomerOrder, hBox, buttonMakeFile, goBackAndEndProgramHBox);
+    private VBox createVbox(HBox logoBox, Button buttonWebScrape, Button buttonCustomerOrder, HBox hBox, Button buttonMakeFile, HBox goBackAndEndProgramHBox, Text statusText)  {
+        VBox vBox = new VBox(logoBox, buttonWebScrape, buttonCustomerOrder, hBox, buttonMakeFile, goBackAndEndProgramHBox, statusText);
         vBox.setStyle(getContainerStyle());
         vBox.setSpacing(20);
         vBox.setPadding(new Insets(15));

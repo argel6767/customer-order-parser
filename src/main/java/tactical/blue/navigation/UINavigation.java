@@ -100,7 +100,7 @@ public class UINavigation {
     }
 
     /*
-     * Creates a FadeTransiton object that transitions into scene
+     * Creates a FadeTransition object that transitions into scene
      */
     private void getFadeIn(Scene newScene, int time) {
         FadeTransition fadeIn = new FadeTransition(Duration.millis(time), newScene.getRoot());
