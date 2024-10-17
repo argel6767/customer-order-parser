@@ -64,6 +64,9 @@ buildNumber.properties
 build.sh
 *.sh
 
+#
+*.bat
+
 #custom-runtime
 custom-runtime/*
 
