@@ -85,7 +85,7 @@ public class ConsolidateExcelFilesUIBuilder extends UIComponents{
      * Creates container that holds all UI Components 
      */
     private VBox createConsolidatorUIVBox(Stage primaryStage) throws FileNotFoundException {
-        VBox vBox = new VBox(createLogoBox(), createMulitpleFilesButton(new FileChooser(), primaryStage),createCustomerOrderFileButton(primaryStage, createFileChooser("Upload Customer Infomation")),createRunConsolidateProgramButton(),createGoBackAndEndProgramButtonsHBox());
+        VBox vBox = new VBox(createLogoBox(), createMulitpleFilesButton(new FileChooser(), primaryStage),createCustomerOrderFileButton(primaryStage, createFileChooser("Upload Customer Infomation")),createRunConsolidateProgramButton(),createGoBackAndEndProgramButtonsHBox(), createStatusText("Consolidating files..."));
         vBox.setSpacing(20);
         vBox.setAlignment(Pos.TOP_CENTER);
         vBox.setStyle(getContainerStyle());

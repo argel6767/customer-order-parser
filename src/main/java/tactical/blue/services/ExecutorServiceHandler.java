@@ -37,8 +37,6 @@ public class ExecutorServiceHandler {
        }, executorService);
    }
 
-
-
     /*
     * creates the Runnable that will be executed by the executorService
     * and runs makeNewExcelFile()
