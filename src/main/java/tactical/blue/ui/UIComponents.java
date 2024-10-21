@@ -5,6 +5,7 @@ import java.util.List;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 import javafx.application.Platform;
 import javafx.beans.Observable;
@@ -209,25 +210,63 @@ public abstract class UIComponents {
      */
     protected void showStatusText() {
         List<Node> components = this.container.getChildren();
-        components.get(components.size()-1).setVisible(true); //Text object will be last in list;
+        Text text = (Text) components.get(components.size()-1);
+        text.setVisible(true); //Text object will be last in list;
+    }
+
+    //TODO Considering making Text Handling into separate class (single-responsibility)
+    protected void handleText(CompletableFuture<Void> task, Consumer<String> firstConsumer, Consumer<String> secondConsumer, String firstText, String secondText) {
+        CompletableFuture<Void> secondTask = updateTextStatus(task, firstConsumer, firstText);
+        sleep();
+        updateTextStatus(secondTask, secondConsumer, secondText);
     }
 
     /*
      * updates the UI based off the CompletableFuture object status, ie when it's done
      */
-    protected void updateTextStatus(CompletableFuture<?> task, String newStatusText) {
-        task.thenRun( () -> {
-            Platform.runLater( () -> {changeStatusText(newStatusText);});
+    protected CompletableFuture<Void> updateTextStatus(CompletableFuture<Void> task, Consumer<String> consumer, String text) {
+       return task.thenRun( () -> {
+            Platform.runLater( () -> {consumer.accept(text);});
         } );
     }
 
     /*
      * Updates the text to complete
      */
-    private void changeStatusText(String newStatusText) {
-        List<Node> components = this.container.getChildren();
-        Text text = (Text) components.get(components.size()-1);
+    protected void changeStatusText(String newStatusText) {
+        Text text = getText();
         text.setText(newStatusText);
     }
+    /*
+     * resets the status text back to its default and to its hidden state
+     * this allows for multiple files to be made with the correct text being used
+     */
+    protected void resetStatusText(String newStatusText) {
+        sleep();
+        Text text = getText();
+        text.setVisible(false);
+        changeStatusText(newStatusText);
+    }
 
+    /*
+     * gives a few seconds before the resetStatusText taks effect to allow reader to be
+     * notified file is done
+     */
+
+    protected void sleep( ){
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /*
+     * grabs the Text object in container
+     * will always be last
+     */
+    private Text getText() {
+        List<Node> components = this.container.getChildren();
+        return (Text) components.get(components.size()-1);
+    }
 }

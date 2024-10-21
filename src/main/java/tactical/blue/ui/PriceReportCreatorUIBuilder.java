@@ -93,17 +93,17 @@ public class PriceReportCreatorUIBuilder extends UIComponents{
      * Creates the Radio Buttons for Each Eccomerce Website and puts them into one ToggleGroup object
      */
     private ToggleGroup createRadioButtons() {
-        ToggleGroup eccomerceSites = new ToggleGroup();
+        ToggleGroup ecommerceSites = new ToggleGroup();
         RadioButton boundTree = new RadioButton("Bound Tree");
-        boundTree.setToggleGroup(eccomerceSites);
+        boundTree.setToggleGroup(ecommerceSites);
         RadioButton henrySchein = new RadioButton("Henry Schein");
-        henrySchein.setToggleGroup(eccomerceSites);
+        henrySchein.setToggleGroup(ecommerceSites);
         RadioButton medco = new RadioButton("Medco Sports Medicine");
-        medco.setToggleGroup(eccomerceSites);
+        medco.setToggleGroup(ecommerceSites);
         RadioButton naRescue = new RadioButton("North American Rescue");
-        naRescue.setToggleGroup(eccomerceSites);
+        naRescue.setToggleGroup(ecommerceSites);
 
-        eccomerceSites.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+        ecommerceSites.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == boundTree) {
                     this.siteName = "Bound Tree";
             }
@@ -119,7 +119,7 @@ public class PriceReportCreatorUIBuilder extends UIComponents{
             System.out.println(this.siteName);
         });
        
-        return eccomerceSites;
+        return ecommerceSites;
     }
 
     /*
@@ -130,7 +130,9 @@ public class PriceReportCreatorUIBuilder extends UIComponents{
         button.setOnAction(e -> {
             CompletableFuture<Void> task = getHandler().makePriceReportAsync(fileInWebScrapedData, fileInCustomerOrderData, siteName);
             showStatusText();
-            updateTextStatus(task, "Price Report complete! Check the Weekly-Reports folder.");
+            //TODO Handle resetting text of Text object
+            task = updateTextStatus(task, this::changeStatusText, "Price Report complete! Check the Weekly-Reports folder.");
+            updateTextStatus(task, this::changeStatusText, "Creating Price Report...");
         });
         button.setStyle(getButtonStyle());
         return button;

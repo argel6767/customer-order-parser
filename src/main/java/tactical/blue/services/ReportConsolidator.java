@@ -13,16 +13,27 @@ import tactical.blue.parsing.excel_parsing.PriceReportParser;
 
 public class ReportConsolidator {
 
-    private List<File> priceReportFiles;
+    private final List<File> priceReportFiles;
     private LinkedHashMap<String, List<ExcelRow>> itemDescriptionMappedRows = new LinkedHashMap<>();
-    private ExcelWriter excelWriter = new ExcelWriter();
-    CustomerOrderInformationCSVParser customerOrderInformationParser = new CustomerOrderInformationCSVParser();
+    private ExcelWriter excelWriter;
+
 
     
     public ReportConsolidator(List<File> priceReportFiles, File customerOrderInfo) {
+        CustomerOrderInformationCSVParser parser = new CustomerOrderInformationCSVParser();
         this.priceReportFiles = priceReportFiles;
-        this.itemDescriptionMappedRows = customerOrderInformationParser.getItemDescriptions(customerOrderInfo);
+        this.itemDescriptionMappedRows = parser.getItemDescriptions(customerOrderInfo);
+        excelWriter = new ExcelWriter();
 
+    }
+
+    /*
+    Testing constructor for mock injection
+     */
+    public ReportConsolidator(List<File> priceReportFiles, File customerOrderInfo, ExcelWriter excelWriter, CustomerOrderInformationCSVParser parser) {
+        this.priceReportFiles = priceReportFiles;
+        this.itemDescriptionMappedRows = parser.getItemDescriptions(customerOrderInfo);
+        this.excelWriter = excelWriter;
     }
 
     /*

@@ -61,7 +61,7 @@ public class ConsolidateExcelFilesUIBuilder extends UIComponents{
         button.setOnAction(e -> {
             CompletableFuture<Void> task = getHandler().makeReportConsolidationAsync(excelFilesUploaded, customerOrderInfoFile);
             showStatusText();
-            updateTextStatus(task, "Reports consolidated! Check the Weekly-Reports folder.");
+            updateTextStatus(task, this::changeStatusText, "Reports consolidated! Check the Weekly-Reports folder.");
         });
         button.setStyle(getButtonStyle());
         return button;
