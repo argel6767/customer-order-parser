@@ -5,7 +5,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.List;
-import java.util.concurrent.Future;
 
 
 /*
@@ -19,6 +18,9 @@ public class ExecutorServiceHandler {
         this.executorService = Executors.newFixedThreadPool(threadNumber);
    }
 
+   /*
+   Testing Constructor
+    */
    public ExecutorServiceHandler(ExecutorService executorService) {
      this.executorService = executorService;
    }
@@ -28,13 +30,10 @@ public class ExecutorServiceHandler {
    }
 
    /*
-    * designates a thread with the task of creating a price report, and returns a Future object
+    * designates a thread with the task of creating a price report, and returns a CompletableFuture object
     */
    public CompletableFuture<Void> makePriceReportAsync(File webScrape, File customerOrder, String siteName) {
-       return CompletableFuture.runAsync(() -> {
-           PriceReportCreator priceReportCreator = new PriceReportCreator(webScrape, customerOrder, siteName);
-           priceReportCreator.makeNewExcelFile();
-       }, executorService);
+       return CompletableFuture.runAsync(createPriceReportRunnable(webScrape, customerOrder, siteName), executorService);
    }
 
     /*
@@ -49,10 +48,10 @@ public class ExecutorServiceHandler {
    }
 
    /*
-    * designates a thread with the task of consolidating reports and returns future object
+    * designates a thread with the task of consolidating reports and returns CompletableFuture object
     */
-   public Future<?> makeReportConsolidation(List<File> reports, File customerOrder) {
-          return this.executorService.submit(createReportConsolidatorRunnable(reports, customerOrder));
+   public CompletableFuture<Void> makeReportConsolidationAsync(List<File> reports, File customerOrder) {
+       return CompletableFuture.runAsync(createReportConsolidatorRunnable(reports, customerOrder), executorService);
    }
    
    /*

@@ -4,13 +4,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 public class ExecutorServiceHandlerTest {
 
@@ -18,7 +21,7 @@ public class ExecutorServiceHandlerTest {
     private ExecutorService mockExecutorService;
     private File mockWebScrape;
     private File mockCustomerOrder;
-    private List<File> mockReports;
+    private List mockReports;
     private String siteName;
 
     @BeforeEach
@@ -38,89 +41,73 @@ public class ExecutorServiceHandlerTest {
     }
 
     @Test
-    void testMakePriceReport() {
-        // Act
-        executorServiceHandler.makePriceReport(mockWebScrape, mockCustomerOrder, siteName);
-
-        // Assert
+    void testMakePriceReportAsync() {
+        executorServiceHandler.makePriceReportAsync(mockWebScrape, mockCustomerOrder, siteName);
         verify(mockExecutorService, times(1)).execute(any(Runnable.class));
     }
 
     @Test
-    void testMakeReportConsolidation() {
-        // Act
-        executorServiceHandler.makeReportConsolidation(mockReports, mockCustomerOrder);
+    void testMakePriceReportAsyncReturnsCompletableFuture() {
+        CompletableFuture<Void> task  = executorServiceHandler.makePriceReportAsync(mockWebScrape, mockCustomerOrder, siteName);
+        verify(mockExecutorService, times(1)).execute(any(Runnable.class));
+        assertNotNull(task);
+        assertInstanceOf(Future.class, task);
+    }
 
-        // Assert
+    @Test
+    void testMakeReportConsolidationAsync() {
+        executorServiceHandler.makeReportConsolidationAsync(mockReports, mockCustomerOrder);
         verify(mockExecutorService, times(1)).execute(any(Runnable.class));
     }
 
     @Test
-    void testMakePriceReportWithNullFiles() {
-        // Act
-        executorServiceHandler.makePriceReport(null, null, null);
+    void testMakeReportConsolidationAsyncReturnsCompletableFuture() {
+        CompletableFuture<Void> task  = executorServiceHandler.makeReportConsolidationAsync(mockReports, mockCustomerOrder);
+        verify(mockExecutorService, times(1)).execute(any(Runnable.class));
+        assertNotNull(task);
+        assertInstanceOf(Future.class, task);
+    }
 
-        // Assert
-        // Verify that the executor still submits the task
+    @Test
+    void testMakePriceReportAsyncWithNullFiles() {
+        executorServiceHandler.makePriceReportAsync(null, null, null);
         verify(mockExecutorService, times(1)).execute(any(Runnable.class));
     }
 
     @Test
-    void testMakeReportConsolidationWithEmptyReports() {
-        // Setup
+    void testMakeReportConsolidationAsyncWithEmptyReports() {
         List<File> emptyReports = new ArrayList<>();
-
-        // Act
-        executorServiceHandler.makeReportConsolidation(emptyReports, mockCustomerOrder);
-
-        // Assert
+        executorServiceHandler.makeReportConsolidationAsync(emptyReports, mockCustomerOrder);
         verify(mockExecutorService, times(1)).execute(any(Runnable.class));
     }
 
     @Test
-    void testMakePriceReportMultipleTimes() {
-        // Act
-        executorServiceHandler.makePriceReport(mockWebScrape, mockCustomerOrder, siteName);
-        executorServiceHandler.makePriceReport(mockWebScrape, mockCustomerOrder, siteName);
-        executorServiceHandler.makePriceReport(mockWebScrape, mockCustomerOrder, siteName);
-
-        // Assert
+    void testMakePriceReportAsyncMultipleTimes() {
+        executorServiceHandler.makePriceReportAsync(mockWebScrape, mockCustomerOrder, siteName);
+        executorServiceHandler.makePriceReportAsync(mockWebScrape, mockCustomerOrder, siteName);
+        executorServiceHandler.makePriceReportAsync(mockWebScrape, mockCustomerOrder, siteName);
         verify(mockExecutorService, times(3)).execute(any(Runnable.class));
     }
 
     @Test
-    void testMakeReportConsolidationWithNullReportsList() {
-        // Act
-        executorServiceHandler.makeReportConsolidation(null, mockCustomerOrder);
-
-        // Assert
-        // Ensure that a thread task is still submitted
+    void testMakeReportConsolidationAsyncWithNullReportsList() {
+        executorServiceHandler.makeReportConsolidationAsync(null, mockCustomerOrder);
         verify(mockExecutorService, times(1)).execute(any(Runnable.class));
     }
 
     @Test
-    void testMakePriceReportWithoutSiteName() {
-        // Act
-        executorServiceHandler.makePriceReport(mockWebScrape, mockCustomerOrder, null);
-
-        // Assert
-        // Verify that the task was submitted even without a site name
+    void testMakePriceReportAsyncWithoutSiteName() {
+        executorServiceHandler.makePriceReportAsync(mockWebScrape, mockCustomerOrder, null);
         verify(mockExecutorService, times(1)).execute(any(Runnable.class));
     }
 
     @Test
-    void testMakeReportConsolidationWithMultipleReports() {
-        // Setup
+    void testMakeReportConsolidationAsyncWithMultipleReports() {
         List<File> multipleReports = new ArrayList<>();
         multipleReports.add(mock(File.class));
         multipleReports.add(mock(File.class));
         multipleReports.add(mock(File.class));
-
-        // Act
-        executorServiceHandler.makeReportConsolidation(multipleReports, mockCustomerOrder);
-
-        // Assert
-        // Ensure the task is still submitted even with multiple files
+        executorServiceHandler.makeReportConsolidationAsync(multipleReports, mockCustomerOrder);
         verify(mockExecutorService, times(1)).execute(any(Runnable.class));
     }
 }

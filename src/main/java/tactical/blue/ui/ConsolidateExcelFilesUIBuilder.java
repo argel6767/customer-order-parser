@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import java.io.FileNotFoundException;
 import java.io.File;
+import java.util.concurrent.CompletableFuture;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -27,7 +28,9 @@ public class ConsolidateExcelFilesUIBuilder extends UIComponents{
 
     
     private void build(Stage primaryStage) throws FileNotFoundException {
-        super.setScene(new Scene(createConsolidatorUIVBox(primaryStage), getPageWidth(), getPageHeight()));
+        VBox container = createConsolidatorUIVBox(primaryStage);
+        super.setContainer(container);
+        super.setScene(new Scene(container, getPageWidth(), getPageHeight()));
     }
 
     @Override
@@ -36,7 +39,7 @@ public class ConsolidateExcelFilesUIBuilder extends UIComponents{
     }
 
     /*
-     * Creates Button that allows uploding a customer order data file
+     * Creates Button that allows uploading a customer order data file
      */
     private Button createCustomerOrderFileButton(Stage primaryStage, FileChooser fileChooser) {
         Button button = new Button("Upload Customer Order Data Here");
@@ -50,13 +53,15 @@ public class ConsolidateExcelFilesUIBuilder extends UIComponents{
     }
 
     /*
-     * Creates Button that allows the ReportConsolidator object to be made and run .consolidatReports() on seperate thread
+     * Creates Button that allows the ReportConsolidator object to be made and run .consolidateReports() on separate thread
      */
     private Button createRunConsolidateProgramButton() {
         Button button = new Button("Consolidate Files");
         
         button.setOnAction(e -> {
-            getHandler().makeReportConsolidation(excelFilesUploaded, customerOrderInfoFile);
+            CompletableFuture<Void> task = getHandler().makeReportConsolidationAsync(excelFilesUploaded, customerOrderInfoFile);
+            showStatusText();
+            updateTextStatus(task, "Reports consolidated! Check the Weekly-Reports folder.");
         });
         button.setStyle(getButtonStyle());
         return button;
@@ -72,9 +77,7 @@ public class ConsolidateExcelFilesUIBuilder extends UIComponents{
             List<File> files = fileChooser.showOpenMultipleDialog(stage);
             if (files != null) {
                 this.excelFilesUploaded.addAll(files);
-                excelFilesUploaded.forEach(file -> {
-                    System.out.println("File Uploaded: " + file);
-                });
+                excelFilesUploaded.forEach(file -> System.out.println("File Uploaded: " + file));
             }
         });
         button.setStyle(getButtonStyle());
@@ -85,7 +88,7 @@ public class ConsolidateExcelFilesUIBuilder extends UIComponents{
      * Creates container that holds all UI Components 
      */
     private VBox createConsolidatorUIVBox(Stage primaryStage) throws FileNotFoundException {
-        VBox vBox = new VBox(createLogoBox(), createMulitpleFilesButton(new FileChooser(), primaryStage),createCustomerOrderFileButton(primaryStage, createFileChooser("Upload Customer Infomation")),createRunConsolidateProgramButton(),createGoBackAndEndProgramButtonsHBox(), createStatusText("Consolidating files..."));
+        VBox vBox = new VBox(createLogoBox(), createMulitpleFilesButton(new FileChooser(), primaryStage),createCustomerOrderFileButton(primaryStage, createFileChooser("Upload Customer Information")),createRunConsolidateProgramButton(),createGoBackAndEndProgramButtonsHBox(), createStatusText("Consolidating files..."));
         vBox.setSpacing(20);
         vBox.setAlignment(Pos.TOP_CENTER);
         vBox.setStyle(getContainerStyle());
