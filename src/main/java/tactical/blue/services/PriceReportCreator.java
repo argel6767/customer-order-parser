@@ -64,7 +64,6 @@ public final class PriceReportCreator{
         try {
             readCSVFiles();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         excelWriter.createExcelCells(excelRows, "Weekly Customer Price Report for" + this.siteName);
