@@ -4,9 +4,7 @@ import java.util.List;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.concurrent.CompletableFuture;
 
-import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -19,7 +17,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.util.Duration;
+
 import tactical.blue.navigation.UINavigation;
 import tactical.blue.services.ExecutorServiceHandler;
 
