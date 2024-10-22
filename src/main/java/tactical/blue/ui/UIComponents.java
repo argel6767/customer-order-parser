@@ -5,10 +5,9 @@ import java.util.List;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
-import javafx.beans.Observable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -20,6 +19,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.util.Duration;
 import tactical.blue.navigation.UINavigation;
 import tactical.blue.services.ExecutorServiceHandler;
 
@@ -214,19 +214,14 @@ public abstract class UIComponents {
         text.setVisible(true); //Text object will be last in list;
     }
 
-    //TODO Considering making Text Handling into separate class (single-responsibility)
-    protected void handleText(CompletableFuture<Void> task, Consumer<String> firstConsumer, Consumer<String> secondConsumer, String firstText, String secondText) {
-        CompletableFuture<Void> secondTask = updateTextStatus(task, firstConsumer, firstText);
-        sleep();
-        updateTextStatus(secondTask, secondConsumer, secondText);
-    }
-
     /*
      * updates the UI based off the CompletableFuture object status, ie when it's done
      */
-    protected CompletableFuture<Void> updateTextStatus(CompletableFuture<Void> task, Consumer<String> consumer, String text) {
+    protected CompletableFuture<Void> updateTextStatus(CompletableFuture<Void> task, String textOne, String textTwo) {
        return task.thenRun( () -> {
-            Platform.runLater( () -> {consumer.accept(text);});
+            Platform.runLater( () -> {
+                changeStatusText(textOne);});
+            pauseBeforeResettingStatusText(textTwo);
         } );
     }
 
@@ -234,38 +229,30 @@ public abstract class UIComponents {
      * Updates the text to complete
      */
     protected void changeStatusText(String newStatusText) {
-        Text text = getText();
+        Text text = getTextObject();
         text.setText(newStatusText);
+    }
+
+    private void pauseBeforeResettingStatusText(String newStatusText) {
+        PauseTransition pause = new PauseTransition(Duration.seconds(3));
+        pause.setOnFinished(event -> resetStatusText(newStatusText));
+        pause.play();
     }
     /*
      * resets the status text back to its default and to its hidden state
      * this allows for multiple files to be made with the correct text being used
      */
     protected void resetStatusText(String newStatusText) {
-        sleep();
-        Text text = getText();
+        Text text = getTextObject();
         text.setVisible(false);
         changeStatusText(newStatusText);
-    }
-
-    /*
-     * gives a few seconds before the resetStatusText taks effect to allow reader to be
-     * notified file is done
-     */
-
-    protected void sleep( ){
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     /*
      * grabs the Text object in container
      * will always be last
      */
-    private Text getText() {
+    protected Text getTextObject() {
         List<Node> components = this.container.getChildren();
         return (Text) components.get(components.size()-1);
     }

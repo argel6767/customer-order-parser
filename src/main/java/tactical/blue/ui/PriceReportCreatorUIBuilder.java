@@ -3,8 +3,6 @@ package tactical.blue.ui;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -130,9 +128,8 @@ public class PriceReportCreatorUIBuilder extends UIComponents{
         button.setOnAction(e -> {
             CompletableFuture<Void> task = getHandler().makePriceReportAsync(fileInWebScrapedData, fileInCustomerOrderData, siteName);
             showStatusText();
-            //TODO Handle resetting text of Text object
-            task = updateTextStatus(task, this::changeStatusText, "Price Report complete! Check the Weekly-Reports folder.");
-            updateTextStatus(task, this::changeStatusText, "Creating Price Report...");
+            String originalText = getTextObject().getText();
+            CompletableFuture<Void>  task2 = updateTextStatus(task,"Price Report complete! Check the Weekly-Reports folder.", originalText);
         });
         button.setStyle(getButtonStyle());
         return button;
