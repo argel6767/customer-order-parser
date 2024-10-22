@@ -7,6 +7,7 @@ import javafx.util.Duration;
 
 import java.util.concurrent.CompletableFuture;
 
+
 public class StatusTextStateManager {
 
     private Text statusText;
@@ -23,6 +24,9 @@ public class StatusTextStateManager {
      * then after a few seconds Text object is reset back to its initial state
      */
     public CompletableFuture<Void> updateTextStatus(CompletableFuture<Void> task, String newStatus) {
+        if (task.isCancelled()) {
+            return CompletableFuture.completedFuture(null);
+        }
         return task.thenRun( () -> {
             Platform.runLater( () -> {
                 statusText.setText(newStatus);
@@ -63,7 +67,7 @@ public class StatusTextStateManager {
         statusText.setVisible(false);
     }
     /*
-     * getter and setter
+     * getters and setters
      */
     public Text getStatusText() {
         return statusText;
@@ -71,5 +75,9 @@ public class StatusTextStateManager {
 
     public void setStatusText(Text statusText) {
         this.statusText = statusText;
+    }
+
+    public String getStatusTextValue() {
+        return statusText.getText();
     }
 }
