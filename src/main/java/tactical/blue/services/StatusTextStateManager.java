@@ -7,7 +7,10 @@ import javafx.util.Duration;
 
 import java.util.concurrent.CompletableFuture;
 
-
+/*
+ * handles state management of the Text object that holds the current status
+ * of a task that was started
+ */
 public class StatusTextStateManager {
 
     private Text statusText;

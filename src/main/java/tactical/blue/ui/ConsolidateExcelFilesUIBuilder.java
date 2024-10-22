@@ -60,13 +60,23 @@ public class ConsolidateExcelFilesUIBuilder extends UIComponents{
         Button button = new Button("Consolidate Files");
         
         button.setOnAction(e -> {
-            CompletableFuture<Void> task = getHandler().makeReportConsolidationAsync(excelFilesUploaded, customerOrderInfoFile);
-            StatusTextStateManager statusTextStateManager = new StatusTextStateManager(getTextObject());
-            statusTextStateManager.showStatusText();
-            statusTextStateManager.updateTextStatus(task, "Files consolidated! Check the Weekly-Reports folder");
+            startConsolidateReportsTask();
         });
         button.setStyle(getButtonStyle());
         return button;
+    }
+
+    /*
+     * handles the logic of running the task on a separate thread by using
+     * the shared handler among the UI
+     * then uses a StatusTextStateManager to manage whether not statusText
+     * is seen and the correct status is shown
+     */
+    private void startConsolidateReportsTask() {
+        CompletableFuture<Void> task = getHandler().makeReportConsolidationAsync(excelFilesUploaded, customerOrderInfoFile);
+        StatusTextStateManager statusTextStateManager = new StatusTextStateManager(getTextObject());
+        statusTextStateManager.showStatusText();
+        statusTextStateManager.updateTextStatus(task, "Files consolidated! Check the Weekly-Reports folder.");
     }
 
     /*

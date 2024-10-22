@@ -18,6 +18,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import tactical.blue.navigation.UINavigation;
 import tactical.blue.services.ExecutorServiceHandler;
+import tactical.blue.services.StatusTextStateManager;
 
 public class PriceReportCreatorUIBuilder extends UIComponents{
 
@@ -126,13 +127,23 @@ public class PriceReportCreatorUIBuilder extends UIComponents{
     private Button createMakeExcelFileButton() {
         Button button = new Button("Create Price Report");
         button.setOnAction(e -> {
-            CompletableFuture<Void> task = getHandler().makePriceReportAsync(fileInWebScrapedData, fileInCustomerOrderData, siteName);
-            showStatusText();
-            String originalText = getTextObject().getText();
-            CompletableFuture<Void>  task2 = updateTextStatus(task,"Price Report complete! Check the Weekly-Reports folder.", originalText);
+            startPriceReportCreatorTask();
         });
         button.setStyle(getButtonStyle());
         return button;
+    }
+
+    /*
+     * handles the logic of running the task on a separate thread by using
+     * the shared handler among the UI
+     * then uses a StatusTextStateManager to manage whether not statusText
+     * is seen and the correct status is shown
+     */
+    private void startPriceReportCreatorTask() {
+        CompletableFuture<Void> task = getHandler().makePriceReportAsync(fileInWebScrapedData, fileInCustomerOrderData, siteName);
+        StatusTextStateManager statusTextStateManager = new StatusTextStateManager(getTextObject());
+        statusTextStateManager.showStatusText();
+        statusTextStateManager.updateTextStatus(task, "Price Report created! Check the Weekly-Reports folder.");
     }
 
     /*
