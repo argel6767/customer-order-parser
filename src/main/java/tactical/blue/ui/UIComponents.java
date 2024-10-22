@@ -206,49 +206,6 @@ public abstract class UIComponents {
     }
 
     /*
-     * Changes visibility to true to show Text, takes in the container that it will be in
-     */
-    protected void showStatusText() {
-        List<Node> components = this.container.getChildren();
-        Text text = (Text) components.get(components.size()-1);
-        text.setVisible(true); //Text object will be last in list;
-    }
-
-    /*
-     * updates the UI based off the CompletableFuture object status, ie when it's done
-     */
-    protected CompletableFuture<Void> updateTextStatus(CompletableFuture<Void> task, String textOne, String textTwo) {
-       return task.thenRun( () -> {
-            Platform.runLater( () -> {
-                changeStatusText(textOne);});
-            pauseBeforeResettingStatusText(textTwo);
-        } );
-    }
-
-    /*
-     * Updates the text to complete
-     */
-    protected void changeStatusText(String newStatusText) {
-        Text text = getTextObject();
-        text.setText(newStatusText);
-    }
-
-    private void pauseBeforeResettingStatusText(String newStatusText) {
-        PauseTransition pause = new PauseTransition(Duration.seconds(3));
-        pause.setOnFinished(event -> resetStatusText(newStatusText));
-        pause.play();
-    }
-    /*
-     * resets the status text back to its default and to its hidden state
-     * this allows for multiple files to be made with the correct text being used
-     */
-    protected void resetStatusText(String newStatusText) {
-        Text text = getTextObject();
-        text.setVisible(false);
-        changeStatusText(newStatusText);
-    }
-
-    /*
      * grabs the Text object in container
      * will always be last
      */
