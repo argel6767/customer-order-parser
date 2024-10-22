@@ -15,6 +15,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import tactical.blue.navigation.UINavigation;
 import tactical.blue.services.ExecutorServiceHandler;
+import tactical.blue.services.StatusTextStateManager;
 
 public class ConsolidateExcelFilesUIBuilder extends UIComponents{
 
@@ -60,9 +61,9 @@ public class ConsolidateExcelFilesUIBuilder extends UIComponents{
         
         button.setOnAction(e -> {
             CompletableFuture<Void> task = getHandler().makeReportConsolidationAsync(excelFilesUploaded, customerOrderInfoFile);
-            showStatusText();
-            String originalText = getTextObject().getText();
-            updateTextStatus(task,"Reports consolidated! Check the Weekly-Reports folder.", originalText);
+            StatusTextStateManager statusTextStateManager = new StatusTextStateManager(getTextObject());
+            statusTextStateManager.showStatusText();
+            statusTextStateManager.updateTextStatus(task, "Files consolidated! Check the Weekly-Reports folder");
         });
         button.setStyle(getButtonStyle());
         return button;
