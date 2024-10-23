@@ -14,11 +14,17 @@ import java.util.concurrent.CompletableFuture;
 public class StatusTextStateManager {
 
     private Text statusText;
-    private final String originalTextValue;
+    private String originalTextValue;
 
     public StatusTextStateManager(Text statusText) {
         this.statusText = statusText;
         this.originalTextValue = statusText.getText();
+    }
+
+    /*
+       empty constructor
+     */
+    public StatusTextStateManager() {
     }
 
     /*
@@ -60,7 +66,7 @@ public class StatusTextStateManager {
      * makes statusText visible
      */
     public void showStatusText() {
-        statusText.setVisible(true);
+        Platform.runLater( () -> statusText.setVisible(true));
     }
 
     /*
@@ -76,8 +82,20 @@ public class StatusTextStateManager {
         return statusText;
     }
 
+    /*
+     * sets both fields in one method call
+     */
+    public void setFields(Text statusText) {
+        setStatusText(statusText);
+        setOriginalTextValue(statusText);
+    }
+
     public void setStatusText(Text statusText) {
         this.statusText = statusText;
+    }
+
+    public void setOriginalTextValue(Text statusText) {
+        this.originalTextValue = statusText.getText();
     }
 
     public String getStatusTextValue() {

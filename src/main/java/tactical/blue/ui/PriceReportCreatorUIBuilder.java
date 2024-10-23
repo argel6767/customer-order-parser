@@ -44,17 +44,13 @@ public class PriceReportCreatorUIBuilder extends UIComponents{
     private void build(Stage primaryStage) throws FileNotFoundException {
         FileChooser fileChooserWebScraped = createFileChooser("Web Scraped Data File");
         Button buttonWebScrape = createWebScrapeFileButton(primaryStage, fileChooserWebScraped);
-
         FileChooser fileChooserCustomerOrder = createFileChooser("Customer Order Data");
         Button buttonCustomerOrder = createCustomerOrderFileButton(primaryStage, fileChooserCustomerOrder);
-
         ToggleGroup ecommerceSites = createRadioButtons();
-
         VBox vBox = createVbox(createLogoBox(),buttonWebScrape, buttonCustomerOrder, createRadioButtonHBox(ecommerceSites), createMakeExcelFileButton(), createGoBackAndEndProgramButtonsHBox(), createStatusText("Creating Price Report..."));
         setContainer(vBox);
-
+        manager.setFields(getTextObject());
         Scene scene = new Scene(vBox, getPageWidth(), getPageHeight());
-        
         super.setScene(scene);
     }
 
@@ -140,10 +136,9 @@ public class PriceReportCreatorUIBuilder extends UIComponents{
      * is seen and the correct status is shown
      */
     private void startPriceReportCreatorTask() {
-        CompletableFuture<Void> task = getHandler().makePriceReportAsync(fileInWebScrapedData, fileInCustomerOrderData, siteName);
-        StatusTextStateManager statusTextStateManager = new StatusTextStateManager(getTextObject());
-        statusTextStateManager.showStatusText();
-        statusTextStateManager.updateTextStatus(task, "Price Report created! Check the Weekly-Reports folder.");
+        manager.showStatusText();
+        CompletableFuture<Void> task = handler.makePriceReportAsync(fileInWebScrapedData, fileInCustomerOrderData, siteName);
+        manager.updateTextStatus(task, "Price Report created! Check the Weekly-Reports folder.");
     }
 
     /*

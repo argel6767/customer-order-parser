@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class StatusTextStateManagerTest {
     @Mock
     private Text mockText;
+    private Text newText;
     private StatusTextStateManager manager;
     private static final String ORIGINAL_TEXT = "Original Status";
     private static final String NEW_STATUS = "Task Completed";
@@ -34,6 +35,7 @@ class StatusTextStateManagerTest {
     @BeforeEach
     void setUp() {
         when(mockText.getText()).thenReturn(ORIGINAL_TEXT);
+        when(newText.getText()).thenReturn(NEW_STATUS);
         manager = new StatusTextStateManager(mockText);
     }
 
@@ -46,7 +48,16 @@ class StatusTextStateManagerTest {
     @Test
     void testShowStatusTextMakesVisible() {
         manager.showStatusText();
+        CountDownLatch latch = new CountDownLatch(1);
+        Platform.runLater(latch::countDown);
+        // Wait for all Platform.runLater calls to complete
+        try {
+            latch.await(2, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            fail("Test timed out");
+        }
         verify(mockText).setVisible(true);
+
     }
 
     @Test

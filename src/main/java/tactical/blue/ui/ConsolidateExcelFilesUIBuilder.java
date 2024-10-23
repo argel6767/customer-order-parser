@@ -31,6 +31,7 @@ public class ConsolidateExcelFilesUIBuilder extends UIComponents{
     private void build(Stage primaryStage) throws FileNotFoundException {
         VBox container = createConsolidatorUIVBox(primaryStage);
         super.setContainer(container);
+        manager.setFields(getTextObject());
         super.setScene(new Scene(container, getPageWidth(), getPageHeight()));
     }
 
@@ -73,10 +74,9 @@ public class ConsolidateExcelFilesUIBuilder extends UIComponents{
      * is seen and the correct status is shown
      */
     private void startConsolidateReportsTask() {
-        CompletableFuture<Void> task = getHandler().makeReportConsolidationAsync(excelFilesUploaded, customerOrderInfoFile);
-        StatusTextStateManager statusTextStateManager = new StatusTextStateManager(getTextObject());
-        statusTextStateManager.showStatusText();
-        statusTextStateManager.updateTextStatus(task, "Files consolidated! Check the Weekly-Reports folder.");
+        manager.showStatusText();
+        CompletableFuture<Void> task = handler.makeReportConsolidationAsync(excelFilesUploaded, customerOrderInfoFile);
+        manager.updateTextStatus(task, "Files consolidated! Check the Weekly-Reports folder.");
     }
 
     /*

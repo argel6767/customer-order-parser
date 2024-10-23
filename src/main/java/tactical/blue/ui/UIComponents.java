@@ -20,6 +20,7 @@ import javafx.stage.FileChooser;
 
 import tactical.blue.navigation.UINavigation;
 import tactical.blue.services.ExecutorServiceHandler;
+import tactical.blue.services.StatusTextStateManager;
 
 /*
  * Abstract Class that houses the styles and components that will exist throughout the program
@@ -33,8 +34,10 @@ public abstract class UIComponents {
     private final int pageWidth = 950;
     private final int pageHeight = 534;
     private final UINavigation uiNavigation;
-    private final ExecutorServiceHandler handler; //shared handler throughout UI
+    protected final ExecutorServiceHandler handler;//shared handler throughout UI
+    protected final StatusTextStateManager manager = new StatusTextStateManager();
     private VBox container;
+
 
 
     public UIComponents(UINavigation uiNavigation, ExecutorServiceHandler handler) {
