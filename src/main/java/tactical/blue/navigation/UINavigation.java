@@ -6,7 +6,7 @@ import javafx.animation.FadeTransition;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import tactical.blue.async.ExecutorServiceHandler;
+import tactical.blue.async.UIThreadExecutor;
 import tactical.blue.ui.ConsolidateExcelFilesUIBuilder;
 import tactical.blue.ui.MainPageUIBuilder;
 import tactical.blue.ui.PriceReportCreatorUIBuilder;
@@ -18,7 +18,7 @@ import tactical.blue.ui.PriceReportCreatorUIBuilder;
 public class UINavigation {
     private Stage stage;
     private final int THREADS_COUNT = 5; //number of threads (currently a price report + 3 reports consolidated + 1)
-    private  ExecutorServiceHandler handler = new ExecutorServiceHandler(THREADS_COUNT);
+    private UIThreadExecutor handler = new UIThreadExecutor(THREADS_COUNT);
     private MainPageUIBuilder mainPageUIBuilder;
     private PriceReportCreatorUIBuilder priceReportCreatorUIBuilder;
     private ConsolidateExcelFilesUIBuilder consolidateExcelFilesUIBuilder;
@@ -26,7 +26,7 @@ public class UINavigation {
     /*
     * For Testing Purposes
      */
-    public UINavigation(Stage stage, ExecutorServiceHandler handler, MainPageUIBuilder mainPageUIBuilder, PriceReportCreatorUIBuilder priceReportCreatorUIBuilder, ConsolidateExcelFilesUIBuilder consolidateExcelFilesUIBuilder) {
+    public UINavigation(Stage stage, UIThreadExecutor handler, MainPageUIBuilder mainPageUIBuilder, PriceReportCreatorUIBuilder priceReportCreatorUIBuilder, ConsolidateExcelFilesUIBuilder consolidateExcelFilesUIBuilder) {
         this.stage = stage;
         this.handler = handler;
         this.mainPageUIBuilder = mainPageUIBuilder;

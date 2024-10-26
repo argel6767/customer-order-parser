@@ -14,14 +14,14 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import tactical.blue.navigation.UINavigation;
-import tactical.blue.async.ExecutorServiceHandler;
+import tactical.blue.async.UIThreadExecutor;
 
 public class ConsolidateExcelFilesUIBuilder extends UIComponents{
 
     private final List<File> excelFilesUploaded = new ArrayList<>();
     private File customerOrderInfoFile;
 
-    public ConsolidateExcelFilesUIBuilder(UINavigation uiNavigation, Stage primaryStage, ExecutorServiceHandler handler) throws FileNotFoundException {
+    public ConsolidateExcelFilesUIBuilder(UINavigation uiNavigation, Stage primaryStage, UIThreadExecutor handler) throws FileNotFoundException {
         super(uiNavigation, handler);
         build(primaryStage);
     }

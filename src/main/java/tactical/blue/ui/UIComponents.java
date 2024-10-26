@@ -19,7 +19,7 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 
 import tactical.blue.navigation.UINavigation;
-import tactical.blue.async.ExecutorServiceHandler;
+import tactical.blue.async.UIThreadExecutor;
 import tactical.blue.async.StatusTextStateManager;
 
 /*
@@ -34,13 +34,13 @@ public abstract class UIComponents {
     private final int pageWidth = 950;
     private final int pageHeight = 534;
     private final UINavigation uiNavigation;
-    protected final ExecutorServiceHandler handler;//shared handler throughout UI
+    protected final UIThreadExecutor handler;//shared handler throughout UI
     protected final StatusTextStateManager manager = new StatusTextStateManager();
     private VBox container;
 
 
 
-    public UIComponents(UINavigation uiNavigation, ExecutorServiceHandler handler) {
+    public UIComponents(UINavigation uiNavigation, UIThreadExecutor handler) {
         this.uiNavigation = uiNavigation;
         this.handler = handler;
     }
@@ -57,7 +57,7 @@ public abstract class UIComponents {
         return scene;
     }
 
-    protected  ExecutorServiceHandler getHandler() {
+    protected UIThreadExecutor getHandler() {
         return handler;
     }
 

@@ -5,7 +5,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.*;
-import tactical.blue.async.ExecutorServiceHandler;
+import tactical.blue.async.UIThreadExecutor;
 import tactical.blue.ui.*;
 
 import java.io.FileNotFoundException;
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UINavigationTest {
 
     private Stage stage;
-    private ExecutorServiceHandler mockHandler;
+    private UIThreadExecutor mockHandler;
     private MainPageUIBuilder mockMainPageUIBuilder;
     private PriceReportCreatorUIBuilder mockPriceReportCreatorUIBuilder;
     private ConsolidateExcelFilesUIBuilder mockConsolidateExcelFilesUIBuilder;
@@ -40,7 +40,7 @@ public class UINavigationTest {
             stage = new Stage();
 
             // Create mock or stub implementations of your UI builders
-            mockHandler = new ExecutorServiceHandler(5);
+            mockHandler = new UIThreadExecutor(5);
             try {
                 mockMainPageUIBuilder = new StubMainPageUIBuilder();
                 mockPriceReportCreatorUIBuilder = new StubPriceReportCreatorUIBuilder();

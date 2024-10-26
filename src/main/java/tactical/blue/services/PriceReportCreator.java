@@ -57,7 +57,7 @@ public final class PriceReportCreator{
     }
 
      /*
-     * Abstracted overview of how a Excel file is created using the scraped data and order info given by customer
+     * Abstracted overview of how an Excel file is created using the scraped data and order info given by customer
      */
     public void makeNewExcelFile() {
         System.out.println("makeNewExcelFile() called");
@@ -102,7 +102,7 @@ public final class PriceReportCreator{
     /*
      * An abstracted view of readCSVFiles
      * the column titles are found for dynamic grabbing of values
-     * the rows are are then red and mapped by their product url
+     * the rows are then red and mapped by their product url
      * the Order Info file is read
      * The rows are then converted to a proper format for Excel Rows and written to Excel File
      */

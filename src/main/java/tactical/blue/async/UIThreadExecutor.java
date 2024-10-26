@@ -14,17 +14,17 @@ import java.util.List;
  * This class holds the ExecutorService that holds the threads needed for multithreading
  * and allowing for the UI not the freeze
  */
-public class ExecutorServiceHandler {
+public class UIThreadExecutor {
    private final ExecutorService executorService;
 
-    public ExecutorServiceHandler(int threadNumber) {
+    public UIThreadExecutor(int threadNumber) {
         this.executorService = Executors.newFixedThreadPool(threadNumber);
    }
 
    /*
    Testing Constructor
     */
-   public ExecutorServiceHandler(ExecutorService executorService) {
+   public UIThreadExecutor(ExecutorService executorService) {
      this.executorService = executorService;
    }
 

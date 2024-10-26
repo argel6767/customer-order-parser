@@ -17,7 +17,7 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import tactical.blue.navigation.UINavigation;
-import tactical.blue.async.ExecutorServiceHandler;
+import tactical.blue.async.UIThreadExecutor;
 
 public class PriceReportCreatorUIBuilder extends UIComponents{
 
@@ -26,7 +26,7 @@ public class PriceReportCreatorUIBuilder extends UIComponents{
     private File fileInCustomerOrderData;
 
 
-    public PriceReportCreatorUIBuilder(UINavigation uiNavigation, Stage primaryStage, ExecutorServiceHandler handler) throws FileNotFoundException {
+    public PriceReportCreatorUIBuilder(UINavigation uiNavigation, Stage primaryStage, UIThreadExecutor handler) throws FileNotFoundException {
         super(uiNavigation, handler);
         build(primaryStage);
     }
