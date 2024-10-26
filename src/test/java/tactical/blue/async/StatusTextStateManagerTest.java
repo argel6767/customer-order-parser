@@ -1,4 +1,4 @@
-package tactical.blue.services;
+package tactical.blue.async;
 
 import javafx.application.Platform;
 import javafx.scene.text.Text;

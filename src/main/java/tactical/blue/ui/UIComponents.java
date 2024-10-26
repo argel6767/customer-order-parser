@@ -19,8 +19,8 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 
 import tactical.blue.navigation.UINavigation;
-import tactical.blue.services.ExecutorServiceHandler;
-import tactical.blue.services.StatusTextStateManager;
+import tactical.blue.async.ExecutorServiceHandler;
+import tactical.blue.async.StatusTextStateManager;
 
 /*
  * Abstract Class that houses the styles and components that will exist throughout the program

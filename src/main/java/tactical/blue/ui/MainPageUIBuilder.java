@@ -11,7 +11,7 @@ import javafx.scene.text.Text;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import tactical.blue.navigation.UINavigation;
-import tactical.blue.services.ExecutorServiceHandler;
+import tactical.blue.async.ExecutorServiceHandler;
 
 public class MainPageUIBuilder extends UIComponents{
 
