@@ -43,9 +43,9 @@ public class UIThreadExecutor {
     * creates the Runnable that will be executed by the executorService
     * and runs makeNewExcelFile()
     */
-   private Runnable createPriceReportRunnable(File webScrape, File customerOrder, String sitename) {
+   private Runnable createPriceReportRunnable(File webScrape, File customerOrder, String siteName) {
        return () -> {
-            PriceReportCreator priceReportCreator = new PriceReportCreator(webScrape, customerOrder, sitename);
+            PriceReportCreator priceReportCreator = new PriceReportCreator(webScrape, customerOrder, siteName);
             priceReportCreator.makeNewExcelFile();
        };
    }
