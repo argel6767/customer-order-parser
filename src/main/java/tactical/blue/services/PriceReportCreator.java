@@ -62,9 +62,9 @@ public final class PriceReportCreator{
      /*
      * Abstracted overview of how an Excel file is created using the scraped data and order info given by customer
      */
-    public void makeNewExcelFile() {
+    public CompletableFuture<Void> makeNewExcelFile() {
         System.out.println("makeNewExcelFile() called");
-        runParsingAndWriting();
+        return runParsingAndWriting();
     }
 
     /*

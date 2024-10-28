@@ -167,6 +167,7 @@ public abstract class UIComponents {
     protected Button createEndProgramButton() {
         Button button = new Button("End Program");
         button.setOnAction(e -> {
+            handler.shutdown();
             Platform.exit();
         });
         button.setStyle(getButtonStyle());

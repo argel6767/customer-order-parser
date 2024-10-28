@@ -32,6 +32,7 @@ public class StatusTextStateManager {
      * and then updates the text to show completion of task
      * then after a few seconds Text object is reset back to its initial state
      */
+    //TODO fix this!! figure out why text state is changing to soon, this could possibly be where!!
     public CompletableFuture<Void> updateTextStatus(CompletableFuture<Void> task, String newStatus) {
         if (task.isCancelled()) {
             return CompletableFuture.completedFuture(null);
