@@ -41,11 +41,11 @@ public final class PriceReportCreator{
         this.fileInCustomerOrderInfo = fileInCustomerOrderInfo;
         this.siteName = siteName;
         setRowParser(siteName);
-        setBufferedReader(fileInWebScrape);
+        createBufferedReader(fileInWebScrape);
 
     }
 
-    public void setBufferedReader(File file) {
+    public void createBufferedReader(File file) {
         try {
             this.bufferedReaderWebScrape = new BufferedReader(new FileReader(file));
         } catch (FileNotFoundException fnfe) {
@@ -64,16 +64,25 @@ public final class PriceReportCreator{
      */
     public void makeNewExcelFile() {
         System.out.println("makeNewExcelFile() called");
+        runParsingAndWriting();
+    }
 
+    /*
+     * holds the try/catch logic
+     * readCSVFiles() called, then once the CSV files are done then the Excel write
+     * creates the Excel file
+     */
+    private void runParsingAndWriting() {
         try {
-           var filesDone = readCSVFiles();
-           filesDone.thenRun( () -> {
+           var filesParsed = readCSVFiles();
+           filesParsed.thenRun( () -> {
                excelWriter.createExcelCells(excelRows, "Weekly Customer Price Report for" + this.siteName);
                excelWriter.generateExcelFile(siteName + "-Report-");
                ExcelRow.resetRowNumber();
            });
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ioe) {
+            System.out.println("Something went wrong! Check the Exception Stack");
+            ioe.printStackTrace();
         }
     }
 
@@ -129,8 +138,7 @@ public final class PriceReportCreator{
         var done = manager.runCSVParsingConcurrently(this::mapScrapedRows, this::getOrderInfoRows, this::parseScrapedRowsToExcelRows);
         done.thenRun(() -> {
             manager.shutdown();
-            System.out.println("Done!");
-            System.out.println(this.excelRows.size());
+            System.out.println("Done! Shutting down ExecutorService");
         });
         return done;
 
