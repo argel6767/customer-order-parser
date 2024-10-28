@@ -39,6 +39,13 @@ public class UIThreadExecutor {
        return CompletableFuture.runAsync(createPriceReportRunnable(webScrape, customerOrder, siteName), executorService);
    }
 
+   /*
+    * shuts down ExecutorService
+    */
+   public void shutdown() {
+       executorService.shutdown();
+   }
+
     /*
     * creates the Runnable that will be executed by the executorService
     * and runs makeNewExcelFile()
