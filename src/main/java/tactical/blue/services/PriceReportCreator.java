@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 import tactical.blue.async.AsyncPriceReportManager;
@@ -63,14 +64,17 @@ public final class PriceReportCreator{
      */
     public void makeNewExcelFile() {
         System.out.println("makeNewExcelFile() called");
+
         try {
-            readCSVFiles();
+           var filesDone = readCSVFiles();
+           filesDone.thenRun( () -> {
+               excelWriter.createExcelCells(excelRows, "Weekly Customer Price Report for" + this.siteName);
+               excelWriter.generateExcelFile(siteName + "-Report-");
+               ExcelRow.resetRowNumber();
+           });
         } catch (IOException e) {
             e.printStackTrace();
         }
-        excelWriter.createExcelCells(excelRows, "Weekly Customer Price Report for" + this.siteName);
-        excelWriter.generateExcelFile(siteName + "-Report-");
-        ExcelRow.resetRowNumber();
     }
 
     /*
@@ -108,13 +112,10 @@ public final class PriceReportCreator{
      * the Order Info file is read
      * The rows are then converted to a proper format for Excel Rows and written to Excel File
      */
-    private void readCSVFiles() throws IOException {
+    private CompletableFuture<?> readCSVFiles() throws IOException {
         String columnTitles = bufferedReaderWebScrape.readLine();
         getExcelColumnNames(columnTitles.split(","));
-
-        HashMap<String, List<String[]>> webScrapedMap = mapScrapedRows();
-        List<String[]> orderInfoRows = getOrderInfoRows();        
-        parseScrapedRowsToExcelRows(webScrapedMap, orderInfoRows);
+        return grabCSVRowsConcurrently();
     }
 
     /*
@@ -123,9 +124,16 @@ public final class PriceReportCreator{
      * then uses values created by these methods in parseScrapedRowsToExcelRows()
      * then shuts down the ExecutorService in AsyncPriceReportManager
      */
-    private void grabCSVRowsConcurrently() {
+    private CompletableFuture<?> grabCSVRowsConcurrently() {
         AsyncPriceReportManager<Void> manager = new AsyncPriceReportManager<>();
-        manager.runCSVParsingConcurrently(this::mapScrapedRows, this::getOrderInfoRows, this::parseScrapedRowsToExcelRows);
+        var done = manager.runCSVParsingConcurrently(this::mapScrapedRows, this::getOrderInfoRows, this::parseScrapedRowsToExcelRows);
+        done.thenRun(() -> {
+            manager.shutdown();
+            System.out.println("Done!");
+            System.out.println(this.excelRows.size());
+        });
+        return done;
+
     }
 
     /*
