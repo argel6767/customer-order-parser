@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
+import tactical.blue.async.AsyncPriceReportManager;
 import tactical.blue.excel.excelrows.ExcelRow;
 import tactical.blue.parsing.csv_parsing.ScrapedDataCSVParser;
 import tactical.blue.parsing.excel_parsing.ExcelWriter;
@@ -109,9 +111,21 @@ public final class PriceReportCreator{
     private void readCSVFiles() throws IOException {
         String columnTitles = bufferedReaderWebScrape.readLine();
         getExcelColumnNames(columnTitles.split(","));
+
         HashMap<String, List<String[]>> webScrapedMap = mapScrapedRows();
         List<String[]> orderInfoRows = getOrderInfoRows();        
         parseScrapedRowsToExcelRows(webScrapedMap, orderInfoRows);
+    }
+
+    /*
+     * declares and instantiates an AsyncPriceReportManager and runs
+     * mapScrapedRows() and getOrderInfoRows() on their own threads to run them concurrently
+     * then uses values created by these methods in parseScrapedRowsToExcelRows()
+     * then shuts down the ExecutorService in AsyncPriceReportManager
+     */
+    private void grabCSVRowsConcurrently() {
+        AsyncPriceReportManager<Void> manager = new AsyncPriceReportManager<>();
+        manager.runCSVParsingConcurrently(this::mapScrapedRows, this::getOrderInfoRows, this::parseScrapedRowsToExcelRows);
     }
 
     /*

@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /*
  * This class holds the managing of tasks that will happen concurrently in PriceReportCreator
@@ -45,13 +46,13 @@ public class AsyncPriceReportManager<T> {
     }
 
     /*
-     * tasks in two functions than does both tasks asynchronously
+     * tasks in two Suppliers than does both tasks asynchronously
      * once both are done their return values are used by the BiConsumer, ie creating using the data to make excel rows,
      * to do more work
      */
-    public CompletableFuture<?> runCSVParsingConcurrently(Function<Void, HashMap<String, List<String>>> mapScrapedRows, Function<Void, List<String[]>> getOrderInfoRows,
-                                          BiConsumer<HashMap<String, List<String>>, List<String[]>> parseScrapedRowsToExcelRowsTask) {
-        CompletableFuture<HashMap<String, List<String>>> mapScrapedRowsTask = doCSVParseTaskAsync(mapScrapedRows);
+    public CompletableFuture<?> runCSVParsingConcurrently(Supplier<HashMap<String, List<String[]>>> mapScrapedRows, Supplier<List<String[]>> getOrderInfoRows,
+                                                          BiConsumer<HashMap<String, List<String[]>>, List<String[]>> parseScrapedRowsToExcelRowsTask) {
+        CompletableFuture<HashMap<String, List<String[]>>> mapScrapedRowsTask = doCSVParseTaskAsync(mapScrapedRows);
         CompletableFuture<List<String[]>> getOrderInfoRowsTask = doCSVParseTaskAsync(getOrderInfoRows);
         return mapScrapedRowsTask.thenAcceptBoth(getOrderInfoRowsTask, parseScrapedRowsToExcelRowsTask);
     }
@@ -59,8 +60,8 @@ public class AsyncPriceReportManager<T> {
     /*
      * submits the task to the ExecutorService
      */
-    <T> CompletableFuture<T> doCSVParseTaskAsync(Function<Void, T> function) {
-        return CompletableFuture.supplyAsync(() -> function.apply(null), executor);
+    <T> CompletableFuture<T> doCSVParseTaskAsync(Supplier<T> function) {
+        return CompletableFuture.supplyAsync(function, executor);
     }
 
 }
