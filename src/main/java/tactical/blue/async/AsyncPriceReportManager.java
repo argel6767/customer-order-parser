@@ -7,7 +7,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /*
  * This class holds the managing of tasks that will happen concurrently in PriceReportCreator
@@ -17,6 +16,9 @@ public class AsyncPriceReportManager<T> {
 
     private final ExecutorService executor;
 
+    /*
+     * makes an ExecutorService with only two threads
+     */
     public AsyncPriceReportManager() {
         this.executor = Executors.newFixedThreadPool(2);
     }
@@ -29,20 +31,35 @@ public class AsyncPriceReportManager<T> {
     }
 
     /*
-     * TODO make this method once the bottom two are fixed!!!
-     *  general format : take the two functions in and then do their work and once the two are done do the creation of the Price Report!!!
+     * shuts down the ExecutorService
      */
-    public void runCSVParsingConcurrently(Function<Void, HashMap<String, List<String>>> mapScrapedRows, Function<Void, List<String[]>> getOrderInfoRows,
+    public void shutdown() {
+        executor.shutdown();
+    }
+
+    /*
+     * getter
+     */
+    public ExecutorService getExecutorService() {
+        return this.executor;
+    }
+
+    /*
+     * tasks in two functions than does both tasks asynchronously
+     * once both are done their return values are used by the BiConsumer, ie creating using the data to make excel rows,
+     * to do more work
+     */
+    public CompletableFuture<?> runCSVParsingConcurrently(Function<Void, HashMap<String, List<String>>> mapScrapedRows, Function<Void, List<String[]>> getOrderInfoRows,
                                           BiConsumer<HashMap<String, List<String>>, List<String[]>> parseScrapedRowsToExcelRowsTask) {
         CompletableFuture<HashMap<String, List<String>>> mapScrapedRowsTask = doCSVParseTaskAsync(mapScrapedRows);
         CompletableFuture<List<String[]>> getOrderInfoRowsTask = doCSVParseTaskAsync(getOrderInfoRows);
-        CompletableFuture<Void> parsingDone = mapScrapedRowsTask.thenAcceptBoth(getOrderInfoRowsTask, parseScrapedRowsToExcelRowsTask);
+        return mapScrapedRowsTask.thenAcceptBoth(getOrderInfoRowsTask, parseScrapedRowsToExcelRowsTask);
     }
 
     /*
      * submits the task to the ExecutorService
      */
-    public <T> CompletableFuture<T> doCSVParseTaskAsync(Function<Void, T> function) {
+    <T> CompletableFuture<T> doCSVParseTaskAsync(Function<Void, T> function) {
         return CompletableFuture.supplyAsync(() -> function.apply(null), executor);
     }
 
