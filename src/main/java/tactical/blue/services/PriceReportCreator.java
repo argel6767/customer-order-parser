@@ -72,10 +72,10 @@ public final class PriceReportCreator{
      * readCSVFiles() called, then once the CSV files are done then the Excel write
      * creates the Excel file
      */
-    private void runParsingAndWriting() {
+    private CompletableFuture<Void> runParsingAndWriting() {
         try {
            var filesParsed = readCSVFiles();
-           filesParsed.thenRun( () -> {
+           return filesParsed.thenRun( () -> {
                excelWriter.createExcelCells(excelRows, "Weekly Customer Price Report for" + this.siteName);
                excelWriter.generateExcelFile(siteName + "-Report-");
                ExcelRow.resetRowNumber();
@@ -83,6 +83,7 @@ public final class PriceReportCreator{
         } catch (IOException ioe) {
             System.out.println("Something went wrong! Check the Exception Stack");
             ioe.printStackTrace();
+            return CompletableFuture.failedFuture(ioe);
         }
     }
 
