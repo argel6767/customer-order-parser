@@ -15,7 +15,7 @@ public class ReportConsolidator {
 
     private final List<File> priceReportFiles;
     private LinkedHashMap<String, List<ExcelRow>> itemDescriptionMappedRows = new LinkedHashMap<>();
-    private ExcelWriter excelWriter;
+    private final ExcelWriter excelWriter;
 
 
     
@@ -30,9 +30,9 @@ public class ReportConsolidator {
     /*
     Testing constructor for mock injection
      */
-    public ReportConsolidator(List<File> priceReportFiles, File customerOrderInfo, ExcelWriter excelWriter, CustomerOrderInformationCSVParser parser) {
+    public ReportConsolidator(List<File> priceReportFiles, ExcelWriter excelWriter, LinkedHashMap<String, List<ExcelRow>> itemDescriptionMappedRows) {
         this.priceReportFiles = priceReportFiles;
-        this.itemDescriptionMappedRows = parser.getItemDescriptions(customerOrderInfo);
+        this.itemDescriptionMappedRows = itemDescriptionMappedRows;
         this.excelWriter = excelWriter;
     }
 
@@ -50,7 +50,7 @@ public class ReportConsolidator {
     /*
      * Grabs all ExcelRows from each file and combines them into one singular list
      */
-    private List<ExcelRow> grabAllRowsFromEveryFile() {
+    List<ExcelRow> grabAllRowsFromEveryFile() {
         List<ExcelRow> consolidatedRows = new ArrayList<>();
         for (File file : this.priceReportFiles) {
             PriceReportParser priceReportParser = new PriceReportParser(file);
@@ -63,7 +63,7 @@ public class ReportConsolidator {
     /*
      * Groups ExcelRows by Item Description and keeps original order due to LinkedHashMap
      */
-    private void groupExcelRowsByItemDescription(List<ExcelRow> excelRows) {
+    void groupExcelRowsByItemDescription(List<ExcelRow> excelRows) {
         for (ExcelRow row: excelRows) {
             List<ExcelRow> excelRowGroup = itemDescriptionMappedRows.get(row.getItemDescription());
             if (excelRowGroup != null) {
@@ -76,7 +76,7 @@ public class ReportConsolidator {
      * Grabs All List values from the LinkedHashMap then sorts each group by wholesale
      * then combines all the lists into one
      */
-    private List<ExcelRow> sortGroupedLists() {
+    List<ExcelRow> sortGroupedLists() {
         Comparator<ExcelRow> comparator = Comparator.comparing(
             excelRow -> excelRow.getWholeSalePrice() != null ? excelRow.getWholeSalePrice() : Double.MAX_VALUE
         ); //Will check if wholesale price is null ie is part of an ItemNotFoundExcelRow Object

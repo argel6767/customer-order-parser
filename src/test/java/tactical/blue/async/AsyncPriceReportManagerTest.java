@@ -13,6 +13,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -51,33 +52,27 @@ public class AsyncPriceReportManagerTest {
 
     @Test
     void testDoCSVParseTaskAsync() throws Exception {
-        Function<Void, String> mockFunction = mock(Function.class);
-        when(mockFunction.apply(null)).thenReturn("Test");
+        Supplier<String> mockSupplier = mock(Supplier.class);
+        when(mockSupplier.get()).thenReturn("Test");
 
-        CompletableFuture<String> future = manager.doCSVParseTaskAsync(mockFunction);
+        CompletableFuture<String> future = manager.doCSVParseTaskAsync(mockSupplier);
 
         assertEquals("Test", future.get());
-        verify(mockFunction).apply(null);
+        verify(mockSupplier).get();
     }
 
     @Test
     void testRunCSVParsingConcurrently() throws Exception {
-        Function<Void, HashMap<String, List<String>>> mockMapFunction = mock(Function.class);
-        Function<Void, List<String[]>> mockListFunction = mock(Function.class);
-        BiConsumer<HashMap<String, List<String>>, List<String[]>> mockConsumer = mock(BiConsumer.class);
-
-        when(mockMapFunction.apply(null)).thenReturn(new HashMap<>());
-        when(mockListFunction.apply(null)).thenReturn(new ArrayList<String[]>(Collections.singleton(new String[]{"Item1"})));
-
-        CompletableFuture<Void> future = (CompletableFuture<Void>) manager.runCSVParsingConcurrently(mockMapFunction, mockListFunction, mockConsumer);
-
-        // Ensure tasks are submitted.
+        Supplier<HashMap<String, List<String[]>>> mockMapSupplier = mock(Supplier.class);
+        Supplier<List<String[]>> mockListSupplier = mock(Supplier.class);
+        BiConsumer<HashMap<String, List<String[]>>, List<String[]>> mockConsumer = mock(BiConsumer.class);
+        when(mockMapSupplier.get()).thenReturn(new HashMap<>());
+        when(mockListSupplier.get()).thenReturn(new ArrayList<String[]>(Collections.singleton(new String[]{"Item1"})));
+        var future =  manager.runCSVParsingConcurrently(mockMapSupplier, mockListSupplier, mockConsumer);
         assertFalse(future.isCompletedExceptionally());
         future.get();
-
-        // Verify mock invocations
-        verify(mockMapFunction).apply(null);
-        verify(mockListFunction).apply(null);
+        verify(mockMapSupplier).get();
+        verify(mockListSupplier).get();
         verify(mockConsumer).accept(any(), any());
     }
 }
