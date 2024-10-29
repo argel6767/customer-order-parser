@@ -36,6 +36,9 @@ public class UIThreadExecutor {
     * designates a thread with the task of creating a price report, and returns a CompletableFuture object
     */
     public CompletableFuture<Void> makePriceReportAsync(File webScrape, File customerOrder, String siteName) {
+        if (webScrape == null || customerOrder == null) {
+            return CompletableFuture.completedFuture(null);
+        }
        PriceReportCreator priceReportCreator = new PriceReportCreator(webScrape, customerOrder, siteName);
        return priceReportCreator.makeNewExcelFile();
    }

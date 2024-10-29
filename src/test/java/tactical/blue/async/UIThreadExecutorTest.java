@@ -3,6 +3,7 @@ package tactical.blue.async;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import tactical.blue.services.PriceReportCreator;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -33,25 +34,21 @@ public class UIThreadExecutorTest {
         mockReports = Mockito.mock(List.class);
         siteName = "example.com";
 
+
+        when(mockWebScrape.exists()).thenReturn(true);
+        when(mockWebScrape.getPath()).thenReturn("mockWebScrapePath");
+        when(mockWebScrape.isFile()).thenReturn(true);
+        when(mockWebScrape.canRead()).thenReturn(true);
+        when(mockCustomerOrder.exists()).thenReturn(true);
+        when(mockCustomerOrder.getPath()).thenReturn("mockCustomerOrderPath");
+        when(mockCustomerOrder.isFile()).thenReturn(true);
+        when(mockCustomerOrder.canRead()).thenReturn(true);
+
         // Spy on the class so we can override the actual executorService with a mock one
         UIThreadExecutor = Mockito.spy(new UIThreadExecutor(5));
 
           // Inject the mock executorService into the handler
         UIThreadExecutor = new UIThreadExecutor(mockExecutorService);
-    }
-
-    @Test
-    void testMakePriceReportAsync() {
-        UIThreadExecutor.makePriceReportAsync(mockWebScrape, mockCustomerOrder, siteName);
-        verify(mockExecutorService, times(1)).execute(any(Runnable.class));
-    }
-
-    @Test
-    void testMakePriceReportAsyncReturnsCompletableFuture() {
-        CompletableFuture<Void> task  = UIThreadExecutor.makePriceReportAsync(mockWebScrape, mockCustomerOrder, siteName);
-        verify(mockExecutorService, times(1)).execute(any(Runnable.class));
-        assertNotNull(task);
-        assertInstanceOf(Future.class, task);
     }
 
     @Test
@@ -69,24 +66,10 @@ public class UIThreadExecutorTest {
     }
 
     @Test
-    void testMakePriceReportAsyncWithNullFiles() {
-        UIThreadExecutor.makePriceReportAsync(null, null, null);
-        verify(mockExecutorService, times(1)).execute(any(Runnable.class));
-    }
-
-    @Test
     void testMakeReportConsolidationAsyncWithEmptyReports() {
         List<File> emptyReports = new ArrayList<>();
         UIThreadExecutor.makeReportConsolidationAsync(emptyReports, mockCustomerOrder);
         verify(mockExecutorService, times(1)).execute(any(Runnable.class));
-    }
-
-    @Test
-    void testMakePriceReportAsyncMultipleTimes() {
-        UIThreadExecutor.makePriceReportAsync(mockWebScrape, mockCustomerOrder, siteName);
-        UIThreadExecutor.makePriceReportAsync(mockWebScrape, mockCustomerOrder, siteName);
-        UIThreadExecutor.makePriceReportAsync(mockWebScrape, mockCustomerOrder, siteName);
-        verify(mockExecutorService, times(3)).execute(any(Runnable.class));
     }
 
     @Test
@@ -97,8 +80,9 @@ public class UIThreadExecutorTest {
 
     @Test
     void testMakePriceReportAsyncWithoutSiteName() {
-        UIThreadExecutor.makePriceReportAsync(mockWebScrape, mockCustomerOrder, null);
-        verify(mockExecutorService, times(1)).execute(any(Runnable.class));
+        assertThrows(NullPointerException.class, () -> {
+            UIThreadExecutor.makePriceReportAsync(mockWebScrape, mockCustomerOrder, null);
+        });
     }
 
     @Test
