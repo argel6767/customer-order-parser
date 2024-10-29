@@ -4,6 +4,60 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 public class ExcelRowTest {
+    // Constructor initializes all fields correctly with valid inputs
+    @Test
+    public void testConstructorInitializesFieldsCorrectly() {
+        String itemDescription = "Sample Description";
+        String itemName = "Sample Item";
+        String manufacturer = "Sample Manufacturer";
+        String sku = "12345";
+        Integer quantityNeeded = 10;
+        String packaging = "Box";
+        Object msrp = 19.99;
+        Double wholeSalePrice = 15.00;
+        Double costOfGoods = 150.00;
+        Double unitPrice = 20.00;
+        Double extendedPrice = 200.00;
+        Double contribution = 50.00;
+        String source = "Sample Source";
+        String productURL = "http://example.com/product";
+
+        ExcelRow excelRow = new ExcelRow(itemDescription, itemName, manufacturer, sku, quantityNeeded, packaging, msrp, wholeSalePrice, costOfGoods, unitPrice, extendedPrice, contribution, source, productURL);
+
+        assertEquals(itemDescription, excelRow.getItemDescription());
+        assertEquals(itemName, excelRow.getItemName());
+        assertEquals(manufacturer, excelRow.getManufacturer());
+        assertEquals(sku, excelRow.getSku());
+        assertEquals(quantityNeeded, excelRow.getQuantityNeeded());
+        assertEquals(packaging, excelRow.getPackaging());
+        assertEquals(msrp, excelRow.getMsrp());
+        assertEquals(wholeSalePrice, excelRow.getWholeSalePrice());
+        assertEquals(costOfGoods, excelRow.getCostOfGoods());
+        assertEquals(unitPrice, excelRow.getUnitPrice());
+        assertEquals(extendedPrice, excelRow.getExtendedPrice());
+        assertEquals(contribution, excelRow.getContribution());
+        assertEquals(source, excelRow.getSource());
+        assertEquals(productURL, excelRow.getProductURL());
+    }
+
+    @Test
+    public void testInitializationWithValidInputs() {
+        String itemName = "Sample Item";
+        Integer quantityRequested = 10;
+        String packaging = "Box";
+        Double msrp = 100.0;
+        Double wholeSalePrice = 80.0;
+        String productURL = "http://example.com/product";
+
+        ExcelRow excelRow = new ExcelRow(itemName, quantityRequested, packaging, msrp, wholeSalePrice, productURL);
+
+        assertEquals(itemName, excelRow.getItemName());
+        assertEquals(quantityRequested, excelRow.getQuantityRequested());
+        assertEquals(packaging, excelRow.getPackaging());
+        assertEquals(msrp, excelRow.getMsrp());
+        assertEquals(wholeSalePrice, excelRow.getWholeSalePrice());
+        assertEquals(productURL, excelRow.getProductURL());
+    }
     @Test
     void testGetCostOfGoods() {
         // Creating an ExcelRow object
