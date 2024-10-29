@@ -59,4 +59,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
         assertEquals(productURL, noItemFoundExcelRow.getProductURL());
         assertEquals("Unknown", noItemFoundExcelRow.getSource());
     }
+
+     // Converts object to array with default values for missing items
+     @Test
+     public void testToArrayWithDefaultValues() {
+         NoItemFoundExcelRow row = new NoItemFoundExcelRow("Sample Item", "http://example.com/product");
+         Object[] result = row.toArray();
+         assertEquals(16, result.length);
+         assertEquals("No Item Found Matching Customer Description", result[2]);
+         assertEquals("N/A", result[3]);
+         assertEquals("N/A", result[5]);
+         assertEquals("N/A", result[6]);
+         assertEquals("N/A", result[7]);
+         assertEquals("N/A", result[8]);
+         assertEquals("N/A", result[9]);
+         assertEquals("N/A", result[10]);
+         assertEquals("N/A", result[12]);
+         assertEquals("N/A", result[13]);
+         assertEquals("N/A", result[14]);
+     }
 }
