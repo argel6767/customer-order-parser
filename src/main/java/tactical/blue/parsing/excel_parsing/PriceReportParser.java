@@ -30,6 +30,9 @@ public class PriceReportParser {
         }
     }
 
+    public PriceReportParser() {
+    }
+
     /*
      * Grabs rows from the Excel file and maps them to ExcelRow objects
      * then adds all these objects into a List that is returned

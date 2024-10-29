@@ -12,7 +12,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,12 +40,8 @@ public class AsyncPriceReportManagerTest {
 
     @Test
     void testShutdown() {
-        // Before shutdown
         assertFalse(executor.isShutdown());
-
         manager.shutdown();
-
-        // After shutdown
         assertTrue(executor.isShutdown());
     }
 
@@ -54,9 +49,7 @@ public class AsyncPriceReportManagerTest {
     void testDoCSVParseTaskAsync() throws Exception {
         Supplier<String> mockSupplier = mock(Supplier.class);
         when(mockSupplier.get()).thenReturn("Test");
-
         CompletableFuture<String> future = manager.doCSVParseTaskAsync(mockSupplier);
-
         assertEquals("Test", future.get());
         verify(mockSupplier).get();
     }
