@@ -24,9 +24,9 @@ public final class PriceReportCreator{
     private BufferedReader bufferedReaderWebScrape;
     private List<ExcelRow> excelRows = new ArrayList<>();
     private final HashMap<String,Integer> columnHeaderIndex = new HashMap<>();
-    private final ScrapedDataCSVParser scrapedDataCSVParser = new ScrapedDataCSVParser();
+    private ScrapedDataCSVParser scrapedDataCSVParser = new ScrapedDataCSVParser();
     private RowParser rowParser; //strategy pattern
-    private final ExcelWriter excelWriter = new ExcelWriter();
+    private ExcelWriter excelWriter = new ExcelWriter();
    
     /*
      * Constructor that is called by UI
@@ -38,6 +38,22 @@ public final class PriceReportCreator{
         setRowParser(siteName);
         createBufferedReader(fileInWebScrape);
 
+    }
+
+
+    /*
+     * Testing constructor via injection mocking
+     */
+    public PriceReportCreator(File fileInWebScrape, File fileInCustomerOrderInfo, String siteName, BufferedReader bufferedReaderWebScrape, List<ExcelRow> excelRows, HashMap<String, Integer> columnHeaderIndex, ScrapedDataCSVParser scrapedDataCSVParser, RowParser rowParser, ExcelWriter excelWriter) {
+        this.fileInWebScrape = fileInWebScrape;
+        this.fileInCustomerOrderInfo = fileInCustomerOrderInfo;
+        this.siteName = siteName;
+        this.bufferedReaderWebScrape = bufferedReaderWebScrape;
+        this.excelRows = excelRows;
+        this.columnHeaderIndex.putAll(columnHeaderIndex);
+        this.scrapedDataCSVParser = scrapedDataCSVParser;
+        this.rowParser = rowParser;
+        this.excelWriter = excelWriter;
     }
 
     public void createBufferedReader(File file) {
