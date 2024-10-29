@@ -35,7 +35,6 @@ public class UIThreadExecutor {
    /*
     * designates a thread with the task of creating a price report, and returns a CompletableFuture object
     */
-    //TODO fix this!! figure out why text state is changing to soon, this could possibly be where!!
     public CompletableFuture<Void> makePriceReportAsync(File webScrape, File customerOrder, String siteName) {
        PriceReportCreator priceReportCreator = new PriceReportCreator(webScrape, customerOrder, siteName);
        return priceReportCreator.makeNewExcelFile();

@@ -10,17 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 
 import tactical.blue.async.AsyncPriceReportManager;
 import tactical.blue.excel.excelrows.ExcelRow;
 import tactical.blue.parsing.csv_parsing.ScrapedDataCSVParser;
 import tactical.blue.parsing.excel_parsing.ExcelWriter;
-import tactical.blue.parsing.row_parsing.BoundTreeRowParser;
-import tactical.blue.parsing.row_parsing.HenryScheinRowParser;
-import tactical.blue.parsing.row_parsing.MedcoRowParser;
-import tactical.blue.parsing.row_parsing.NARescueRowParser;
-import tactical.blue.parsing.row_parsing.RowParser;
+import tactical.blue.parsing.row_parsing.*;
 
 public final class PriceReportCreator{
     private File fileInWebScrape;
