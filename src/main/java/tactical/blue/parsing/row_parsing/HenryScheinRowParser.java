@@ -120,11 +120,6 @@ public class HenryScheinRowParser implements RowParser {
         return Double.valueOf(wholesale);
     }
 
-    public static void main(String[] args) {
-        HenryScheinRowParser henryScheinRowParser = new HenryScheinRowParser();
-        henryScheinRowParser.getItemNameManufactuerAndSKUFromExtractedElement("Support Sleeve Unisex Thigh 22.25-25\" Large7760116 | Pro Orthopedic Devices - 500-3-01");
-    }
-
 } 
 
     
