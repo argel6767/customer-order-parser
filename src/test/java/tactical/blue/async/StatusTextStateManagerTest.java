@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class StatusTextStateManagerTest {
     @Mock
     private Text mockText;
-    private Text newText;
+
     private StatusTextStateManager manager;
     private static final String ORIGINAL_TEXT = "Original Status";
     private static final String NEW_STATUS = "Task Completed";
@@ -35,7 +35,7 @@ class StatusTextStateManagerTest {
     @BeforeEach
     void setUp() {
         when(mockText.getText()).thenReturn(ORIGINAL_TEXT);
-        when(newText.getText()).thenReturn(NEW_STATUS);
+        when(mockText.isVisible()).thenReturn(false);
         manager = new StatusTextStateManager(mockText);
     }
 
