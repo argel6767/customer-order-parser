@@ -35,9 +35,10 @@ public class UIThreadExecutor {
    /*
     * designates a thread with the task of creating a price report, and returns a CompletableFuture object
     */
-   public CompletableFuture<Void> makePriceReportAsync(File webScrape, File customerOrder, String siteName) {
+    //TODO fix this!! figure out why text state is changing to soon, this could possibly be where!!
+    public CompletableFuture<Void> makePriceReportAsync(File webScrape, File customerOrder, String siteName) {
        PriceReportCreator priceReportCreator = new PriceReportCreator(webScrape, customerOrder, siteName);
-       return CompletableFuture.runAsync(priceReportCreator::makeNewExcelFile, executorService);
+       return priceReportCreator.makeNewExcelFile();
    }
 
    /*
@@ -51,7 +52,6 @@ public class UIThreadExecutor {
    /*
     * designates a thread with the task of consolidating reports and returns CompletableFuture object
     */
-    //TODO fix this!! figure out why text state is changing to soon, this could possibly be where!!
    public CompletableFuture<Void> makeReportConsolidationAsync(List<File> reports, File customerOrder) {
        return CompletableFuture.runAsync(createReportConsolidatorRunnable(reports, customerOrder), executorService);
    }
