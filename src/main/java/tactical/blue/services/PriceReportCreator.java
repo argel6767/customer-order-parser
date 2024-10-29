@@ -88,21 +88,14 @@ public final class PriceReportCreator{
      */
     void setRowParser(String siteName) {
         switch (siteName) {
-            case "Bound Tree":
-                this.rowParser = new BoundTreeRowParser();
-                break;
-            case "Henry Schein":
-                this.rowParser = new HenryScheinRowParser();
-                break;
-            case "Medco":
-                this.rowParser = new MedcoRowParser();
-                break;
-            case "NA Rescue":
-                this.rowParser = new NARescueRowParser();
-                break;
-            default:
-                System.out.println("Not a valid option!");
+            case "Bound Tree" -> this.rowParser = new BoundTreeRowParser();
+            case "Henry Schein" -> this.rowParser = new HenryScheinRowParser();
+            case "Medco" -> this.rowParser = new MedcoRowParser();
+            case "NA Rescue" -> this.rowParser = new NARescueRowParser();
+            default -> {
+                System.out.println("Invalid site name!");
                 this.rowParser = null;
+            }
         }
     }
 

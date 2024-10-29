@@ -183,7 +183,7 @@ public class PriceReportCreatorTest {
         File nonExistentFile = new File("nonexistent.csv");
 
         // Act
-        priceReportCreator.setBufferedReader(nonExistentFile);
+        priceReportCreator.createBufferedReader(nonExistentFile);
 
         // Assert
         assertNull(priceReportCreator.getBufferedReaderWebScrape(), "BufferedReader should be null for non-existent file.");
