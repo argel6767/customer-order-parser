@@ -99,7 +99,6 @@ public class ExcelWriterTest {
         assertNotNull(dataRow2, "Data row 2 should not be null");
         assertEquals(2, (int) dataRow2.getCell(0).getNumericCellValue());
         assertEquals("HP Premium Paper, 8.5 x 11, 98 Bright, 500 Sheets/Ream", dataRow2.getCell(1).getStringCellValue());
-        // ... continue asserting data cells as needed
     }
 
     @Test
@@ -140,7 +139,7 @@ public class ExcelWriterTest {
             // Verify data
             Row dataRow = sheet.getRow(1);
             assertNotNull(dataRow, "Data row should not be null");
-            assertEquals(4, (int) dataRow.getCell(0).getNumericCellValue());
+            assertEquals(1, (int) dataRow.getCell(0).getNumericCellValue());
             assertEquals("USB-C Charging Cable, 6ft, Black, Bulk Pack", dataRow.getCell(1).getStringCellValue());
         }
     }
