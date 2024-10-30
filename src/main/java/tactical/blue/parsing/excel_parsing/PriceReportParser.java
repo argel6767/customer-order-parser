@@ -26,6 +26,7 @@ public class PriceReportParser {
         try {
             workbook = new XSSFWorkbook(new FileInputStream(file));
         } catch (IOException e) {
+            System.out.println("Something went wrong! The Excel file could not be found.");
             e.printStackTrace();
         }
     }

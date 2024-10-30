@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import tactical.blue.excel.excelrows.ExcelRow;
 
 /*
- * Houses the logic of mapping the order of the item descriptions in the Customer Order to ensure items are group correctly in the excel file
+ * Houses the logic of mapping the order of the item descriptions in the Customer Order to ensure items are group correctly in the Excel file
  */
 public class CustomerOrderInformationCSVParser extends CSVParser{
 
 /*
- * This methods returns the Item Descriptions of products wanted by the customer
+ * This method returns the Item Descriptions of products wanted by the customer
  * as a LinkedHashMap object with the format
  * <String, List<ExcelRow>>
  */

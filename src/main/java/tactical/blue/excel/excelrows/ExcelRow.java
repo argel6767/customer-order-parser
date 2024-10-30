@@ -6,12 +6,12 @@ import tactical.blue.api.OpenAIClient;
 
 public class ExcelRow{
     protected static Integer row = 1;
-    private String itemDescription; //item description orginally given by customer
+    private String itemDescription; //item description originally given by customer
     private String itemName; //name of item
     private String manufacturer; //maker of item
     private String sku; //item sku
     private Integer quantityRequested; //how much of item customer wants
-    private Integer quantityNeeded; //how much is actually needed to be bought, depened on packaging
+    private Integer quantityNeeded; //how much is actually needed to be bought, depending on packaging
     private String packaging; //how item is sold -- each, box, etc
     private Object msrp; //Manufacturers Suggested Retail Price 
     private Double wholeSalePrice; //cost for a single item
@@ -65,7 +65,7 @@ public class ExcelRow{
 
 
     /*
-     * If no packaging info is found, an item descrition can be used to get packaging type
+     * If no packaging info is found, an item description can be used to get packaging type
      */
     public ExcelRow(String itemDescription, String itemName, String manufacturer, String sku, Integer quantityRequested, Double msrp, Double wholeSalePrice, String productURL) {
         this.itemDescription = itemDescription;
@@ -134,7 +134,7 @@ public class ExcelRow{
 
     
     /*
-     * Finds the packaging via customer description of item, then multplies by quantity requested in order to get raw value, as opposed to packaged value
+     * Finds the packaging via customer description of item, then multiples by quantity requested in order to get raw value, as opposed to packaged value
      * (100 as opposed to 4 of 25pk)
      * If packaging is each then just return requested quantity
      */
@@ -180,7 +180,7 @@ public class ExcelRow{
 
 
     /*
-     * Caluclates various important values for excel row, that are not potentially given directly by websites or customers
+     * Calculates various important values for Excel row, that are not potentially given directly by websites or customers
      */
     private void calculatePricingAndQuantities(String packaging) {
         calculateQuantityNeeded(packaging);
@@ -192,7 +192,7 @@ public class ExcelRow{
 
     /*
      * grab the number value of the packaging variable to be able to determine how much
-     * of much of an item needs to be bought then save it to
+     * of an item needs to be bought then save it to
      * quantity needed
      */
     private void calculateQuantityNeeded(String packaging) {

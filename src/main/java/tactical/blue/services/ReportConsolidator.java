@@ -82,14 +82,14 @@ public class ReportConsolidator {
         ); //Will check if wholesale price is null ie is part of an ItemNotFoundExcelRow Object
         List<List<ExcelRow>> allGroups = new ArrayList<>(this.itemDescriptionMappedRows.values());
         for (List<ExcelRow> excelRows : allGroups) {
-            if (excelRows.size() != 0) {
+            if (!excelRows.isEmpty()) {
                 excelRows.sort(comparator);
             }  
         }
 
         List<ExcelRow> sortedRows = new ArrayList<>();
         for (List<ExcelRow> excelRows : allGroups) {
-            if (excelRows.size() != 0) {
+            if (!excelRows.isEmpty()) {
                 ExcelRow bestDeal = excelRows.get(0);
                 bestDeal.setIsFirstGroupItem(); //flags each best deal
             }

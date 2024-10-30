@@ -1,7 +1,7 @@
 package tactical.blue.excel.excelrows;
 
 /*
- * Product, Source, Price, Packaging, Manufactuer
+ * Product, Source, Price, Packaging, Manufacturer
  */
 public class HenryScheinExcelRow extends ExcelRow{
 

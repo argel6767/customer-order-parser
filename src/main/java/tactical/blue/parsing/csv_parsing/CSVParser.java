@@ -16,11 +16,10 @@ public abstract class CSVParser {
      */
     public List<String[]> getCSVRows(File customerInfo) {
         try {
-           FileReader fileReader = new FileReader(customerInfo);
-        CSVReader csvReader = new CSVReaderBuilder(fileReader) .withSkipLines(1).build(); 
-        List<String[]> rows = csvReader.readAll();
-        return rows; 
-        } 
+            FileReader fileReader = new FileReader(customerInfo);
+            CSVReader csvReader = new CSVReaderBuilder(fileReader).withSkipLines(1).build();
+            return csvReader.readAll();
+        }
         catch (Exception e) {
             System.out.println("Something went wrong!");
             e.printStackTrace();

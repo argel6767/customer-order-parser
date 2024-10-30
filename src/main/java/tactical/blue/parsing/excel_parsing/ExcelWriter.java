@@ -28,7 +28,7 @@ public class ExcelWriter {
     public ExcelWriter() {}
 
     /*
-     * allows for the the applyStyling flag to become true
+     * allows for the applyStyling flag to become true
      * this is typically only done by the Price Consolidator
      */
     public void allowStyling() {
@@ -36,7 +36,7 @@ public class ExcelWriter {
     }
 
     /*
-     * creates the necesssary cells from the ExcelRows that will be written into the ExcelFile
+     * creates the necessary cells from the ExcelRows that will be written into the ExcelFile
      */
       public void createExcelCells(List<ExcelRow> excelRows, String sheetTitle) {
         System.out.println("createExcelCells() called");
@@ -47,7 +47,7 @@ public class ExcelWriter {
         dataSheetInfo.put("1", new Object[] {"Row","Item Description","Item", "Manfucturer", "Source", "SKU", "Packaging", "Quantity", "MSRP", "Wholesale Price", "Cost of Goods", "Markup", "Unit Price", "Extended Price", "Contribution", "Product URL", ""}); //headers, empty string to allow for Product URL to be written
         
         int index = 2;
-        //adds the excel rows into dataSheetInfo from List excelRows
+        //adds the Excel rows into dataSheetInfo from List excelRows
         System.out.println("Grabbing rows...");
         for (ExcelRow excelRow : excelRows) {
             dataSheetInfo.put(String.valueOf(index), excelRow.toArray());
