@@ -164,7 +164,7 @@ public class UINavigationTest {
 
     class StubShuttingDownUIBuilder extends ShuttingDownUIBuilder {
         public StubShuttingDownUIBuilder() throws FileNotFoundException {
-            super(null,null,null);
+            super(null,null);
         }
 
         @Override

@@ -47,7 +47,7 @@ public class UINavigation {
         mainPageUIBuilder = new MainPageUIBuilder(this, stage, handler);
         priceReportCreatorUIBuilder = new PriceReportCreatorUIBuilder(this, stage, handler);
         consolidateExcelFilesUIBuilder = new ConsolidateExcelFilesUIBuilder(this, stage, handler);
-        shuttingDownUIBuilder = new ShuttingDownUIBuilder(this, stage, handler);
+        shuttingDownUIBuilder = new ShuttingDownUIBuilder(this, handler);
     }
 
     /*

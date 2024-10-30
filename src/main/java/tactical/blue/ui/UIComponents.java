@@ -5,7 +5,6 @@ import java.util.List;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
