@@ -17,13 +17,14 @@ import tactical.blue.ui.ShuttingDownUIBuilder;
  * or option buttons, etc
  */
 public class UINavigation {
-    private Stage stage;
+    private final Stage stage;
     private final int THREADS_COUNT = 5; //number of threads (currently a price report + 3 reports consolidated + 1)
     private UIThreadExecutor handler = new UIThreadExecutor(THREADS_COUNT);
     private MainPageUIBuilder mainPageUIBuilder;
     private PriceReportCreatorUIBuilder priceReportCreatorUIBuilder;
     private ConsolidateExcelFilesUIBuilder consolidateExcelFilesUIBuilder;
     private ShuttingDownUIBuilder shuttingDownUIBuilder;
+    private final SceneSwitchHandler sceneSwitchHandler = new SceneSwitchHandler();
 
     /*
     * For Testing Purposes
@@ -55,25 +56,26 @@ public class UINavigation {
      * When called switches the scene to the Main page
      */
     public void setSceneToMainPage() throws FileNotFoundException {
-        switchScene(mainPageUIBuilder.getScene(), "Blue Tactical Customer Order Parser");
+        sceneSwitchHandler.switchScene(mainPageUIBuilder.getScene(), "Blue Tactical Customer Order Parser", stage);
     }
 
     /*
      * When called switches scene to the Price Report Creator page
      */
     public void setSceneToPriceReportCreator() throws FileNotFoundException {
-        switchScene(priceReportCreatorUIBuilder.getScene(), "Scraped Data Price Report Creator");
+        sceneSwitchHandler.switchScene(priceReportCreatorUIBuilder.getScene(), "Scraped Data Price Report Creator", stage);
     }
 
     /*
      * When called switches scene to the Consolidate Excel Files page
      */
     public void setSceneToConsolidateExcelFiles() throws FileNotFoundException {
-        switchScene(consolidateExcelFilesUIBuilder.getScene(), "Price Report Consolidator");
+        sceneSwitchHandler.switchScene(consolidateExcelFilesUIBuilder.getScene(), "Price Report Consolidator",stage);
     }
 
     public void setSceneToShuttingDown() {
-        switchScene(shuttingDownUIBuilder.getScene(), "Shutting Down");
+        sceneSwitchHandler.switchScene(shuttingDownUIBuilder.getScene(), "Shutting Down", stage);
+        sceneSwitchHandler.fadeOut(stage);
     }
 
     /*
