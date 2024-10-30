@@ -13,7 +13,6 @@ import tactical.blue.excel.excelrows.NoItemFoundExcelRow;
 
 public class HenryScheinRowParser implements RowParser {
 
-
     @Override
     public List<ExcelRow> parseRow(String[] currItemArray, Map<String, List<String[]>> webScrapedMap, HashMap<String, Integer> columnHeaderIndex) {
         List<ExcelRow> productRows = new ArrayList<>();
@@ -54,17 +53,16 @@ public class HenryScheinRowParser implements RowParser {
 
      /*
      * Must be used for HenrySchein data as item name, manufacturer and SKU are tied to the same element on the web page
-     * seperates the values via 2 dividers
-     * 1 - a regex utlizing the un-needed Henry Schein code
-     * 2 - the "-" divider the site uses to seperate the manufacturer name and sku
+     * separates the values via 2 dividers
+     * 1 - a regex utilizing the un-needed Henry Schein code
+     * 2 - the "-" divider the site uses to separate the manufacturer name and sku
      */
 
      private  String[] getItemNameManufactuerAndSKUFromExtractedElement(String itemAndManufacturerInfo) {
         String[] split = seperateItemAndManufacturerInfo(itemAndManufacturerInfo);
         String itemName = split[0].trim();
         String[] manufacturerAndSKU = seperateManufacturerInfo(split[1]);
-        String[] productInfo = {itemName, manufacturerAndSKU[0], manufacturerAndSKU[1]};
-        return productInfo;
+         return new String[]{itemName, manufacturerAndSKU[0], manufacturerAndSKU[1]};
         
     }
 
@@ -73,7 +71,7 @@ public class HenryScheinRowParser implements RowParser {
      * returns the itemName and then the manufacturerInfo in a String[]
      */
     private String[] seperateItemAndManufacturerInfo(String itemAndManufacturerInfo) {
-        Matcher matcher = createMatcher("\\d{7,}", itemAndManufacturerInfo);
+        Matcher matcher = createMatcher(itemAndManufacturerInfo);
         matcher.find();
         String itemName = itemAndManufacturerInfo.substring(0, matcher.start());
         String manufacturerAndSKU = itemAndManufacturerInfo.substring(matcher.end()+2).trim();
@@ -83,14 +81,13 @@ public class HenryScheinRowParser implements RowParser {
     /*
      * Creates Matcher object to find desired Henry Schein number regex
      */
-    private Matcher createMatcher(String regex, String input) {
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(input);
-        return matcher;
+    private Matcher createMatcher(String input) {
+        Pattern pattern = Pattern.compile("\\d{7,}");
+        return pattern.matcher(input);
     }
 
     /*
-     * Seperates the manufacturerInfo by the index of "-"
+     * Separates the manufacturerInfo by the index of "-"
      * returns manufacturer and sku in a String[]
      */
     private String[] seperateManufacturerInfo (String manufacturerAndSKU) {

@@ -49,8 +49,7 @@ public class BoundTreeRowParser implements RowParser{
                             double msrpBulk = Double.parseDouble(currWebScrapedDataArray[columnHeaderIndex.get("List_Price_Bulk")]);
                             String packagingBulk = currWebScrapedDataArray[columnHeaderIndex.get("Bulk_Packaging")];
                             productRows.add(new BoundTreeExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, packaging, msrp, wholesalePrice, itemUrl)); 
-                            productRows.add(new BoundTreeExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, packagingBulk, msrpBulk, wholesaleBulk, itemUrl)); 
-
+                            productRows.add(new BoundTreeExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, packagingBulk, msrpBulk, wholesaleBulk, itemUrl));
                         }
                         /*
                         * Will catch NullPointerException that is thrown when an item has no bulk info
@@ -63,15 +62,10 @@ public class BoundTreeRowParser implements RowParser{
                         productRows.add(new NoItemFoundExcelRow(currItemArray[0], itemUrl));
                     }
                 }
-
-
-   
             return productRows;
         }
     }
-    return null;
+        return null;
     }
-
-    
 
 }
