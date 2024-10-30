@@ -23,4 +23,9 @@ public class ShuttingDownUIBuilder extends UIComponents{
         super.setContainer(container);
         super.setScene(new Scene(container, getPageWidth(), getPageHeight()));
     }
+
+    public Scene getScene() {
+        return super.getScene();
+    }
+
 }

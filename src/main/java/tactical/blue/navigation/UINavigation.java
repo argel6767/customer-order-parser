@@ -73,7 +73,7 @@ public class UINavigation {
     }
 
     public void setSceneToShuttingDown() {
-        switchScene();
+        switchScene(shuttingDownUIBuilder.getScene(), "Shutting Down");
     }
 
     /*
