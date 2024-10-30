@@ -10,6 +10,7 @@ import tactical.blue.async.UIThreadExecutor;
 import tactical.blue.ui.ConsolidateExcelFilesUIBuilder;
 import tactical.blue.ui.MainPageUIBuilder;
 import tactical.blue.ui.PriceReportCreatorUIBuilder;
+import tactical.blue.ui.ShuttingDownUIBuilder;
 
 /*
  * Will Handle the navigation between pages, as each method will be called by buttons such as back buttons
@@ -22,16 +23,18 @@ public class UINavigation {
     private MainPageUIBuilder mainPageUIBuilder;
     private PriceReportCreatorUIBuilder priceReportCreatorUIBuilder;
     private ConsolidateExcelFilesUIBuilder consolidateExcelFilesUIBuilder;
+    private ShuttingDownUIBuilder shuttingDownUIBuilder;
 
     /*
     * For Testing Purposes
      */
-    public UINavigation(Stage stage, UIThreadExecutor handler, MainPageUIBuilder mainPageUIBuilder, PriceReportCreatorUIBuilder priceReportCreatorUIBuilder, ConsolidateExcelFilesUIBuilder consolidateExcelFilesUIBuilder) {
+    public UINavigation(Stage stage, UIThreadExecutor handler, MainPageUIBuilder mainPageUIBuilder, PriceReportCreatorUIBuilder priceReportCreatorUIBuilder, ConsolidateExcelFilesUIBuilder consolidateExcelFilesUIBuilder, ShuttingDownUIBuilder shuttingDownUIBuilder) {
         this.stage = stage;
         this.handler = handler;
         this.mainPageUIBuilder = mainPageUIBuilder;
         this.priceReportCreatorUIBuilder = priceReportCreatorUIBuilder;
         this.consolidateExcelFilesUIBuilder = consolidateExcelFilesUIBuilder;
+        this.shuttingDownUIBuilder = shuttingDownUIBuilder;
     }
 
     public UINavigation(Stage stage) throws FileNotFoundException {
@@ -67,6 +70,10 @@ public class UINavigation {
      */
     public void setSceneToConsolidateExcelFiles() throws FileNotFoundException {
         switchScene(consolidateExcelFilesUIBuilder.getScene(), "Price Report Consolidator");
+    }
+
+    public void setSceneToShuttingDown() {
+        switchScene();
     }
 
     /*

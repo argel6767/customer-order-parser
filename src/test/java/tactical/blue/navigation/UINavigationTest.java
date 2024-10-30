@@ -20,13 +20,14 @@ public class UINavigationTest {
     private MainPageUIBuilder mockMainPageUIBuilder;
     private PriceReportCreatorUIBuilder mockPriceReportCreatorUIBuilder;
     private ConsolidateExcelFilesUIBuilder mockConsolidateExcelFilesUIBuilder;
+    private ShuttingDownUIBuilder mockShuttingDownUIBuilder;
     private UINavigation uiNavigation;
 
     @BeforeAll
     static void initToolkit() throws InterruptedException {
         // Initialize JavaFX Toolkit once before any tests run
         CountDownLatch latch = new CountDownLatch(1);
-        Platform.startup(() -> latch.countDown());
+        Platform.startup(latch::countDown);
         latch.await(); // Wait for the toolkit to be initialized
     }
 
@@ -45,6 +46,7 @@ public class UINavigationTest {
                 mockMainPageUIBuilder = new StubMainPageUIBuilder();
                 mockPriceReportCreatorUIBuilder = new StubPriceReportCreatorUIBuilder();
                 mockConsolidateExcelFilesUIBuilder = new StubConsolidateExcelFilesUIBuilder();
+                mockShuttingDownUIBuilder = new StubShuttingDownUIBuilder();
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -53,7 +55,9 @@ public class UINavigationTest {
             uiNavigation = new UINavigation(stage, mockHandler,
                     mockMainPageUIBuilder,
                     mockPriceReportCreatorUIBuilder,
-                    mockConsolidateExcelFilesUIBuilder);
+                    mockConsolidateExcelFilesUIBuilder,
+                    mockShuttingDownUIBuilder
+                    );
 
             latch.countDown(); // Signal that setup is complete
         });
@@ -150,6 +154,17 @@ public class UINavigationTest {
     class StubConsolidateExcelFilesUIBuilder extends ConsolidateExcelFilesUIBuilder {
         public StubConsolidateExcelFilesUIBuilder() throws FileNotFoundException {
             super(null, null, null);
+        }
+
+        @Override
+        public Scene getScene() {
+            return new Scene(new Parent() {});
+        }
+    }
+
+    class StubShuttingDownUIBuilder extends ShuttingDownUIBuilder {
+        public StubShuttingDownUIBuilder() throws FileNotFoundException {
+            super(null,null,null);
         }
 
         @Override
