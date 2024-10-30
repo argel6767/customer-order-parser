@@ -2,10 +2,7 @@ package tactical.blue.navigation;
 
 import java.io.FileNotFoundException;
 
-import javafx.animation.FadeTransition;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import tactical.blue.async.UIThreadExecutor;
 import tactical.blue.ui.ConsolidateExcelFilesUIBuilder;
 import tactical.blue.ui.MainPageUIBuilder;
@@ -50,6 +47,7 @@ public class UINavigation {
         mainPageUIBuilder = new MainPageUIBuilder(this, stage, handler);
         priceReportCreatorUIBuilder = new PriceReportCreatorUIBuilder(this, stage, handler);
         consolidateExcelFilesUIBuilder = new ConsolidateExcelFilesUIBuilder(this, stage, handler);
+        shuttingDownUIBuilder = new ShuttingDownUIBuilder(this, stage, handler);
     }
 
     /*

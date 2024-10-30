@@ -31,12 +31,13 @@ public class SceneSwitchHandler {
     }
 
     public void fadeOut(Stage stage) {
-        FadeTransition fadeOut = new FadeTransition(Duration.millis(350), stage.getScene().getRoot());
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(700), stage.getScene().getRoot());
         setFadeValues(fadeOut, 1, 0);
         fadeOut.setOnFinished(event -> {
             Platform.exit();
             System.exit(0);
         });
+        fadeOut.play();
     }
 
     /*

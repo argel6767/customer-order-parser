@@ -10,7 +10,7 @@ import tactical.blue.navigation.UINavigation;
 
 public class ShuttingDownUIBuilder extends UIComponents{
 
-    public ShuttingDownUIBuilder(UINavigation uiNavigation, UIThreadExecutor handler, Stage primaryStage) {
+    public ShuttingDownUIBuilder(UINavigation uiNavigation, Stage primaryStage, UIThreadExecutor handler) {
         super(uiNavigation, handler);
         build(primaryStage);
     }
