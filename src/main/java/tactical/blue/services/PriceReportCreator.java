@@ -27,6 +27,7 @@ public final class PriceReportCreator{
     private ScrapedDataCSVParser scrapedDataCSVParser = new ScrapedDataCSVParser();
     private RowParser rowParser; //strategy pattern
     private ExcelWriter excelWriter = new ExcelWriter();
+    private boolean isAMultiPriceReport = false;
    
     /*
      * Constructor that is called by UI
@@ -247,4 +248,13 @@ public final class PriceReportCreator{
     public ExcelWriter getExcelWriter() {
         return excelWriter;
     }
+
+    public boolean getIsAMultiPriceReport() {
+        return isAMultiPriceReport;
+    }
+
+    public void setIsAMultiPriceReport(boolean isAMultiPriceReport) {
+        this.isAMultiPriceReport = isAMultiPriceReport;
+    }
+
 }
