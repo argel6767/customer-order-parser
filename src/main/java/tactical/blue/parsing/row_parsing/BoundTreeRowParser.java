@@ -30,7 +30,7 @@ public class BoundTreeRowParser implements RowParser{
                      * Grab all scraped Info to make row objects
                      * 
                      */
-                    if (currWebScrapedDataArray[columnHeaderIndex.get("Product")] != "")    {
+                    if (!currWebScrapedDataArray[columnHeaderIndex.get("Product")].isEmpty())    {
                         String customerDescription = currItemArray[0]; //objects with same URL with have the same customer description
                         String itemName = currWebScrapedDataArray[columnHeaderIndex.get("Product")];
                         String manufacturer = currWebScrapedDataArray[columnHeaderIndex.get("Manufacturer")].trim();

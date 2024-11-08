@@ -88,6 +88,7 @@ public final class PriceReportCreator{
         try {
            var filesParsed = readCSVFiles();
            return filesParsed.thenRun( () -> {
+               System.out.println("Parsing complete, beginning writing to Excel File!");
                excelWriter.createExcelCells(excelRows, "Weekly Customer Price Report for" + this.siteName);
                excelWriter.generateExcelFile(siteName + "-Report-");
                ExcelRow.resetRowNumber();
@@ -142,6 +143,7 @@ public final class PriceReportCreator{
     private CompletableFuture<?> grabCSVRowsConcurrently() {
         AsyncPriceReportManager<Void> manager = new AsyncPriceReportManager<>();
         var done = manager.runCSVParsingConcurrently(this::mapScrapedRows, this::getOrderInfoRows, this::parseScrapedRowsToExcelRows);
+        System.out.println("beginning concurrent process");
         done.thenRun(() -> {
             manager.shutdown();
             System.out.println("Done! Shutting down ExecutorService");

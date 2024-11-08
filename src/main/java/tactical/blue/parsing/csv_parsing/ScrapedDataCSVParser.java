@@ -24,9 +24,13 @@ public class ScrapedDataCSVParser extends CSVParser{
         HashMap<String,List<String[]>> webScrapedMap = new HashMap<>();
         for (String[] row : rows) {
             if (row.length >= 5) { //Ensuring there's enough columns in the row
-                String productURl = siteName.equals("Henry Schein")? 
-                row[0].replaceAll("\"", "") : row[row.length-1];
-                mappingRowByProductURL(webScrapedMap, productURl, row);
+                String productURL = "";
+                switch (siteName) {
+                    case "Henry Schein" -> productURL = row[0].replaceAll("\"", "") ;
+                    case "Bound Tree" -> productURL = row[row.length-1];
+                    default -> productURL = row[row.length-1];
+                }
+                mappingRowByProductURL(webScrapedMap, productURL, row);
             }
         }
         return webScrapedMap;

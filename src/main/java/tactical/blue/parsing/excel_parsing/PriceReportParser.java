@@ -50,7 +50,7 @@ public class PriceReportParser {
     /*
      * Grabs all rows from the Excel File and makes each of them into a String List
      */
-    private void grabRowsFromExcelFile(List<List<String>> rowsList, Iterator<Row> rowIterator) {
+    public static void grabRowsFromExcelFile(List<List<String>> rowsList, Iterator<Row> rowIterator) {
         int index = 0;
         while (rowIterator.hasNext()) {
             if (index == 0) {

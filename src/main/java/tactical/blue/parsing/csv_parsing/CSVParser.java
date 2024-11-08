@@ -16,6 +16,7 @@ public abstract class CSVParser {
      */
     public List<String[]> getCSVRows(File customerInfo) {
         try {
+            System.out.println("grabbing CSV rows");
             FileReader fileReader = new FileReader(customerInfo);
             CSVReader csvReader = new CSVReaderBuilder(fileReader).withSkipLines(1).build();
             return csvReader.readAll();

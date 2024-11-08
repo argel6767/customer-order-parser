@@ -20,7 +20,7 @@ public class AsyncPriceReportManager<T> {
      * makes an ExecutorService with only two threads
      */
     public AsyncPriceReportManager() {
-        this.executor = Executors.newFixedThreadPool(2);
+        this.executor = Executors.newFixedThreadPool(4);
     }
 
     /*
@@ -53,6 +53,7 @@ public class AsyncPriceReportManager<T> {
                                                           BiConsumer<HashMap<String, List<String[]>>, List<String[]>> parseScrapedRowsToExcelRowsTask) {
         CompletableFuture<HashMap<String, List<String[]>>> mapScrapedRowsTask = doCSVParseTaskAsync(mapScrapedRows);
         CompletableFuture<List<String[]>> getOrderInfoRowsTask = doCSVParseTaskAsync(getOrderInfoRows);
+        System.out.println("Starting concurrent parsing");
         return mapScrapedRowsTask.thenAcceptBoth(getOrderInfoRowsTask, parseScrapedRowsToExcelRowsTask);
     }
 

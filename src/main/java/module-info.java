@@ -5,7 +5,6 @@ module excel_cleaner {
     exports tactical.blue;
     requires org.apache.poi.poi;
     requires org.apache.poi.ooxml;
-    requires java.base;
     requires org.apache.commons.lang3;
     requires jdk.jsobject;
     requires java.naming;
@@ -13,4 +12,5 @@ module excel_cleaner {
     requires javafx.graphics;
     requires opencsv;
     requires org.apache.xmlbeans;
+    requires org.apache.logging.log4j;
 }

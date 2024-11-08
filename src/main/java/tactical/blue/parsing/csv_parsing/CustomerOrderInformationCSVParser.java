@@ -18,6 +18,7 @@ public class CustomerOrderInformationCSVParser extends CSVParser{
  * <String, List<ExcelRow>>
  */
     public LinkedHashMap<String, List<ExcelRow>> getItemDescriptions(File customerInfo) {
+            System.out.println("getting Item Descriptions");
             List<String[]> rows = getCSVRows(customerInfo);
             return mapItemDescriptions(rows);
     }
