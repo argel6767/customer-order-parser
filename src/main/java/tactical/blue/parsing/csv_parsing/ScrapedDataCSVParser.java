@@ -1,5 +1,7 @@
 package tactical.blue.parsing.csv_parsing;
 
+import tactical.blue.parsing.UrlSearchQueryNormalizer;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +29,7 @@ public class ScrapedDataCSVParser extends CSVParser{
                 String productURL = "";
                 switch (siteName) {
                     case "Henry Schein" -> productURL = row[0].replaceAll("\"", "") ;
-                    case "Bound Tree" -> productURL = row[row.length-1];
+                    case "Bound Tree" -> productURL = row[1];
                     default -> productURL = row[row.length-1];
                 }
                 mappingRowByProductURL(webScrapedMap, productURL, row);
@@ -43,14 +45,15 @@ public class ScrapedDataCSVParser extends CSVParser{
      * then puts the productUrl and list as a pair into the HashMap
      */
     private void mappingRowByProductURL(HashMap<String,List<String[]>> webScrapedMap, String productURL, String[] row) {
-        if (webScrapedMap.containsKey(productURL)) {
-            List<String[]> urValList = webScrapedMap.get(productURL);
+        String query = UrlSearchQueryNormalizer.normalizeSearchQuery(productURL);
+        if (webScrapedMap.containsKey(query)) {
+            List<String[]> urValList = webScrapedMap.get(query);
             urValList.add(row);
         }
         else {
             List<String[]> urlValList = new ArrayList<>();
             urlValList.add(row);
-            webScrapedMap.put(productURL, urlValList);
+            webScrapedMap.put(query, urlValList);
         }
     }
 }

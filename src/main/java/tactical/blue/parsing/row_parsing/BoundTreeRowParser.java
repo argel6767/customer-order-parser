@@ -8,6 +8,7 @@ import java.util.Map;
 import tactical.blue.excel.excelrows.BoundTreeExcelRow;
 import tactical.blue.excel.excelrows.ExcelRow;
 import tactical.blue.excel.excelrows.NoItemFoundExcelRow;
+import tactical.blue.parsing.UrlSearchQueryNormalizer;
 
 /*
     * Bound Tree Data Scrape Structure:
@@ -20,9 +21,10 @@ public class BoundTreeRowParser implements RowParser{
             HashMap<String, Integer> columnHeaderIndex) {
         List<ExcelRow> productRows = new ArrayList<>();
         if (currItemArray.length >= 3) {
-        String itemUrl = currItemArray[2];
-        if (webScrapedMap.containsKey(itemUrl)) {
-                List<String[]> urlValList = webScrapedMap.get(itemUrl); //grabs all products found under url
+            String itemUrl = currItemArray[2];
+            String itemQuery = UrlSearchQueryNormalizer.normalizeSearchQuery(itemUrl);
+        if (webScrapedMap.containsKey(itemQuery)) {
+                List<String[]> urlValList = webScrapedMap.get(itemQuery); //grabs all products found under url
 
                 for (String[] currWebScrapedDataArray : urlValList) { //makes new objects for each one
                 

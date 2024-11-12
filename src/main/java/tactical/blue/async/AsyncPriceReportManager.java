@@ -3,6 +3,7 @@ package tactical.blue.async;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.BiConsumer;
@@ -51,8 +52,16 @@ public class AsyncPriceReportManager<T> {
      */
     public CompletableFuture<?> runCSVParsingConcurrently(Supplier<HashMap<String, List<String[]>>> mapScrapedRows, Supplier<List<String[]>> getOrderInfoRows,
                                                           BiConsumer<HashMap<String, List<String[]>>, List<String[]>> parseScrapedRowsToExcelRowsTask) {
-        CompletableFuture<HashMap<String, List<String[]>>> mapScrapedRowsTask = doCSVParseTaskAsync(mapScrapedRows);
-        CompletableFuture<List<String[]>> getOrderInfoRowsTask = doCSVParseTaskAsync(getOrderInfoRows);
+        CompletableFuture<HashMap<String, List<String[]>>> mapScrapedRowsTask = doCSVParseTaskAsync(mapScrapedRows)
+                .exceptionally(throwable -> {
+                    System.out.println(throwable.getMessage());
+                    throw new CompletionException(throwable);
+                });
+        CompletableFuture<List<String[]>> getOrderInfoRowsTask = doCSVParseTaskAsync(getOrderInfoRows)
+                .exceptionally(throwable -> {
+                    System.out.println(throwable.getMessage());
+                    throw new CompletionException(throwable);
+                });;
         System.out.println("Starting concurrent parsing");
         return mapScrapedRowsTask.thenAcceptBoth(getOrderInfoRowsTask, parseScrapedRowsToExcelRowsTask);
     }
