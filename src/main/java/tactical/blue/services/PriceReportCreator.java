@@ -76,7 +76,9 @@ public final class PriceReportCreator{
      */
     public CompletableFuture<Void> makeNewExcelFile() {
         System.out.println("makeNewExcelFile() called");
-        return runParsingAndWriting();
+        //return runParsingAndWritingAsync();
+        runParsingAndWriting();
+        return CompletableFuture.completedFuture(null);
     }
 
     /*
@@ -84,7 +86,7 @@ public final class PriceReportCreator{
      * readCSVFiles() called, then once the CSV files are done then the Excel write
      * creates the Excel file
      */
-    private CompletableFuture<Void> runParsingAndWriting() {
+    private CompletableFuture<Void> runParsingAndWritingAsync() {
         try {
            var filesParsed = readCSVFiles();
            return filesParsed.thenRun( () -> {
@@ -98,6 +100,19 @@ public final class PriceReportCreator{
             ioe.printStackTrace();
             return CompletableFuture.failedFuture(ioe);
         }
+    }
+
+    /*
+     * the non async method that holds the try/catch
+     * logic
+     */
+    private void runParsingAndWriting() {
+        HashMap<String, List<String[]>> map = mapScrapedRows();
+        List<String[]> orderRows = getOrderInfoRows();
+        parseScrapedRowsToExcelRows(map, orderRows);
+        excelWriter.createExcelCells(excelRows, "Weekly Customer Price Report for" + this.siteName);
+        excelWriter.generateExcelFile(siteName + "-Report-");
+        ExcelRow.resetRowNumber();
     }
 
     /*
