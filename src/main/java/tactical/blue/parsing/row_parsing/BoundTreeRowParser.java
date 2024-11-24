@@ -18,7 +18,7 @@ import tactical.blue.parsing.UrlSearchQueryNormalizer;
 public class BoundTreeRowParser implements RowParser{
     @Override
     public List<ExcelRow> parseRow(String[] currItemArray, Map<String, List<String[]>> webScrapedMap,
-            HashMap<String, Integer> columnHeaderIndex) {
+            HashMap<String, Integer> columnHeaderIndex, boolean isGroupedItems) {
         List<ExcelRow> productRows = new ArrayList<>();
         if (currItemArray.length >= 3) {
             String itemUrl = currItemArray[2];
@@ -41,6 +41,7 @@ public class BoundTreeRowParser implements RowParser{
                         String packaging = currWebScrapedDataArray[columnHeaderIndex.get("Packaging")];
                         double msrp = Double.parseDouble(currWebScrapedDataArray[columnHeaderIndex.get("List_Price")]);
                         double wholesalePrice = Double.parseDouble(currWebScrapedDataArray[columnHeaderIndex.get("Wholesale")]);
+                        String group = isGroupedItems? currItemArray[currItemArray.length-1]:"";
 
                         //Grab bulk items to make another BoundTreeExcelRow object
                         /*
@@ -50,6 +51,10 @@ public class BoundTreeRowParser implements RowParser{
                             double wholesaleBulk = Double.parseDouble(currWebScrapedDataArray[columnHeaderIndex.get("Whole_Sale_Bulk")]);
                             double msrpBulk = Double.parseDouble(currWebScrapedDataArray[columnHeaderIndex.get("List_Price_Bulk")]);
                             String packagingBulk = currWebScrapedDataArray[columnHeaderIndex.get("Bulk_Packaging")];
+                            if (isGroupedItems) {
+                                productRows.add(new BoundTreeExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, packaging, msrp, wholesalePrice, itemUrl, group));
+                                productRows.add(new BoundTreeExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, packagingBulk, msrpBulk, wholesaleBulk, itemUrl, group));
+                            }
                             productRows.add(new BoundTreeExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, packaging, msrp, wholesalePrice, itemUrl)); 
                             productRows.add(new BoundTreeExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, packagingBulk, msrpBulk, wholesaleBulk, itemUrl));
                         }
@@ -57,6 +62,9 @@ public class BoundTreeRowParser implements RowParser{
                         * Will catch NullPointerException that is thrown when an item has no bulk info
                         */
                         catch(NullPointerException npe) {
+                            if (isGroupedItems) {
+                                productRows.add(new BoundTreeExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, packaging, msrp, wholesalePrice, itemUrl, group));
+                            }
                             productRows.add(new BoundTreeExcelRow(customerDescription, itemName, manufacturer, sku, quantityRequested, packaging, msrp, wholesalePrice, itemUrl)); 
                         }
                     }

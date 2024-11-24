@@ -10,5 +10,11 @@ public class BoundTreeExcelRow extends ExcelRow {
         super(customerDescription,itemName, manufacturer, sku, quantityRequested, packaging, msrp, wholeSalePrice, productURL);
     }
 
-    
+    /*
+     * group constructor
+     */
+    public BoundTreeExcelRow(String customerDescription, String itemName, String manufacturer, String sku, int quantityRequested, String packaging, double msrp, double wholeSalePrice, String productURL, String group) {
+        super(customerDescription,itemName, manufacturer, sku, quantityRequested, packaging, msrp, wholeSalePrice, productURL, group);
+    }
+
 }

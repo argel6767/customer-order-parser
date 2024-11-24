@@ -14,7 +14,7 @@ public class MedcoRowParser implements RowParser{
 
     @Override
     public List<ExcelRow> parseRow(String[] currItemArray, Map<String, List<String[]>> webScrapedMap,
-            HashMap<String, Integer> columnHeaderIndex) {
+            HashMap<String, Integer> columnHeaderIndex, boolean isGroupedRow) {
         List<ExcelRow> productRows = new ArrayList<>();
         if (currItemArray.length >= 3) {
         String itemUrl = currItemArray[2];

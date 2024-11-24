@@ -15,7 +15,7 @@ import tactical.blue.parsing.UrlSearchQueryNormalizer;
 public class HenryScheinRowParser implements RowParser {
 
     @Override
-    public List<ExcelRow> parseRow(String[] currItemArray, Map<String, List<String[]>> webScrapedMap, HashMap<String, Integer> columnHeaderIndex) {
+    public List<ExcelRow> parseRow(String[] currItemArray, Map<String, List<String[]>> webScrapedMap, HashMap<String, Integer> columnHeaderIndex, boolean isGroupedItems) {
         List<ExcelRow> productRows = new ArrayList<>();
         
         String itemUrl = currItemArray[2];

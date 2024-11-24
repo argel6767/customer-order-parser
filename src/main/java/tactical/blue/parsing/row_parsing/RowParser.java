@@ -7,7 +7,7 @@ import java.util.Map;
 import tactical.blue.excel.excelrows.ExcelRow;
 
 public interface RowParser {
-    public List<ExcelRow> parseRow(String[] currItemArray, Map<String, List<String[]>> webScrapedMap, HashMap<String, Integer> columnHeaderIndex);
+    public List<ExcelRow> parseRow(String[] currItemArray, Map<String, List<String[]>> webScrapedMap, HashMap<String, Integer> columnHeaderIndex, boolean isGroupedItems);
 
     private boolean isRowEmptyLogic(String[] currentWebScrapedData, int index) {
         for (int i = index; i < currentWebScrapedData.length;i++) {

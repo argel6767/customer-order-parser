@@ -227,7 +227,7 @@ public final class PriceReportCreator{
      * calls the CSVParser parseRow() object to parse scraped data and have them formatted for the Excel table
      */
     List<ExcelRow> parseRowsForExcelFile(String[] currItemArray, Map<String, List<String[]>> webScrapedMap) {
-        return rowParser.parseRow(currItemArray, webScrapedMap, columnHeaderIndex);
+        return rowParser.parseRow(currItemArray, webScrapedMap, columnHeaderIndex, isAGroupedFile);
     }
 
     public List<ExcelRow> getExcelRows() {

@@ -47,7 +47,7 @@ public class HenryScheinRowParserTest {
     public void testParseRowWithValidData() {
         String[] currItemArray = { "Customer Product A", "5", "https://www.henryschein.com/us-en/Search.aspx?searchkeyWord=Ankle+Brace+X-Small" };
 
-        List<ExcelRow> result = parser.parseRow(currItemArray, webScrapedMap, columnHeaderIndex);
+        List<ExcelRow> result = parser.parseRow(currItemArray, webScrapedMap, columnHeaderIndex, false);
 
         assertNotNull(result);
         assertEquals(1, result.size());
@@ -67,7 +67,7 @@ public class HenryScheinRowParserTest {
     public void testParseRowWithInvalidUrl() {
         String[] currItemArray = { "Invalid Product", "1", "https://www.henryschein.com/us-en/Search.aspx?searchkeyWord=invalid" };
 
-        List<ExcelRow> result = parser.parseRow(currItemArray, webScrapedMap, columnHeaderIndex);
+        List<ExcelRow> result = parser.parseRow(currItemArray, webScrapedMap, columnHeaderIndex, false);
 
         assertNull(result);  // No match for the URL, expecting null
     }

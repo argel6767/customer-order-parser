@@ -46,8 +46,9 @@ public class ExcelRow{
     }
 
     /*
-  Need to find raw quantity of item using item description
-  */
+    * Need to find raw quantity of item using item description
+    * this constructor is used when the items are grouped
+    */
     public ExcelRow(String itemDescription ,String itemName, String manufacturer, String sku, Integer quantityRequested, String packaging, Double msrp, Double wholeSalePrice, String productURL, String groupName) {
         this.itemDescription = itemDescription;
         this.itemName = itemName;

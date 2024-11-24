@@ -47,7 +47,7 @@ public class MedcoCSVParserTest {
     public void testParseRowWithValidData() {
         String[] currItemArray = { "Customer Product A", "5", "http://example.com/product1" };
         
-        List<ExcelRow> result = parser.parseRow(currItemArray, webScrapedMap, columnHeaderIndex);
+        List<ExcelRow> result = parser.parseRow(currItemArray, webScrapedMap, columnHeaderIndex, false);
 
         assertNotNull(result);
         assertEquals(1, result.size());
@@ -65,7 +65,7 @@ public class MedcoCSVParserTest {
     @Test
     public void testParseRowWithInvalidUrl() {
         String[] currItemArray = { "Invalid Product", "1", "http://example.com/invalid" };
-        List<ExcelRow> result = parser.parseRow(currItemArray, webScrapedMap, columnHeaderIndex);
+        List<ExcelRow> result = parser.parseRow(currItemArray, webScrapedMap, columnHeaderIndex, false);
         assertNull(result);  // No match for the URL, expecting null
     }
 
@@ -79,7 +79,7 @@ public class MedcoCSVParserTest {
 
         String[] currItemArray = { "Customer Product Multiple", "3", "http://example.com/multiple" };
 
-        List<ExcelRow> result = parser.parseRow(currItemArray, webScrapedMap, columnHeaderIndex);
+        List<ExcelRow> result = parser.parseRow(currItemArray, webScrapedMap, columnHeaderIndex, false);
 
         assertNotNull(result);
         assertEquals(2, result.size());
