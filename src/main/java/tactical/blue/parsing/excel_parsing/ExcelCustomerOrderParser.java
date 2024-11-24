@@ -64,6 +64,7 @@ public class ExcelCustomerOrderParser {
             this.urls.add(UrlCreator.createUrl(siteName, itemDescription));
             this.quantity.add(row.get(4).trim().replace(".0", ""));
             this.group.add(row.getLast());
+            System.out.println(row.getLast());
         }
     }
 
@@ -75,6 +76,7 @@ public class ExcelCustomerOrderParser {
             String[] row = {itemDescriptions.get(i), quantity.get(i), urls.get(i), group.get(i)};
             writer.writeNext(row);
         }
+        writer.close();
     }
 
 
@@ -86,8 +88,8 @@ public class ExcelCustomerOrderParser {
         ExcelCustomerOrderParser excelCustomerOrderParser = new ExcelCustomerOrderParser(new File("src/main/java/tactical/blue/parsing/excel_parsing/2.2.1-Request for Quote_Attachment 1 – Required Supplies and Pricing Template.xlsx"));
         List<List<String>> list = excelCustomerOrderParser.readFiles();
         excelCustomerOrderParser.mapRows(list);
-        excelCustomerOrderParser.createUrls("Medco");
-        excelCustomerOrderParser.writeToFile("Medco");
+        excelCustomerOrderParser.createUrls("BoundTree");
+        excelCustomerOrderParser.writeToFile("Bound_Tree");
     }
 
 }
