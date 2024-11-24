@@ -44,6 +44,17 @@ public class UIThreadExecutor {
    }
 
    /*
+    * different method signature for when the  items are grouped
+    */
+    public CompletableFuture<Void> makePriceReportAsync(File webScrape, File customerOrder, String siteName, boolean isGroupedItems) {
+        if (webScrape == null || customerOrder == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+        PriceReportCreator priceReportCreator = new PriceReportCreator(webScrape, customerOrder, siteName, isGroupedItems);
+        return priceReportCreator.makeNewExcelFile();
+    }
+
+   /*
     * shuts down ExecutorService
     */
    public void shutdown() {
