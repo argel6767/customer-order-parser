@@ -44,7 +44,7 @@ public class UIThreadExecutor {
    }
 
    /*
-    * different method signature for when the  items are grouped
+    * different method signature for when the items are grouped
     */
     public CompletableFuture<Void> makePriceReportAsync(File webScrape, File customerOrder, String siteName, boolean isGroupedItems) {
         if (webScrape == null || customerOrder == null) {

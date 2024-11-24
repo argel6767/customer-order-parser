@@ -22,6 +22,7 @@ public class ExcelCustomerOrderParser {
     private final List<String> urls = new ArrayList<>();
     private final List<String> itemDescriptions = new ArrayList<>();
     private final List<String> quantity = new ArrayList<>();
+    private final List<String> group = new ArrayList<>();
 
     public ExcelCustomerOrderParser(File file) {
         try {
@@ -35,7 +36,7 @@ public class ExcelCustomerOrderParser {
     public List<List<String>> readFiles() {
         Sheet sheet = workbook.getSheetAt(1);
         Iterator<Row> rowIterator = sheet.iterator();
-        List<List<String>> list = new ArrayList<List<String>>();
+        List<List<String>> list = new ArrayList<>();
         PriceReportParser.grabRowsFromExcelFile(list, rowIterator);
         mapRows(list);
         return list;
@@ -45,10 +46,11 @@ public class ExcelCustomerOrderParser {
         String currentHeader = "";
         for (List<String> row : rows) {
             if (row.get(1).isEmpty()) {
-                currentHeader = row.get(0);
+                currentHeader = row.getFirst();
                 this.groupedRows.put(currentHeader, new ArrayList<>());
             }
             else {
+                row.add(currentHeader);
                 this.groupedRows.get(currentHeader).add(row);
             }
         }
@@ -57,25 +59,35 @@ public class ExcelCustomerOrderParser {
     public void createUrls(String siteName) {
         List<List<String>>  list = groupedRows.values().stream().flatMap(List::stream).toList();
         for (List<String> row : list) {
-            String itemDescription = row.get(0).trim().replaceAll(",", "");
+            String itemDescription = row.getFirst().trim().replaceAll(",", "");
             this.itemDescriptions.add(itemDescription);
             this.urls.add(UrlCreator.createUrl(siteName, itemDescription));
             this.quantity.add(row.get(4).trim().replace(".0", ""));
+            this.group.add(row.getLast());
         }
     }
 
-    public void writeToFile() throws IOException {
-        CSVWriter writer = new CSVWriter(new FileWriter(new File("Medco.csv")));
-        String[] header = {"Item", "Quantity", "Url"};
+    public void writeToFile(String site) throws IOException {
+        CSVWriter writer = new CSVWriter(new FileWriter(new File(site + ".csv")));
+        String[] header = {"Item", "Quantity", "Url", "Group"};
         writer.writeNext(header);
         for (int i = 0; i < this.itemDescriptions.size(); i++) {
-            String[] row = {itemDescriptions.get(i), quantity.get(i), urls.get(i)};
+            String[] row = {itemDescriptions.get(i), quantity.get(i), urls.get(i), group.get(i)};
             writer.writeNext(row);
         }
     }
 
+
     public LinkedHashMap<String, List<List<String>>> getGroupedRows() {
         return groupedRows;
+    }
+
+    public static void main(String[] args) throws IOException {
+        ExcelCustomerOrderParser excelCustomerOrderParser = new ExcelCustomerOrderParser(new File("src/main/java/tactical/blue/parsing/excel_parsing/2.2.1-Request for Quote_Attachment 1 – Required Supplies and Pricing Template.xlsx"));
+        List<List<String>> list = excelCustomerOrderParser.readFiles();
+        excelCustomerOrderParser.mapRows(list);
+        excelCustomerOrderParser.createUrls("Medco");
+        excelCustomerOrderParser.writeToFile("Medco");
     }
 
 }
