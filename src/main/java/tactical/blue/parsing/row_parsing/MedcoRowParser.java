@@ -8,6 +8,7 @@ import java.util.Map;
 import tactical.blue.excel.excelrows.ExcelRow;
 import tactical.blue.excel.excelrows.MedcoSportsMedicineExcelRow;
 import tactical.blue.excel.excelrows.NoItemFoundExcelRow;
+import tactical.blue.parsing.UrlSearchQueryNormalizer;
 
 public class MedcoRowParser implements RowParser{
 
@@ -17,13 +18,14 @@ public class MedcoRowParser implements RowParser{
         List<ExcelRow> productRows = new ArrayList<>();
         if (currItemArray.length >= 3) {
         String itemUrl = currItemArray[2];
+        String itemQuery = UrlSearchQueryNormalizer.normalizeSearchQuery(itemUrl);
 
-        if (webScrapedMap.containsKey(itemUrl)) {
-            List<String[]> urlValList = webScrapedMap.get(itemUrl); //grabs all products found under url
+        if (webScrapedMap.containsKey(itemQuery)) {
+            List<String[]> urlValList = webScrapedMap.get(itemQuery); //grabs all products found under url
 
             for (String[] currWebScrapedDataArray : urlValList) { //makes new objects for each one
 
-               if (!currWebScrapedDataArray[columnHeaderIndex.get("Product")].equals("")){ 
+               if (columnHeaderIndex.get("Product")!= null && !currWebScrapedDataArray[columnHeaderIndex.get("Product")].isEmpty()){
                     String customerDescription = currItemArray[0]; //objects with same URL with have the same customer description
                     String itemName = currWebScrapedDataArray[columnHeaderIndex.get("Product")];
                     String manufacturer = currWebScrapedDataArray[columnHeaderIndex.get("Manufacturer")];

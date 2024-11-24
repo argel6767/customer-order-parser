@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import tactical.blue.excel.excelrows.ExcelRow;
 import tactical.blue.excel.excelrows.HenryScheinExcelRow;
 import tactical.blue.excel.excelrows.NoItemFoundExcelRow;
+import tactical.blue.parsing.UrlSearchQueryNormalizer;
 
 public class HenryScheinRowParser implements RowParser {
 
@@ -18,10 +19,11 @@ public class HenryScheinRowParser implements RowParser {
         List<ExcelRow> productRows = new ArrayList<>();
         
         String itemUrl = currItemArray[2];
-        if (webScrapedMap.containsKey(itemUrl)) {
-                List<String[]> urlValList = webScrapedMap.get(itemUrl); //grabs all products found under url
+        String itemQuery = UrlSearchQueryNormalizer.normalizeSearchQuery(itemUrl);
+        if (webScrapedMap.containsKey(itemQuery)) {
+                List<String[]> urlValList = webScrapedMap.get(itemQuery); //grabs all products found under url
                 for (String[] currWebScrapedDataArray : urlValList) { //makes new objects for each one
-                    if (!currWebScrapedDataArray[1].equals("")) { //check if it's not an empty row
+                    if (columnHeaderIndex.get("Product")!= null && !currWebScrapedDataArray[columnHeaderIndex.get("Product")].isEmpty()) { //check if it's not an empty row
                         String customerDescription = currItemArray[0].replace("\"", ""); //objects with same URL with have the same customer description
                         String[] seperatedProductInfo = getItemNameManufactuerAndSKUFromExtractedElement(currWebScrapedDataArray[columnHeaderIndex.get("\"HenrySchein_Product_And_Manufacturer\"")].replace("\"", ""));
                         String itemName = seperatedProductInfo[0];

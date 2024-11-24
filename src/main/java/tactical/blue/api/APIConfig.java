@@ -18,7 +18,7 @@ public class APIConfig {
         try (InputStream input = APIConfig.class.getResourceAsStream("/config.properties")) {
             properties.load(input);
             return properties.getProperty("openai.api.key");
-        } catch (IOException ioe) {
+        } catch (Exception e) {
             System.out.println("Failed to load API Key!\nUsing ENV backup");
             return System.getenv("OPENAI_API_KEY");
         }

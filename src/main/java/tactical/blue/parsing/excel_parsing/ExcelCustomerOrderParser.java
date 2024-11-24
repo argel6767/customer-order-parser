@@ -62,11 +62,6 @@ public class ExcelCustomerOrderParser {
             this.urls.add(UrlCreator.createUrl(siteName, itemDescription));
             this.quantity.add(row.get(4).trim().replace(".0", ""));
         }
-
-        this.urls.forEach(System.out::println);
-        this.itemDescriptions.forEach(System.out::println);
-        this.quantity.forEach(System.out::println);
-
     }
 
     public void writeToFile() throws IOException {

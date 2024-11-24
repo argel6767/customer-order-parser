@@ -45,6 +45,9 @@ public class ScrapedDataCSVParser extends CSVParser{
      * then puts the productUrl and list as a pair into the HashMap
      */
     private void mappingRowByProductURL(HashMap<String,List<String[]>> webScrapedMap, String productURL, String[] row) {
+        if (productURL == null || productURL.isEmpty()) {
+            return;
+        }
         String query = UrlSearchQueryNormalizer.normalizeSearchQuery(productURL);
         if (webScrapedMap.containsKey(query)) {
             List<String[]> urValList = webScrapedMap.get(query);

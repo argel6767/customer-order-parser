@@ -23,12 +23,12 @@ public class ExcelRow{
     private String source; //website item information was acquired from
     private String productURL; //url of product page
     private Boolean isFirstGroupItem = false;
+    private String groupName = "";
 
-    
 
-   public ExcelRow(String itemDescription, String itemName, String manufacturer, String sku,
-            Integer quantityNeeded, String packaging, Object msrp, Double wholeSalePrice, Double costOfGoods,
-            Double unitPrice, Double extendedPrice, Double contribution, String source, String productURL) {
+    public ExcelRow(String itemDescription, String itemName, String manufacturer, String sku,
+                    Integer quantityNeeded, String packaging, Object msrp, Double wholeSalePrice, Double costOfGoods,
+                    Double unitPrice, Double extendedPrice, Double contribution, String source, String productURL) {
         this.itemDescription = itemDescription;
         this.itemName = itemName;
         this.manufacturer = manufacturer;
@@ -43,6 +43,24 @@ public class ExcelRow{
         this.contribution = contribution;
         this.source = source;
         this.productURL = productURL;
+    }
+
+    /*
+  Need to find raw quantity of item using item description
+  */
+    public ExcelRow(String itemDescription ,String itemName, String manufacturer, String sku, Integer quantityRequested, String packaging, Double msrp, Double wholeSalePrice, String productURL, String groupName) {
+        this.itemDescription = itemDescription;
+        this.itemName = itemName;
+        this.manufacturer = manufacturer;
+        this.sku = sku;
+        this.packaging = packaging;
+        this.quantityRequested = calculateRawQuantity(quantityRequested, itemDescription);
+        this.msrp = determineIfMSRPIsPresent(msrp);
+        this.wholeSalePrice = wholeSalePrice;
+        this.productURL = productURL;
+        this.groupName = groupName;
+        calculatePricingAndQuantities(packaging);
+        determineSourceUsingProductURL();
     }
 
 

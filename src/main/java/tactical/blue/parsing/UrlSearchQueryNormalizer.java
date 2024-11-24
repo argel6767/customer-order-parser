@@ -18,7 +18,7 @@ public class UrlSearchQueryNormalizer {
 
     private static String normalizeQuery(String query) {
          return query.toLowerCase().replaceAll("®", " ")                 // Replace ® with a space
-                .replaceAll("[^a-z0-9\\.\\s]", "")    // Keep alphanumeric, space, and period
+                .replaceAll("[^a-z0-9.\\s]", "")    // Keep alphanumeric, space, and period
                 .replaceAll("\\s+", " ")              // Normalize multiple spaces to a single space
                 .trim();
     }

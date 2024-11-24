@@ -28,6 +28,7 @@ public final class PriceReportCreator{
     private RowParser rowParser; //strategy pattern
     private ExcelWriter excelWriter = new ExcelWriter();
     private boolean isAMultiPriceReport = false;
+    private boolean isAGroupedFile = false;
    
     /*
      * Constructor that is called by UI
@@ -38,7 +39,15 @@ public final class PriceReportCreator{
         this.siteName = siteName;
         setRowParser(siteName);
         createBufferedReader(fileInWebScrape);
+    }
 
+    public PriceReportCreator(File fileInWebScrape, File fileInCustomerOrderInfo, String siteName, boolean isAGroupedFile) {
+        this.fileInWebScrape = fileInWebScrape;
+        this.fileInCustomerOrderInfo = fileInCustomerOrderInfo;
+        this.siteName = siteName;
+        setRowParser(siteName);
+        createBufferedReader(fileInWebScrape);
+        this.isAGroupedFile = isAGroupedFile;
     }
 
 
@@ -106,13 +115,24 @@ public final class PriceReportCreator{
      * the non async method that holds the try/catch
      * logic
      */
-    private void runParsingAndWriting() {
+    private void runParsingAndWriting(){
+        readColumnNames();
         HashMap<String, List<String[]>> map = mapScrapedRows();
         List<String[]> orderRows = getOrderInfoRows();
         parseScrapedRowsToExcelRows(map, orderRows);
-        excelWriter.createExcelCells(excelRows, "Weekly Customer Price Report for" + this.siteName);
+        excelWriter.createExcelCells(excelRows, "Weekly Customer Price Report for " + this.siteName);
         excelWriter.generateExcelFile(siteName + "-Report-");
         ExcelRow.resetRowNumber();
+    }
+
+    private void readColumnNames() {
+        String columnTitles = null;
+        try {
+            columnTitles = bufferedReaderWebScrape.readLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        getExcelColumnNames(columnTitles.split(","));
     }
 
     /*
@@ -274,4 +294,11 @@ public final class PriceReportCreator{
         this.isAMultiPriceReport = isAMultiPriceReport;
     }
 
+    public boolean isAGroupedFile() {
+        return isAGroupedFile;
+    }
+
+    public void setAGroupedFile(boolean isAGroupedFile) {
+        this.isAGroupedFile = isAGroupedFile;
+    }
 }
