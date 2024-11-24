@@ -22,6 +22,7 @@ import tactical.blue.async.UIThreadExecutor;
 public class PriceReportCreatorUIBuilder extends UIComponents{
 
     private String siteName;
+    private boolean isItGroupedItem;
     private File fileInWebScrapedData;
     private File fileInCustomerOrderData;
 
@@ -45,8 +46,13 @@ public class PriceReportCreatorUIBuilder extends UIComponents{
         Button buttonWebScrape = createWebScrapeFileButton(primaryStage, fileChooserWebScraped);
         FileChooser fileChooserCustomerOrder = createFileChooser("Customer Order Data");
         Button buttonCustomerOrder = createCustomerOrderFileButton(primaryStage, fileChooserCustomerOrder);
+        Text whichSite = new Text("Which site?");
+        whichSite.setStyle(getTextStyle());
         ToggleGroup ecommerceSites = createRadioButtons();
-        VBox vBox = createVbox(createLogoBox(),buttonWebScrape, buttonCustomerOrder, createRadioButtonHBox(ecommerceSites), createMakeExcelFileButton(), createGoBackAndEndProgramButtonsHBox(), createStatusText("Creating Price Report..."));
+        Text grouped = new Text("Are the Items Grouped?");
+        grouped.setStyle(getTextStyle());
+        ToggleGroup isItGroupedItems = createIsItAGroupedRadioButtons();
+        VBox vBox = createVbox(createLogoBox(),buttonWebScrape, buttonCustomerOrder, whichSite, createRadioButtonHBox(ecommerceSites), grouped,createRadioButtonHBox(isItGroupedItems),createMakeExcelFileButton(), createGoBackAndEndProgramButtonsHBox(), createStatusText("Creating Price Report..."));
         setContainer(vBox);
         manager.setFields(getTextObject());
         Scene scene = new Scene(vBox, getPageWidth(), getPageHeight());
@@ -71,7 +77,7 @@ public class PriceReportCreatorUIBuilder extends UIComponents{
 
 
     /*
-     * Creates Button that allows uploding a customer order data file
+     * Creates Button that allows uploading a customer order data file
      */
     private Button createCustomerOrderFileButton(Stage primaryStage, FileChooser fileChooser) {
         Button button = new Button("Upload Customer Order Data Here");
@@ -117,6 +123,27 @@ public class PriceReportCreatorUIBuilder extends UIComponents{
     }
 
     /*
+     * creates a ToggleGroup that houses the yes or no options for a user to answer whether the
+     * file given has groupedItems
+     */
+    private ToggleGroup createIsItAGroupedRadioButtons() {
+        ToggleGroup options = new ToggleGroup();
+        RadioButton yes = new RadioButton("Yes");
+        yes.setToggleGroup(options);
+        RadioButton no = new RadioButton("No");
+        no.setToggleGroup(options);
+        options.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == yes) {
+                this.isItGroupedItem = true;
+            }
+            else {
+                this.isItGroupedItem = false;
+            }
+        });
+        return options;
+    }
+
+    /*
      * The "Create Price Report Button" runs makePriceReport on new thread
      */
     private Button createMakeExcelFileButton() {
@@ -136,7 +163,9 @@ public class PriceReportCreatorUIBuilder extends UIComponents{
      */
     private void startPriceReportCreatorTask() {
         manager.showStatusText();
-        CompletableFuture<Void> task = handler.makePriceReportAsync(fileInWebScrapedData, fileInCustomerOrderData, siteName);
+        CompletableFuture<Void> task = isItGroupedItem?  handler.makePriceReportAsync(fileInWebScrapedData, fileInCustomerOrderData, siteName, isItGroupedItem):
+                handler.makePriceReportAsync(fileInWebScrapedData, fileInCustomerOrderData, siteName);
+
         manager.updateTextStatus(task, "Price Report created! Check the Weekly-Reports folder.");
     }
 
@@ -159,8 +188,8 @@ public class PriceReportCreatorUIBuilder extends UIComponents{
     /*
     * Creates Container that houses everything
     */    
-    private VBox createVbox(HBox logoBox, Button buttonWebScrape, Button buttonCustomerOrder, HBox hBox, Button buttonMakeFile, HBox goBackAndEndProgramHBox, Text statusText)  {
-        VBox vBox = new VBox(logoBox, buttonWebScrape, buttonCustomerOrder, hBox, buttonMakeFile, goBackAndEndProgramHBox, statusText);
+    private VBox createVbox(HBox logoBox, Button buttonWebScrape, Button buttonCustomerOrder, Text whichSite, HBox hBox, Text grouped, HBox isItGroupedBox, Button buttonMakeFile, HBox goBackAndEndProgramHBox, Text statusText)  {
+        VBox vBox = new VBox(logoBox, buttonWebScrape, buttonCustomerOrder,  whichSite, hBox, grouped, isItGroupedBox, buttonMakeFile, goBackAndEndProgramHBox, statusText);
         vBox.setStyle(getContainerStyle());
         vBox.setSpacing(20);
         vBox.setPadding(new Insets(15));

@@ -29,9 +29,10 @@ public abstract class UIComponents {
     private final String buttonStyle = "-fx-background-color: #2E5698; -fx-border: none; -fx-text-fill: white; -fx-padding: 10px 20px; -fx-font-size: 16px; -fx-background-radius: 16px;";
     private final String containerStyle = "-fx-font-family: \"Arial\", sans-serif;  -fx-padding: 20px;  -fx-pref-width: 600px; -fx-background-color: #f0f0f0; -fx-padding: 20px; -fx-border-radius: 5px;";
     private final String headerStyle = "-fx-font-size: 36px; -fx-font-weight: bold;-fx-font-family: \"Arial\", sans-serif;";
+    private final String textStyle = "-fx-font-size: 20px;";
     private final String logoAddress = "/static/Blue-Tactical-Logo.png";
-    private final int pageWidth = 950;
-    private final int pageHeight = 534;
+    private final int pageWidth = 1140;
+    private final int pageHeight = 640;
     private final UINavigation uiNavigation;
     protected final UIThreadExecutor handler;//shared handler throughout UI
     protected final StatusTextStateManager manager = new StatusTextStateManager();
@@ -74,6 +75,9 @@ public abstract class UIComponents {
 
     protected String getHeaderStyle() {
         return headerStyle;
+    }
+    protected String getTextStyle() {
+        return textStyle;
     }
 
     protected UINavigation geUINavigation() {
