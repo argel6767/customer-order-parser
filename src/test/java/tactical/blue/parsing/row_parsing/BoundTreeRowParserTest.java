@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 
 import tactical.blue.excel.excelrows.BoundTreeExcelRow;
 import tactical.blue.excel.excelrows.ExcelRow;
-import tactical.blue.parsing.row_parsing.BoundTreeRowParser;
 
 public class BoundTreeRowParserTest {
      private BoundTreeRowParser parser;
@@ -103,5 +102,20 @@ public class BoundTreeRowParserTest {
         List<ExcelRow> result = parser.parseRow(currItemArray, webScrapedMap, columnHeaderIndex, false);
 
         assertNull(result);  // No match for the URL, expecting null
+    }
+
+    @Test
+    void testDetermineWholesalePriceWithTwoPrices() {
+        parser = new BoundTreeRowParser();
+        double price = parser.determineWholesalePrice("\"287.25\n" +
+                "                                                258.52\"");
+        assertEquals(258.52, price, 0.001);
+    }
+
+    @Test
+    void testDetermineWholeSalePriceWithOnePrice() {
+        parser = new BoundTreeRowParser();
+        double price = parser.determineWholesalePrice("\"287.25\"");
+        assertEquals(287.25, price, 0.001);
     }
 }

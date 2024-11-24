@@ -40,7 +40,7 @@ public class BoundTreeRowParser implements RowParser{
                         int quantityRequested = Integer.parseInt(currItemArray[1]);
                         String packaging = currWebScrapedDataArray[columnHeaderIndex.get("Packaging")];
                         double msrp = Double.parseDouble(currWebScrapedDataArray[columnHeaderIndex.get("List_Price")]);
-                        double wholesalePrice = Double.parseDouble(currWebScrapedDataArray[columnHeaderIndex.get("Wholesale")]);
+                        double wholesalePrice = determineWholesalePrice(currWebScrapedDataArray[columnHeaderIndex.get("Wholesale")]);
                         String group = isGroupedItems? currItemArray[currItemArray.length-1]:"";
 
                         //Grab bulk items to make another BoundTreeExcelRow object
@@ -48,7 +48,7 @@ public class BoundTreeRowParser implements RowParser{
                         * Add both a regular and bulk item row to thw entire list of rows
                         */
                         try {
-                            double wholesaleBulk = Double.parseDouble(currWebScrapedDataArray[columnHeaderIndex.get("Whole_Sale_Bulk")]);
+                            double wholesaleBulk = determineWholesalePrice(currWebScrapedDataArray[columnHeaderIndex.get("Whole_Sale_Bulk")]);
                             double msrpBulk = Double.parseDouble(currWebScrapedDataArray[columnHeaderIndex.get("List_Price_Bulk")]);
                             String packagingBulk = currWebScrapedDataArray[columnHeaderIndex.get("Bulk_Packaging")];
                             if (isGroupedItems) {
@@ -76,6 +76,15 @@ public class BoundTreeRowParser implements RowParser{
         }
     }
         return null;
+    }
+
+     double determineWholesalePrice(String scrapedWholesalePrice) {
+        scrapedWholesalePrice = scrapedWholesalePrice.replaceAll("\"","");
+        String[] prices = scrapedWholesalePrice.split("\\s+");
+        if (prices.length > 1) {
+            return Double.parseDouble(prices[1]);
+        }
+        return Double.parseDouble(prices[0]);
     }
 
 }

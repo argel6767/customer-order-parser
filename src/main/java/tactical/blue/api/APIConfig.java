@@ -20,6 +20,7 @@ public class APIConfig {
             return properties.getProperty("openai.api.key");
         } catch (Exception e) {
             System.out.println("Failed to load API Key!\nUsing ENV backup");
+            System.out.println(System.getenv("OPENAI_API_KEY"));
             return System.getenv("OPENAI_API_KEY");
         }
     }

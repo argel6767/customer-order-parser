@@ -50,6 +50,12 @@ public class ExcelWriter {
         //adds the Excel rows into dataSheetInfo from List excelRows
         System.out.println("Grabbing rows...");
         for (ExcelRow excelRow : excelRows) {
+            if (!excelRow.getGroupName().isEmpty()) {
+                String groupName = excelRow.getGroupName();
+                if (!dataSheetInfo.containsKey(groupName)) {
+                    dataSheetInfo.put("Group Name", new Object[]{groupName});
+                }
+            }
             dataSheetInfo.put(String.valueOf(index), excelRow.toArray());
             index++;
         }
