@@ -21,14 +21,14 @@ public class OpenAIClient {
     //makes the API Call to OpenAI gpt-4o-mini to get packaging
     public String makeAPICall() {
         String jsonBody = createJSONBody().toString();
-        
-        HttpResponse<JsonNode> response = Unirest.post(this.API_URL)
+
+        /*
+        *HttpResponse<JsonNode> response = Unirest.post(this.API_URL)
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer " + this.API_KEY)  // Use API key grabbed by APIConfig
             .body(jsonBody)
             .asJson();
-
-        // return the response if successful
+            *  // return the response if successful
         if (response.getStatus() == 200) {
             String packaging = response.getBody().getObject().getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content"); //grabbing the response from the entire json object that is returned
             return packaging;
@@ -36,6 +36,9 @@ public class OpenAIClient {
             System.out.println("Request failed with status: " + response.getStatus());
             return "";
         }
+         */
+        return "Each";
+
     }
 
 

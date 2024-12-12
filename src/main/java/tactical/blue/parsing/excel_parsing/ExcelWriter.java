@@ -5,10 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -23,6 +20,7 @@ import tactical.blue.excel.excelrows.ExcelRow;
 public class ExcelWriter {
     private final XSSFWorkbook workbook = new XSSFWorkbook();
     private final CellStyle cellStyle = workbook.createCellStyle();
+    private final CellStyle groupNameStyle = workbook.createCellStyle();
     private boolean applyStyling = false;
 
     public ExcelWriter() {}
@@ -44,16 +42,17 @@ public class ExcelWriter {
         XSSFSheet sheet = workbook.createSheet(sheetTitle + " " + LocalDate.now());
 
         Map<String, Object[]> dataSheetInfo = new LinkedHashMap<>(); //use LinkedHashMap to keep order
-        dataSheetInfo.put("1", new Object[] {"Row","Item Description","Item", "Manfucturer", "Source", "SKU", "Packaging", "Quantity", "MSRP", "Wholesale Price", "Cost of Goods", "Markup", "Unit Price", "Extended Price", "Contribution", "Product URL", ""}); //headers, empty string to allow for Product URL to be written
+        dataSheetInfo.put("1", new Object[] {"Row","Item Description","Item", "Manufacturer", "Source", "SKU", "Packaging", "Quantity", "MSRP", "Wholesale Price", "Cost of Goods", "Markup", "Unit Price", "Extended Price", "Contribution", "Product URL", ""}); //headers, empty string to allow for Product URL to be written
         
         int index = 2;
         //adds the Excel rows into dataSheetInfo from List excelRows
         System.out.println("Grabbing rows...");
         for (ExcelRow excelRow : excelRows) {
+            //System.out.println(excelRow);
             if (!excelRow.getGroupName().isEmpty()) {
                 String groupName = excelRow.getGroupName();
                 if (!dataSheetInfo.containsKey(groupName)) {
-                    dataSheetInfo.put("Group Name", new Object[]{groupName});
+                    dataSheetInfo.put(groupName, new Object[]{groupName});
                 }
             }
             dataSheetInfo.put(String.valueOf(index), excelRow.toArray());
@@ -74,7 +73,7 @@ public class ExcelWriter {
                 rowNum++;
                 Object[] objArr = dataSheetInfo.get(key); 
                 String isFirstGroupItem = String.valueOf(objArr[objArr.length-1]);
-                int cellnum = 0; 
+                int cellnum = 0;
                 if (applyStyling && isFirstGroupItem(isFirstGroupItem)) {
                     addBestDealStyling();
                     //Arrow function that is defined to style if necessary when the item is the best deal
@@ -84,13 +83,28 @@ public class ExcelWriter {
                     writeRows(row, objArr, cellnum, cellStyler); 
 
                 }
+                else if (!isADigit(key)) {
+                    System.out.println(key);
+                    addGroupNameStyling();
+                    CellStyler cellStyler = (cell) -> {
+                        cell.setCellStyle(groupNameStyle);
+                    };
+                    writeRows(row, objArr, cellnum, cellStyler);
+                }
                 else writeRows(row, objArr, cellnum, null); 
             } 
         }
-    
-    
-    
-        
+
+        private boolean isADigit(String str) {
+          try {
+              Double.parseDouble(str);
+              return true;
+          }
+          catch (NumberFormatException e) {
+              return false;
+          }
+        }
+
     public XSSFWorkbook getWorkbook() {
         return workbook;
     }
@@ -116,7 +130,8 @@ public class ExcelWriter {
      * in the Excel File
      */
     private void writeRows(Row row, Object[] objArr, int cellnum, CellStyler cellStyler) {
-        for (int i = 0; i < objArr.length - 1; i++) { 
+        int len = objArr.length == 1? objArr.length : objArr.length -1;
+        for (int i = 0; i < len; i++) {
             // This line creates a cell in the next 
             //  column of that row 
             Cell cell = row.createCell(cellnum++); 
@@ -133,6 +148,7 @@ public class ExcelWriter {
 
             if (cellStyler != null) cellStyler.customize(cell);
         }
+        //System.out.println(Arrays.toString(objArr));
     }
 
     /*
@@ -166,6 +182,11 @@ public class ExcelWriter {
     private void addBestDealStyling() {
         this.cellStyle.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
         this.cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+    }
+
+    private void addGroupNameStyling() {
+        this.groupNameStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        this.groupNameStyle.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
     }
 
 }
