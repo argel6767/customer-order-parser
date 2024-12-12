@@ -8,7 +8,7 @@ import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
 
 public class OpenAIClient {
-    private final String BEGINNING_OF_PROMPT = "Using the following item description, identify what its packaging is. It will typically be in the form of XX/package, XX/box, X per case, etc. If no packaging is found it is safe to assume it is just each, and so return each. Only return the value and packaging type. Here is the item description: ";
+    private final String BEGINNING_OF_PROMPT = "You are an assistant that determines packaging of items based on their description. Using the following item description, identify what its packaging is. It will typically be in the form of XX/package, XX/box, X per case, etc. If no packaging is found it is safe to assume it is just each, and so return each. Only return the value and packaging type. Here is the item description: ";
     private String entirePrompt;
     private final String API_KEY = getAPIKey();
     private final String API_URL = "https://api.openai.com/v1/chat/completions";
